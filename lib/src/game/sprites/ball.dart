@@ -2,7 +2,6 @@ import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/paddle.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 
 enum Surface {vertical, horiontal}
 
@@ -55,9 +54,12 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       rebound(Surface.horiontal);
     }
     if (other is Paddle){
-      // gameManager.score.value += 1;
-      // print(gameManager.score.value);
-      // print('$runtimeType collided with ${other.runtimeType}');
+      if(other.direction == PaddleDirection.left){
+        _velocity.x -= 100;
+      }
+      else if(other.direction == PaddleDirection.right){
+        _velocity.x += 100;
+      }
     }
     // TODO: handle collision for bricks
   }
@@ -83,7 +85,6 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   void reset(){
     x = game.size.x/2 - width/2;
     y = game.size.y/2 - height/2;
-
     _velocity = levelManager.ballSpeed;
     _gravity = levelManager.gravity;
     gameManager.state = GameState.playing;

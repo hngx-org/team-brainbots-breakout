@@ -12,7 +12,11 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   LevelManager({this.level = 1});
 
   final Map<int, BallSpeed> ballConfig =  {
-    1: BallSpeed(speed: Vector2(200, 200), gravity: Vector2(0, 20))
+    1: BallSpeed(speed: Vector2(0, 400), gravity: Vector2(0, 20)),
+  };
+
+  final Map<int, int> brickConfig = {
+    1: 2,
   };
 
   Vector2 get ballSpeed{
@@ -27,5 +31,12 @@ class LevelManager extends Component with HasGameRef<Breakout>{
       return ballConfig[level]!.gravity;
     }
     return Vector2.zero();
+  }
+
+  int get brickStrength{
+    if (brickConfig[level] != null){
+      return brickConfig[level]!;
+    }
+    return 1;
   }
 }
