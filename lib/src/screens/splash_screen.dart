@@ -12,7 +12,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   int imageIndex = 0;
   late AnimationController animationController;
   List<String> imagePaths = [
@@ -34,7 +35,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void startImageSwitchTimer() {
-
     Timer.periodic(const Duration(seconds: 2), (timer) {
       routerConfig.push(RoutesPath.menuScreen);
       timer.cancel();
@@ -64,16 +64,26 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 77),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Align(
               alignment: Alignment.center,
-              child: Text(
-                'BrainBots Breakout',
-                  style: GoogleFonts.pressStart2p(color: Colors.orangeAccent)
-              ),
+              child: Text('Breakout',
+                  style: GoogleFonts.pressStart2p(
+                      color: Colors.yellowAccent,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(height: 10,),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text('By BrainBots',
+                  style: GoogleFonts.pressStart2p(
+                      color: Colors.yellowAccent.withOpacity(0.7),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold)),
             ),
             const SizedBox(
               height: 10,

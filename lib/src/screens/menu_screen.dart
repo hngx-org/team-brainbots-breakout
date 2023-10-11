@@ -20,13 +20,14 @@ class _MenuScreenState extends State<MenuScreen> {
     final imageSize = isTapped ? 80.0 : 100.0;
     
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Stack(
         alignment: Alignment.center,
         children: [
           SizedBox(
             width: mediaQuery.width,
             height: mediaQuery.height,
-            child: Image.asset('assets/images/brick_back.png', fit: BoxFit.cover,),
+            child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -40,23 +41,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   });
                   routerConfig.pushReplacement(RoutesPath.gameScreen);
                 },
-                onTapCancel: () {
-                  setState(() {
-                    isTapped = false;
-                  });
-                },
-                onTapUp: (details) {
-                  setState(() {
-                    isTapped = false;
-                  });
-                },
-                child: AnimatedContainer(
-                    duration: Duration(milliseconds: 150), // Adjust animation duration
-                    width: imageSize,
-                    height: imageSize,
-                child: Image.asset('assets/images/Default@3x.png', width: 100, )),
+                child: Image.asset('assets/images/menu-Tiles.png', width: 100, ),
               ),
-              Image.asset('assets/images/SETTINGS3x.png', width: 100, ),
+              Image.asset('assets/images/menu-Tiles.png', width: 100, ),
             ],
           ),
         ],
