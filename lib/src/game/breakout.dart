@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/game.dart';
@@ -20,6 +22,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     super.onLoad();
   }
 
+  @override
+  Future<void> update(dt) async{
+    super.update(dt);
+    if(!children.any((element) => element is Ball)){
+      gameManager.state = GameState.gameOver;
+    }
+  }
+
   void setObjects(){
     ball = Ball(
       gameManager: gameManager,
@@ -29,17 +39,38 @@ class Breakout extends FlameGame with HasCollisionDetection{
       gameManager: gameManager,
       levelManager: levelManager,
     );
-    testBrick = Brick(
-      brickColor: BrickColor.blue,
-      brickState: BrickState.normal,
-      brickPosition: Vector2(size.x/2, size.y*0.1) );
-
     add(ball);
     add(paddle);
-    add(testBrick);
+  }
+
+  void arrangeBricks(double numBricks){
+    Vector2 brickSize = Vector2(75, 25);
+    var random = Random();
+    double x = 0;
+    double y = 40;
+    double xSpace = 5;
+    double ySpace = 5;
+
+    for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){  
+      add(
+         Brick(
+          levelManager: levelManager,
+          brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
+          brickSize: brickSize,
+          brickPosition: Vector2(x, y)
+        )
+      );
+      x += brickSize.x + xSpace;
+
+      if(x + brickSize.y > size.x){
+        y += brickSize.y + ySpace;
+        x = 0;
+      }
+    }
   }
   
   void initializeGameStart(){
     setObjects();
+    arrangeBricks(10);
   }
 }
