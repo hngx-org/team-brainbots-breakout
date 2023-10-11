@@ -1,4 +1,3 @@
-import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/paddle.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -7,91 +6,82 @@ enum Surface {vertical, horiontal}
 
 class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
 
-  GameManager gameManager;
-  LevelManager levelManager;
+  Vector2 ballSize;
+  Vector2 ballPosition;
+  Vector2 velocity;
+  Vector2 gravity;
+
   Ball({
-    required this.gameManager,
-    required this.levelManager,
+    required this.ballSize,
+    required this.ballPosition,
+    required this.velocity,
+    required this.gravity,
   });
 
-  late Vector2 _velocity;
-  late Vector2 _gravity;
   late ShapeHitbox hitbox;
+  bool canMove = false;
+
+  bool get isMoving{
+    return canMove ? velocity == Vector2.zero(): false;
+  }
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     sprite = await gameRef.loadSprite('ball.png');
-    width *= 0.2;
-    height *= 0.2;
-    
+
+    size = ballSize;
+    position = ballPosition;
+
     hitbox = CircleHitbox();
     add(hitbox);
   }
 
   @override
   void update(dt){
-    //TODO: if there are no bricks left go to win screen
-    if(gameManager.isGameOver) return;
-    if(gameManager.isIntro) reset();
-
-    wallRebound();
-    if ((position.y + height) >= game.size.y * 0.925){
-      gameOver();
+    if(canMove){
+      _handleWallCollision();
+      velocity += gravity;
+      position += velocity * dt;
+      super.update(dt);
     }
-    _velocity += _gravity * dt;
-    position += _velocity * dt;
-    super.update(dt);
   }
 
   @override
   void onCollision(Set<Vector2>intersectionPoints, PositionComponent other){
     super.onCollision(intersectionPoints, other);
-    if ((intersectionPoints.first.x - intersectionPoints.last.x).abs() < 2){ // horizontal collision
-      rebound(Surface.vertical); 
-    }
-    else{ // vertical collision
-      rebound(Surface.horiontal);
-    }
-    if (other is Paddle){
-      if(other.direction == PaddleDirection.left){
-        _velocity.x -= 100;
-      }
-      else if(other.direction == PaddleDirection.right){
-        _velocity.x += 100;
-      }
-    }
-    // TODO: handle collision for bricks
-  }
-
-  void wallRebound(){
-    if(position.x <= 0 || (position.x + width) >= game.size.x){
-      rebound(Surface.vertical);
-    }
-    if(position.y <= 0 || (position.y + height) >= game.size.y){
-      rebound(Surface.horiontal);
-    }
-  }
-
-  void rebound(Surface surface){
-    if(surface == Surface.vertical){
-      _velocity.x *= -1;
+    if ((intersectionPoints.first.x - intersectionPoints.last.x).abs() < 2){
+      _rebound(Surface.vertical); 
     }
     else{
-      _velocity.y *= -1;
+      _rebound(Surface.horiontal);
+    }
+
+    if (other is Paddle){
+      if(other.direction == PaddleDirection.left){
+        velocity.x -= 100;
+      }
+      else if(other.direction == PaddleDirection.right){
+        velocity.x += 100;
+      }
     }
   }
 
-  void reset(){
-    x = game.size.x/2 - width/2;
-    y = game.size.y/2 - height/2;
-    _velocity = levelManager.ballSpeed;
-    _gravity = levelManager.gravity;
-    gameManager.state = GameState.playing;
+  void _handleWallCollision(){
+    if(position.x <= 0 || (position.x + width) >= game.size.x){
+      _rebound(Surface.vertical);
+    }
+    if(position.y <= 0 || (position.y + height) >= game.size.y){
+      _rebound(Surface.horiontal);
+    }
   }
 
-  void gameOver(){
-    gameManager.state = GameState.gameOver;
-    // TODO: show game over screen
+  void _rebound(Surface surface){
+    if(surface == Surface.vertical){
+      velocity.x *= -1;
+    }
+    else{
+      velocity.y *= -1;
+    }
   }
 }
