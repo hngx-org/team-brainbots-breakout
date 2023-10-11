@@ -1,5 +1,4 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
-import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/ball.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -9,21 +8,19 @@ enum BrickColor
     {blue, brown, cyan, green, grey,lemon, orange, purple, red, yellow}
 
 class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCallbacks{
-  LevelManager levelManager;
   BrickColor brickColor;
   Vector2 brickSize;
   Vector2 brickPosition;
-
+  int strength;
 
   Brick({
-    required this.levelManager,
     required this.brickColor,
     required this.brickSize,
     required this.brickPosition,
+    required this.strength,
   });
   late ShapeHitbox hitbox;
   late BrickState brickState;
-  late int strength;
 
 
   @override
@@ -31,9 +28,6 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
     super.onLoad();
     _loadBricks();
     current = BrickState.normal;
-
-    strength = levelManager.brickStrength;
-
     size = brickSize;
     position = brickPosition;
 

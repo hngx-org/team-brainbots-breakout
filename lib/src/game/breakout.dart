@@ -14,50 +14,81 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   late Ball ball;
   late Paddle paddle;
-  late Brick testBrick;
 
   @override
   Future<void> onLoad() async{
     initializeGameStart();
+    ball.canMove = true;
+    paddle.canMove = true;
     super.onLoad();
   }
 
   @override
   Future<void> update(dt) async{
     super.update(dt);
-    if(!children.any((element) => element is Ball)){
-      gameManager.state = GameState.gameOver;
+
+    // if(gameManager.state == GameState.win){
+    //   win();
+    // }
+    if(!children.any((element) => element is Brick)){
+      gameManager.state = GameState.win;
     }
   }
+  // void win(){
+  //   print('you won');
+  //   // ball.canMove = false;
+  //   // paddle.canMove = false;
+  // }
+  // void reset(){
+  //   gameManager.state = GameState.intro; 
+  //   arrangeBricks(levelManager.numBricks);
+  // }
+  void setBall(){
+    Vector2 ballSize = Vector2.all(25);
+    Vector2 ballPosition = size/2 - ballSize/2;
+    Vector2 initialVelocity = levelManager.initialVelocity;
+    Vector2 gravity = levelManager.gravity;
 
-  void setObjects(){
     ball = Ball(
-      gameManager: gameManager,
-      levelManager: levelManager
-    );
-    paddle = Paddle(
-      gameManager: gameManager,
-      levelManager: levelManager,
+      ballSize: ballSize,
+      ballPosition: ballPosition,
+      velocity: initialVelocity,
+      gravity: gravity,
     );
     add(ball);
+  }
+
+  void setPaddle(){
+    Vector2 paddleSize = Vector2(100, 25);
+    Vector2 paddlePosition = Vector2(
+      size.x/2 - paddleSize.x/2,
+      size.y * 0.9
+    );
+    double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
+
+    paddle = Paddle(
+      paddleSize: paddleSize,
+      paddlePosition: paddlePosition,
+      speedMultiplier: paddleSpeedMultiplier
+    );
     add(paddle);
   }
 
-  void arrangeBricks(double numBricks){
+  void arrangeBricks(int numBricks){
     Vector2 brickSize = Vector2(75, 25);
     var random = Random();
     double x = 0;
-    double y = 40;
+    double y = 75;
     double xSpace = 5;
     double ySpace = 5;
 
     for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){  
       add(
          Brick(
-          levelManager: levelManager,
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
-          brickPosition: Vector2(x, y)
+          brickPosition: Vector2(x, y),
+          strength: levelManager.brickStrength
         )
       );
       x += brickSize.x + xSpace;
@@ -70,7 +101,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
   
   void initializeGameStart(){
-    setObjects();
-    arrangeBricks(10);
+    setBall();
+    setPaddle();
+    arrangeBricks(levelManager.numBricks);
   }
 }
