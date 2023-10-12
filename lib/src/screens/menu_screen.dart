@@ -25,107 +25,87 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
   }
 
-  Future<void> _preloadAssets() async {
-    await Future.wait([
-      precacheImage(const AssetImage('assets/images/Stars Small_2.png'), context),
-      precacheImage(const AssetImage('assets/images/menu-Tiles.png'), context),
-    ]);
-  }
-
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
 
-    return FutureBuilder<void>(
-        future: _preloadAssets(),
-        builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: mediaQuery.width,
-                  height: mediaQuery.height,
-                  child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Text(
-                          'BREAKOUT',
-                          style: GoogleFonts.pressStart2p(
-                            color: Colors.orange.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 32,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        Positioned(
-                          top: 5.0,
-                          left: 0.0,
-                          child: Text(
-                            'BREAKOUT',
-                            style: GoogleFonts.pressStart2p(
-                              color: Colors.yellowAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: mediaQuery.width,
+            height: mediaQuery.height,
+            child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    'BREAKOUT',
+                    style: GoogleFonts.pressStart2p(
+                      color: Colors.orange.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
                     ),
-                    40.verticalSpace,
-                    BouncyButton(
-                      text: 'Play',
-                      onTap: () {
-                        setState(() {
-                          isPlayTapped = !isPlayTapped;
-                        });
-                        routerConfig.pushReplacement(RoutesPath.gameScreen);
-                      },
-                      isTapped: isPlayTapped,
+                    textAlign: TextAlign.center,
+                  ),
+                  Positioned(
+                    top: 5.0,
+                    left: 0.0,
+                    child: Text(
+                      'BREAKOUT',
+                      style: GoogleFonts.pressStart2p(
+                        color: Colors.yellowAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    20.verticalSpace,
-                    BouncyButton(
-                      text: 'Settings',
-                      onTap: () {
-                        setState(() {
-                          isSettingsTapped = !isSettingsTapped;
-                        });
-                        // Add code for the 'Settings' button action here.
-                      },
-                      isTapped: isSettingsTapped,
-                    ),
-                    20.verticalSpace,
-                    BouncyButton(
-                      text: 'How to play',
-                      onTap: () {
-                        setState(() {
-                          isHowTapped = !isHowTapped;
-                        });
-                        // Add code for the 'How to play' button action here.
-                      },
-                      isTapped: isHowTapped,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }
-        else {
-          // Display a loading indicator or placeholder while assets are loading.
-          return const Center(
-            child: LoadingWidget(),
-          );
-        }
-      }
+                  ),
+                ],
+              ),
+              40.verticalSpace,
+              BouncyButton(
+                text: 'Play',
+                onTap: () {
+                  setState(() {
+                    isPlayTapped = !isPlayTapped;
+                  });
+                  routerConfig.pushReplacement(RoutesPath.gameScreen);
+                },
+                isTapped: isPlayTapped,
+              ),
+              20.verticalSpace,
+              BouncyButton(
+                text: 'Settings',
+                onTap: () {
+                  setState(() {
+                    isSettingsTapped = !isSettingsTapped;
+                  });
+                  // Add code for the 'Settings' button action here.
+                },
+                isTapped: isSettingsTapped,
+              ),
+              20.verticalSpace,
+              BouncyButton(
+                text: 'How to play',
+                onTap: () {
+                  setState(() {
+                    isHowTapped = !isHowTapped;
+                  });
+                  // Add code for the 'How to play' button action here.
+                },
+                isTapped: isHowTapped,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
