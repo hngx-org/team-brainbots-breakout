@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: Colors.black,
       body: Container(
         height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.symmetric(horizontal: 60),
+        padding: const EdgeInsets.symmetric(horizontal: 55),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
