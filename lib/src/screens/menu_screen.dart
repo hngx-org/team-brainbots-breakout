@@ -1,5 +1,6 @@
 
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/background.dart';
 import 'package:brainbots_breakout/src/constants/brick_button.dart';
 import 'package:brainbots_breakout/src/constants/loading_widget.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
@@ -17,6 +18,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   bool isPlayTapped = false;
+  bool isLevelTapped = false;
   bool isSettingsTapped = false;
   bool isHowTapped = false;
 
@@ -34,11 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          SizedBox(
-            width: mediaQuery.width,
-            height: mediaQuery.height,
-            child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
-          ),
+          CustomBackground(mediaQuery: mediaQuery),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -79,6 +77,17 @@ class _MenuScreenState extends State<MenuScreen> {
                   routerConfig.pushReplacement(RoutesPath.gameScreen);
                 },
                 isTapped: isPlayTapped,
+              ),
+              20.verticalSpace,
+              BouncyButton(
+                text: 'Levels',
+                onTap: () {
+                  setState(() {
+                    isLevelTapped = !isLevelTapped;
+                  });
+                  routerConfig.pushReplacement(RoutesPath.levelScreen);
+                },
+                isTapped: isLevelTapped,
               ),
               20.verticalSpace,
               BouncyButton(
