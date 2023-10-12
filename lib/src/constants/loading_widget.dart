@@ -9,19 +9,17 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: LinearPercentIndicator(
-        width: MediaQuery.of(context).size.width - 50,
-        animation: true,
-        lineHeight: 20.0,
-        animationDuration: 2000,
-        percent: 0.9,
-        center: Text("90.0%", style: GoogleFonts.pressStart2p(
-            color: Colors.white),),
-        barRadius: const Radius.circular(10),
-        progressColor: Colors.yellowAccent,
-      ),
+    return LinearPercentIndicator(
+      width: MediaQuery.of(context).size.width / 1.3,
+      animation: true,
+      lineHeight: 20.0,
+      alignment: MainAxisAlignment.center,
+      animationDuration: 2000,
+      percent: 0.9,
+      center: Text("90.0%", style: GoogleFonts.pressStart2p(
+          color: Colors.white),),
+      barRadius: const Radius.circular(10),
+      progressColor: Colors.yellowAccent,
     );
   }
 }
