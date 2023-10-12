@@ -49,7 +49,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     }
 
     bricks = bricks.where((element) => !element.isRemoved).toList();
-
+    gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength;
     if(bricks.isEmpty){
       win();
     }
@@ -76,6 +76,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     overlays.remove('winOverlay');
     gameManager.reset();
     ball.velocity = levelManager.initialVelocity;
+    ball.maxVelocity = levelManager.maxVelocity;
     ball.gravity = levelManager.gravity;
     ball.position = size/2 - ball.size/2;
     paddle.position = Vector2(
@@ -109,12 +110,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     Vector2 ballSize = Vector2.all(25);
     Vector2 ballPosition = size/2 - ballSize/2;
     Vector2 initialVelocity = levelManager.initialVelocity;
+    Vector2 maxVelocity = levelManager.maxVelocity;
     Vector2 gravity = levelManager.gravity;
 
     ball = Ball(
       ballSize: ballSize,
       ballPosition: ballPosition,
       velocity: initialVelocity,
+      maxVelocity: maxVelocity,
       gravity: gravity,
     );
     add(ball);

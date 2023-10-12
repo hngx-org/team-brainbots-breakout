@@ -2,9 +2,14 @@ import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:flame/components.dart';
 
 class BallSettings{
-  Vector2 velocity;
+  Vector2 initialVelocity;
+  Vector2 maxVelocity;
   Vector2 gravity;
-  BallSettings({required this.velocity, required this.gravity});
+  BallSettings({
+    required this.initialVelocity,
+    required this.maxVelocity,
+    required this.gravity,
+  });
 }
 
 class PaddleSettings{
@@ -23,8 +28,8 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   LevelManager({this.level = 1});
 
   final Map<int, BallSettings> ballConfig =  {
-    1: BallSettings(velocity: Vector2(0, 400), gravity: Vector2(0, 2)),
-    2: BallSettings(velocity: Vector2(0, 500), gravity: Vector2(0, 3)),
+    1: BallSettings(initialVelocity: Vector2(0, 400), maxVelocity: Vector2(200, 400), gravity: Vector2(0, 2)),
+    2: BallSettings(initialVelocity: Vector2(0, 500), maxVelocity: Vector2(250, 500), gravity: Vector2(0, 3)),
   };
 
   final Map<int, PaddleSettings> paddleConfig = {
@@ -41,7 +46,14 @@ class LevelManager extends Component with HasGameRef<Breakout>{
 
   Vector2 get initialVelocity{
     if (ballConfig[level] != null){
-      return ballConfig[level]!.velocity;
+      return ballConfig[level]!.initialVelocity;
+    }
+    return Vector2.zero();
+  }
+  
+  Vector2 get maxVelocity{
+    if (ballConfig[level] != null){
+      return ballConfig[level]!.maxVelocity;
     }
     return Vector2.zero();
   }
