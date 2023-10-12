@@ -14,35 +14,96 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   late Ball ball;
   late Paddle paddle;
+  late List<Brick> bricks;
+  bool needBricks = false;
 
   @override
   Future<void> onLoad() async{
-    initializeGameStart();
-    ball.canMove = true;
-    paddle.canMove = true;
     super.onLoad();
+    initializeGameStart();
+    overlays.add('gameOverlay');
   }
 
   @override
   Future<void> update(dt) async{
     super.update(dt);
 
-    // if(gameManager.state == GameState.win){
-    //   win();
-    // }
-    if(!children.any((element) => element is Brick)){
-      gameManager.state = GameState.win;
+    if(needBricks){
+      arrangeBricks(levelManager.numBricks);
+      needBricks = false;
+    }
+    paddle.canMove = true;
+
+    if(!gameManager.isPlaying){
+      ball.canMove = false;
+      paddle.canMove = false;
+    }
+    else{
+      ball.canMove = true;
+      paddle.canMove = true;
+    }
+    
+    if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
+    
+    if(ball.position.y + ball.height > size.y*0.92){
+      gameOver();
+    }
+
+    bricks = bricks.where((element) => !element.isRemoved).toList();
+
+    if(bricks.isEmpty){
+      win();
     }
   }
-  // void win(){
-  //   print('you won');
-  //   // ball.canMove = false;
-  //   // paddle.canMove = false;
-  // }
-  // void reset(){
-  //   gameManager.state = GameState.intro; 
-  //   arrangeBricks(levelManager.numBricks);
-  // }
+
+  
+
+  void start(){
+    overlays.remove('introOverlay');
+    gameManager.state = GameState.playing;
+  }
+  void pause(){
+    pauseEngine();
+    overlays.add('pauseMenuOverlay');
+  }
+
+  void resume(){
+    resumeEngine();
+    overlays.remove('pauseMenuOverlay');
+  }
+
+  void reset(){
+    gameManager.reset();
+    ball.velocity = levelManager.initialVelocity;
+    ball.gravity = levelManager.gravity;
+    ball.position = size/2 - ball.size/2;
+    paddle.position = Vector2(
+      size.x/2 - paddle.size.x/2,
+      size.y * 0.9
+    );
+    
+    needBricks = true;
+    gameManager.state = GameState.intro;
+    overlays.add('introOverlay');
+  }
+
+  void win(){
+    gameManager.state = GameState.win;
+    print('you win');
+    nextLevel();
+  }
+
+  void gameOver(){
+    gameManager.state = GameState.gameOver;
+    print('game over');
+    reset();
+  }
+
+  void nextLevel(){
+    levelManager.level += 1;
+    reset();
+  }
+
   void setBall(){
     Vector2 ballSize = Vector2.all(25);
     Vector2 ballPosition = size/2 - ballSize/2;
@@ -81,9 +142,9 @@ class Breakout extends FlameGame with HasCollisionDetection{
     double y = 75;
     double xSpace = 5;
     double ySpace = 5;
-
+    bricks = [];
     for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){  
-      add(
+      bricks.add(
          Brick(
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
@@ -98,12 +159,12 @@ class Breakout extends FlameGame with HasCollisionDetection{
         x = 0;
       }
     }
+    addAll(bricks);
   }
   
   void initializeGameStart(){
     setBall();
     setPaddle();
-    arrangeBricks(levelManager.numBricks);
+    reset();
   }
 }
-

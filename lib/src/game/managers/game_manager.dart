@@ -12,4 +12,9 @@ class GameManager extends Component with HasGameRef<Breakout>{
   bool get isPaused => state == GameState.paused;
   bool get isGameOver => state == GameState.gameOver;
   bool get isWin => state == GameState.win;
+
+  void reset(){
+    state = GameState.intro;
+    score.value = 0;
+  }
 }
