@@ -40,7 +40,12 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   @override
   void update(dt){
     if(canMove){
-      _handleWallCollision();
+      if((size + position + velocity * dt).x >= game.size.x || (position + velocity * dt).x <= 0){
+        _rebound(Surface.vertical);
+      }
+      if((size + position + velocity * dt).y >= game.size.y || (position + velocity * dt).y <= 0){
+        _rebound(Surface.horiontal);
+      }
       velocity += gravity;
       position += velocity * dt;
       super.update(dt);
@@ -59,15 +64,6 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
 
     if (other is Paddle){
       velocity.x += other.paddleBoost;
-    }
-  }
-
-  void _handleWallCollision(){
-    if(position.x <= 0 || (position.x + width) >= game.size.x){
-      _rebound(Surface.vertical);
-    }
-    if(position.y <= 0 || (position.y + height) >= game.size.y){
-      _rebound(Surface.horiontal);
     }
   }
 
