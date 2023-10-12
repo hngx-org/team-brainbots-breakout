@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/game.dart';
@@ -50,7 +49,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     }
 
     bricks = bricks.where((element) => !element.isRemoved).toList();
-
+    gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength;
     if(bricks.isEmpty){
       win();
     }
@@ -73,15 +72,18 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void reset(){
+    overlays.remove('gameOverOverlay');
+    overlays.remove('winOverlay');
     gameManager.reset();
     ball.velocity = levelManager.initialVelocity;
+    ball.maxVelocity = levelManager.maxVelocity;
     ball.gravity = levelManager.gravity;
     ball.position = size/2 - ball.size/2;
     paddle.position = Vector2(
       size.x/2 - paddle.size.x/2,
       size.y * 0.9
     );
-    
+    paddle.speedMultiplier = levelManager.paddleSpeedMultiplier;
     needBricks = true;
     gameManager.state = GameState.intro;
     overlays.add('introOverlay');
@@ -90,13 +92,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void win(){
     gameManager.state = GameState.win;
     print('you win');
-    nextLevel();
+    overlays.add('winOverlay');
   }
 
   void gameOver(){
     gameManager.state = GameState.gameOver;
     print('game over');
-    reset();
+    overlays.add('gameOverOverlay');
   }
 
   void nextLevel(){
@@ -108,12 +110,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     Vector2 ballSize = Vector2.all(25);
     Vector2 ballPosition = size/2 - ballSize/2;
     Vector2 initialVelocity = levelManager.initialVelocity;
+    Vector2 maxVelocity = levelManager.maxVelocity;
     Vector2 gravity = levelManager.gravity;
 
     ball = Ball(
       ballSize: ballSize,
       ballPosition: ballPosition,
       velocity: initialVelocity,
+      maxVelocity: maxVelocity,
       gravity: gravity,
     );
     add(ball);

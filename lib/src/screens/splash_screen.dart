@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/loading_widget.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
       precacheImage(const AssetImage('assets/images/level_card.png'), context),
       precacheImage(const AssetImage('assets/images/sound_off.png'), context),
       precacheImage(const AssetImage('assets/images/soundOn.png'), context),
+      Flame.images.loadAllImages()
     ]);
   }
 
