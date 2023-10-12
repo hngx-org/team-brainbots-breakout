@@ -1,8 +1,10 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
+import 'package:brainbots_breakout/src/game/overlays/game_over_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/game_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/intro_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/pause_menu_overlay.dart';
+import 'package:brainbots_breakout/src/game/overlays/win_overlay.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -38,6 +40,8 @@ class _GameScreenState extends State<GameScreen> {
             'gameOverlay': (context, game) => GameOverlay(game: game,),
             'pauseMenuOverlay': (context, game) => PauseMenuOverlay(game: game),
             'introOverlay': (context, game) => IntroOverlay(game: game),
+            'gameOverOverlay': (context, game) => GameOverOverlay(game: game),
+            'winOverlay': (context, game) => WinOverlay(game: game),
           },
         ),
       ),

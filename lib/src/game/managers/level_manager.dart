@@ -28,8 +28,8 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   };
 
   final Map<int, PaddleSettings> paddleConfig = {
-    1: PaddleSettings(speedMultiplier: 100),
-    2: PaddleSettings(speedMultiplier: 200),
+    1: PaddleSettings(speedMultiplier: 25),
+    2: PaddleSettings(speedMultiplier: 30),
   };
 
   final Map<int, BrickSettings> brickConfig = {

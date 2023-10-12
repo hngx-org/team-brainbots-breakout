@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/game.dart';
@@ -73,6 +72,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void reset(){
+    overlays.remove('gameOverOverlay');
+    overlays.remove('winOverlay');
     gameManager.reset();
     ball.velocity = levelManager.initialVelocity;
     ball.gravity = levelManager.gravity;
@@ -81,7 +82,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
       size.x/2 - paddle.size.x/2,
       size.y * 0.9
     );
-    
+    paddle.speedMultiplier = levelManager.paddleSpeedMultiplier;
     needBricks = true;
     gameManager.state = GameState.intro;
     overlays.add('introOverlay');
@@ -90,13 +91,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void win(){
     gameManager.state = GameState.win;
     print('you win');
-    nextLevel();
+    overlays.add('winOverlay');
   }
 
   void gameOver(){
     gameManager.state = GameState.gameOver;
     print('game over');
-    reset();
+    overlays.add('gameOverOverlay');
   }
 
   void nextLevel(){
