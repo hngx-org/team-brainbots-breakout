@@ -1,10 +1,11 @@
 
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/brick_button.dart';
+import 'package:brainbots_breakout/src/constants/loading_widget.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 
 class MenuScreen extends StatefulWidget {
@@ -18,6 +19,11 @@ class _MenuScreenState extends State<MenuScreen> {
   bool isPlayTapped = false;
   bool isSettingsTapped = false;
   bool isHowTapped = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> _preloadAssets() async {
     await Future.wait([
@@ -51,7 +57,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       alignment: Alignment.center,
                       children: [
                         Text(
-                          'Welcome to Breakout',
+                          'BREAKOUT',
                           style: GoogleFonts.pressStart2p(
                             color: Colors.orange.withOpacity(0.8),
                             fontWeight: FontWeight.bold,
@@ -61,9 +67,9 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                         Positioned(
                           top: 5.0,
-                          left: 29.0,
+                          left: 0.0,
                           child: Text(
-                            'Welcome to \nBreakout',
+                            'BREAKOUT',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.yellowAccent,
                               fontWeight: FontWeight.bold,
@@ -115,63 +121,11 @@ class _MenuScreenState extends State<MenuScreen> {
         }
         else {
           // Display a loading indicator or placeholder while assets are loading.
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: LinearPercentIndicator(
-                width: MediaQuery.of(context).size.width - 50,
-                animation: true,
-                lineHeight: 20.0,
-                animationDuration: 2000,
-                percent: 0.9,
-                center: const Text("90.0%"),
-                barRadius: const Radius.circular(10),
-                progressColor: Colors.yellowAccent,
-              ),
-            ),
+          return const Center(
+            child: LoadingWidget(),
           );
         }
       }
-    );
-  }
-}
-
-class BouncyButton extends StatelessWidget {
-  final String text;
-  final bool isTapped;
-  final void Function() onTap;
-
-  BouncyButton({
-    required this.text,
-    required this.isTapped,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: ScaleTransition(
-        scale: Tween<double>(
-          begin: 1.0,
-          end: isTapped ? 0.9 : 1.0, // Adjust the scaling values as needed.
-        ).animate(
-          CurvedAnimation(
-            parent: ModalRoute.of(context)!.animation!,
-            curve: Curves.fastOutSlowIn,
-          ),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.asset('assets/images/menu-Tiles.png', width: 170),
-            Text(
-              text,
-              style: GoogleFonts.pressStart2p(color: Colors.yellowAccent, fontSize: 12),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

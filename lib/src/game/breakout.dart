@@ -106,3 +106,4 @@ class Breakout extends FlameGame with HasCollisionDetection{
     arrangeBricks(levelManager.numBricks);
   }
 }
+
