@@ -58,12 +58,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     }
 
     if (other is Paddle){
-      if(other.direction == PaddleDirection.left){
-        velocity.x -= 100;
-      }
-      else if(other.direction == PaddleDirection.right){
-        velocity.x += 100;
-      }
+      velocity.x += other.paddleBoost;
     }
   }
 

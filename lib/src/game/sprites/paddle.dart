@@ -1,9 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/extensions.dart';
 
-enum PaddleDirection {left, center, right}
 class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCallbacks{
   Vector2 paddleSize;
   Vector2 paddlePosition;
@@ -16,7 +14,6 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   });
   
   late ShapeHitbox hitbox;
-  late PaddleDirection direction;
   late double paddleBoost;
   bool canMove = false;
 
@@ -26,9 +23,7 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
     sprite = await gameRef.loadSprite('paddle.png');
     size = paddleSize;
     position = paddlePosition;
-
-    direction = PaddleDirection.center;
-
+    paddleBoost = 0;
     hitbox = RectangleHitbox();
     add(hitbox);
   }
@@ -40,17 +35,7 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
       if(!(position.x + event.delta.x < 0) && !(position.x + width + event.delta.x > game.size.x)){
           position.x += event.delta.x;
         }
-        paddleBoost = 2 * (event.devicePosition.x / game.size.x) - 1;
-        // print(paddleBoost);
-        if(event.delta.x < 0){
-          direction = PaddleDirection.left;
-        }
-        else if(event.delta.x > 0){
-          direction = PaddleDirection.right;
-        }
-        else{
-          direction = PaddleDirection.center;
-        }
+        paddleBoost = event.delta.x * speedMultiplier;
     }
   }
 
@@ -62,6 +47,6 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   @override
   void onDragEnd(DragEndEvent event){
     super.onDragEnd(event);
-    direction = PaddleDirection.center;
+    paddleBoost = 0;
   }
 }
