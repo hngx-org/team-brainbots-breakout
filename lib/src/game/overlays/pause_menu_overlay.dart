@@ -1,3 +1,4 @@
+import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
 import 'package:flame/game.dart';
@@ -22,42 +23,32 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> {
       child: Center(
         child: OverlayScrim(
           child: SizedBox(
-            height: 200,
-            width: 200,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20,),
-                    Text(
-                      'Paused',
-                      style: GoogleFonts.pressStart2p(
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+            width: MediaQuery.of(context).size.width - 50,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset('assets/images/window.png',),
+                Align(
+                    alignment: const Alignment(0, -0.13),
+                    child: Text('Paused',style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 22),)),
+                Align(
+                  alignment: const Alignment(0, 0.06),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Image.asset('assets/images/repeat.png', width: 50,),
+                        GestureDetector(
+                          onTap: () => routerConfig.pop(),
+                            child: Image.asset('assets/images/play.png', width: 95)),
+                        Image.asset('assets/images/levels.png', width: 50),
+                      ],
                     ),
-                    const SizedBox(height: 30,),
-                    GestureDetector(
-                      onTap: (){
-                        (widget.game as Breakout).resume();
-                      },
-                      child: const Icon(
-                        Icons.play_arrow_rounded,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
