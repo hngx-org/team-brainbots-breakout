@@ -1,5 +1,8 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
+import 'package:brainbots_breakout/src/game/overlays/game_overlay.dart';
+import 'package:brainbots_breakout/src/game/overlays/intro_overlay.dart';
+import 'package:brainbots_breakout/src/game/overlays/pause_menu_overlay.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +34,11 @@ class _GameScreenState extends State<GameScreen> {
       body: Center(
         child: GameWidget(
           game: game,
-         // TODO: add overlay maps
+          overlayBuilderMap: <String, Widget Function(BuildContext, FlameGame)>{
+            'gameOverlay': (context, game) => GameOverlay(game: game,),
+            'pauseMenuOverlay': (context, game) => PauseMenuOverlay(game: game),
+            'introOverlay': (context, game) => IntroOverlay(game: game),
+          },
         ),
       ),
     );

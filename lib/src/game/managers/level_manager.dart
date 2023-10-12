@@ -24,14 +24,17 @@ class LevelManager extends Component with HasGameRef<Breakout>{
 
   final Map<int, BallSettings> ballConfig =  {
     1: BallSettings(velocity: Vector2(0, 400), gravity: Vector2(0, 2)),
+    2: BallSettings(velocity: Vector2(0, 500), gravity: Vector2(0, 3)),
   };
 
   final Map<int, PaddleSettings> paddleConfig = {
     1: PaddleSettings(speedMultiplier: 100),
+    2: PaddleSettings(speedMultiplier: 200),
   };
 
   final Map<int, BrickSettings> brickConfig = {
     1: BrickSettings(strength: 1, numBricks: 10),
+    2: BrickSettings(strength: 2, numBricks: 20),
   };
 
   

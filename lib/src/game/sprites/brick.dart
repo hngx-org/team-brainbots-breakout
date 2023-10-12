@@ -26,7 +26,12 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    _loadBricks();
+    Sprite normal = await gameRef.loadSprite('tile_${brickColor.name}.png');
+    Sprite cracked = await gameRef.loadSprite('tile_${brickColor.name}_cracked.png');
+    sprites = <BrickState, Sprite>{
+      BrickState.normal: normal,
+      BrickState.cracked: cracked,
+    };
     current = BrickState.normal;
     size = brickSize;
     position = brickPosition;
@@ -35,19 +40,11 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
     add(hitbox);
   }
 
-  Future<void> _loadBricks() async {
-    Sprite normal = await gameRef.loadSprite('tile_${brickColor.name}.png');
-    Sprite cracked = await gameRef.loadSprite('tile_${brickColor.name}_cracked.png');
-    sprites = <BrickState, Sprite>{
-      BrickState.normal: normal,
-      BrickState.cracked: cracked,
-    };
-  }
-
   @override
   Future<void> onCollision(Set<Vector2> intersectionPoints, PositionComponent other) async{
     super.onCollision(intersectionPoints, other);
     if(other is Ball){
+      gameRef.gameManager.score.value += 1;
       strength -= 1;
       if(strength == 1){
         current = BrickState.cracked;
