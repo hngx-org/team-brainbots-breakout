@@ -14,7 +14,8 @@ class PauseMenuOverlay extends StatefulWidget {
   State<PauseMenuOverlay> createState() => _PauseMenuOverlayState();
 }
 
-class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProviderStateMixin{
+class _PauseMenuOverlayState extends State<PauseMenuOverlay>
+    with TickerProviderStateMixin{
   late AnimationController _playController;
   late AnimationController _levelController;
   late AnimationController _resetController;
