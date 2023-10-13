@@ -91,7 +91,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                   scale: 1.0 - (0.1 * _resetController.value),
                                   child: Image.asset(
                           'assets/images/repeat.png',
-                          width: 50,
+                          width: 95,
                         ),
                                 );
                               }
@@ -102,6 +102,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 _playController.reverse();
                                 (widget.game as Breakout).resume();
                               });
+                              (widget.game as Breakout).resume();
                               print('tap');},
                             child: AnimatedBuilder(
                                 animation: _playController,
@@ -125,7 +126,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 builder: (context, child) {
                                 return Transform.scale(
                                     scale: 1.0 - (0.1 * _levelController.value),
-                                    child: Image.asset('assets/images/levels.png', width: 50));
+                                    child: Image.asset('assets/images/levels.png', width: 95));
                               }
                             )),
                       ],

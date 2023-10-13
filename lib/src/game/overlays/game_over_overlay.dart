@@ -82,7 +82,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                                     scale: 1.0 - (0.1 * _resetController.value),
                                     child: Image.asset(
                                       'assets/images/repeat.png',
-                                      width: 50,
+                                      width: 95,
                                     ),
                                   );
                                 }
@@ -101,7 +101,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                                 builder: (context, child) {
                                   return Transform.scale(
                                       scale: 1.0 - (0.1 * _levelController.value),
-                                      child: Image.asset('assets/images/levels.png', width: 50));
+                                      child: Image.asset('assets/images/levels.png', width: 95));
                                 }
                             )),
                       ],
