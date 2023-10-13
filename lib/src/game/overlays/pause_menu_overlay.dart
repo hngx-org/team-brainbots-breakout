@@ -71,7 +71,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                 Align(
                   alignment: const Alignment(0, 0.06),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.end,

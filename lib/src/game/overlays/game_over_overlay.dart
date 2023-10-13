@@ -63,7 +63,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                 Align(
                   alignment: const Alignment(0, 0.06),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 70),
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,9 +80,11 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                                 builder: (context, child) {
                                   return Transform.scale(
                                     scale: 1.0 - (0.1 * _resetController.value),
-                                    child: Image.asset(
-                                      'assets/images/repeat.png',
-                                      width: 95,
+                                    child: Container(
+                                      child: Image.asset(
+                                        'assets/images/repeat.png',
+                                        width: 95,
+                                      ),
                                     ),
                                   );
                                 }
