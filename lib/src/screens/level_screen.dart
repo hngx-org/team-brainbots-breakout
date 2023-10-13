@@ -165,20 +165,6 @@ class _LevelScreenState extends State<LevelScreen>
                                             ),
                                     ],
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(3, (starIndex) {
-                                      bool isStarActive = starIndex < 1;
-                                      return Image.asset(
-                                        currentTileIndex == 1
-                                            ? isStarActive
-                                                ? 'assets/images/active_star.png'
-                                                : 'assets/images/unactive_star.png'
-                                            : 'assets/images/unactive_star.png',
-                                        width: 20,
-                                      );
-                                    }),
-                                  )
                                 ],
                               ),
                             ),
