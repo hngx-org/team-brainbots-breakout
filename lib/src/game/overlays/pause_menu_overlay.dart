@@ -41,10 +41,10 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProvider
 
   @override
   void dispose() {
-    super.dispose();
     _playController.dispose();
     _levelController.dispose();
     _resetController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -78,9 +78,10 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProvider
                         GestureDetector(
                           onTap: (){
                             _resetController.forward().then((value) {
-                              _resetController.reverse();
+                              _resetController.reverse().then((_){
+                                (widget.game as Breakout).reset();
+                              });
                             });
-                            (widget.game as Breakout).reset();
                           },
                             child: AnimatedBuilder(
                                 animation: _resetController,
@@ -97,8 +98,8 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProvider
                         GestureDetector(
                             onTap: () {
                               _playController.forward().then((value) {
-                                (widget.game as Breakout).start();
                                 _playController.reverse();
+                                (widget.game as Breakout).resume();
                               });
                               print('tap');},
                             child: AnimatedBuilder(
