@@ -1,5 +1,7 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
+import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
 import 'package:flame/game.dart';
@@ -62,25 +64,32 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/gifs/win_gif.gif',
+                  'assets/gifs/win_gif.gif', color: Colors.yellowAccent,
                   width: MediaQuery.of(context).size.width,
                 ),
                 Image.asset(
                   'assets/images/big_window.png',
                 ),
                 Align(
+                    alignment: const Alignment(0, -0.234),
+                    child: Text(
+                      'Level Complete',
+                      style: GoogleFonts.pressStart2p(
+                          color: MyColor.appColor, fontSize: 20),
+                    )),
+                Align(
                     alignment: const Alignment(0, -0.23),
                     child: Text(
                       'Level Complete',
                       style: GoogleFonts.pressStart2p(
-                          color: Colors.white, fontSize: 20),
+                          color: MyColor.secondaryColor, fontSize: 20),
                     )),
                 Align(
                 alignment: const Alignment(0, -0.10),
                 child: Text(
                   'SCORE:${(widget.game as Breakout).gameManager.score.value}',
                   style: GoogleFonts.pressStart2p(
-                    color: Colors.white.withOpacity(0.8),
+                    color: MyColor.secondaryColor.withOpacity(0.8),
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -118,7 +127,8 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                               _playController.forward().then((value) {
                                 _playController.reverse();
                               });
-                              (widget.game as Breakout).nextLevel();},
+                              (widget.game as Breakout).nextLevel();
+                              },
                             child: AnimatedBuilder(
                                 animation: _playController,
                                 builder: (context, child) {
