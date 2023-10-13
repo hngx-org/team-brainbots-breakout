@@ -2,7 +2,7 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/background.dart';
 import 'package:brainbots_breakout/src/constants/brick_button.dart';
-import 'package:brainbots_breakout/src/constants/loading_widget.dart';
+import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -140,7 +140,7 @@ class _MenuScreenState extends State<MenuScreen>{
                     setState(() {
                       isHowTapped = !isHowTapped;
                     });
-                    // Add code for the 'How to play' button action here.
+                      exit(0);
                   },
                   isTapped: isHowTapped,
                 ),
