@@ -1,4 +1,5 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
 import 'package:flame/game.dart';
@@ -7,15 +8,44 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PauseMenuOverlay extends StatefulWidget {
   final Game game;
-  const PauseMenuOverlay({
-    required this.game,
-    super.key});
+  const PauseMenuOverlay({required this.game, super.key});
 
   @override
   State<PauseMenuOverlay> createState() => _PauseMenuOverlayState();
 }
 
-class _PauseMenuOverlayState extends State<PauseMenuOverlay> {
+class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProviderStateMixin{
+  late AnimationController _playController;
+  late AnimationController _levelController;
+  late AnimationController _resetController;
+
+  @override
+  void initState() {
+    super.initState();
+    _playController = AnimationController(
+      vsync: this,
+      duration:
+      const Duration(milliseconds: 200),
+    );
+    _resetController = AnimationController(
+      vsync: this,
+      duration:
+      const Duration(milliseconds: 200),
+    );
+    _levelController = AnimationController(
+      vsync: this,
+      duration:
+      const Duration(milliseconds: 200),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _playController.dispose();
+    _levelController.dispose();
+    _resetController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -27,10 +57,16 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset('assets/images/window.png',),
+                Image.asset(
+                  'assets/images/window.png',
+                ),
                 Align(
                     alignment: const Alignment(0, -0.13),
-                    child: Text('Paused',style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 22),)),
+                    child: Text(
+                      'Paused',
+                      style: GoogleFonts.pressStart2p(
+                          color: Colors.white, fontSize: 22),
+                    )),
                 Align(
                   alignment: const Alignment(0, 0.06),
                   child: Container(
@@ -39,11 +75,57 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Image.asset('assets/images/repeat.png', width: 50,),
                         GestureDetector(
-                          onTap: () => routerConfig.pop(),
-                            child: Image.asset('assets/images/play.png', width: 95)),
-                        Image.asset('assets/images/levels.png', width: 50),
+                          onTap: (){
+                            _resetController.forward().then((value) {
+                              _resetController.reverse();
+                            });
+                            (widget.game as Breakout).reset();
+                          },
+                            child: AnimatedBuilder(
+                                animation: _resetController,
+                                builder: (context, child) {
+                                return Transform.scale(
+                                  scale: 1.0 - (0.1 * _resetController.value),
+                                  child: Image.asset(
+                          'assets/images/repeat.png',
+                          width: 50,
+                        ),
+                                );
+                              }
+                            )),
+                        GestureDetector(
+                            onTap: () {
+                              _playController.forward().then((value) {
+                                (widget.game as Breakout).start();
+                                _playController.reverse();
+                              });
+                              print('tap');},
+                            child: AnimatedBuilder(
+                                animation: _playController,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                    scale: 1.0 - (0.1 * _playController.value),
+                                  child: Image.asset('assets/images/play.png',
+                                      width: 95),
+                                );
+                              }
+                            )),
+                        GestureDetector(
+                            onTap: () {
+                              _levelController.forward().then((value) {
+                                _levelController.reverse();
+                              });
+                                  routerConfig.pushReplacement(RoutesPath.levelScreen);
+                                },
+                            child: AnimatedBuilder(
+                                animation: _levelController,
+                                builder: (context, child) {
+                                return Transform.scale(
+                                    scale: 1.0 - (0.1 * _levelController.value),
+                                    child: Image.asset('assets/images/levels.png', width: 50));
+                              }
+                            )),
                       ],
                     ),
                   ),

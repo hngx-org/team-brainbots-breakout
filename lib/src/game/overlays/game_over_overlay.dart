@@ -1,7 +1,10 @@
+import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GameOverOverlay extends StatefulWidget {
@@ -14,7 +17,34 @@ class GameOverOverlay extends StatefulWidget {
   State<GameOverOverlay> createState() => _GameOverOverlayState();
 }
 
-class _GameOverOverlayState extends State<GameOverOverlay> {
+class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderStateMixin{
+
+  late AnimationController _levelController;
+  late AnimationController _resetController;
+
+  @override
+  void initState() {
+    super.initState();
+    _resetController = AnimationController(
+      vsync: this,
+      duration:
+      const Duration(milliseconds: 200),
+    );
+    _levelController = AnimationController(
+      vsync: this,
+      duration:
+      const Duration(milliseconds: 200),
+    );
+  }
+
+  @override
+  void dispose() {
+    _levelController.dispose();
+    _resetController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -22,42 +52,63 @@ class _GameOverOverlayState extends State<GameOverOverlay> {
       child: Center(
         child: OverlayScrim(
           child: SizedBox(
-            height: 200,
-            width: 200,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20,),
-                    Text(
-                      'Game over',
-                      style: GoogleFonts.pressStart2p(
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+            width: MediaQuery.of(context).size.width - 50,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset('assets/images/window.png',),
+                Align(
+                    alignment: const Alignment(0, -0.13),
+                    child: Text('Game Over',style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 22),)),
+                Align(
+                  alignment: const Alignment(0, 0.06),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 70),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                            onTap: (){
+                              _resetController.forward().then((value) {
+                                _resetController.reverse();
+                              });
+                              (widget.game as Breakout).reset();
+                            },
+                            child: AnimatedBuilder(
+                                animation: _resetController,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                    scale: 1.0 - (0.1 * _resetController.value),
+                                    child: Image.asset(
+                                      'assets/images/repeat.png',
+                                      width: 50,
+                                    ),
+                                  );
+                                }
+                            )),
+                        25.horizontalSpace,
+                        GestureDetector(
+                            onTap: () {
+                              _levelController.forward().then((value) {
+                                _levelController.reverse();
+                              });
+                              routerConfig
+                                  .pushReplacement(RoutesPath.levelScreen);
+                            },
+                            child: AnimatedBuilder(
+                                animation: _levelController,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                      scale: 1.0 - (0.1 * _levelController.value),
+                                      child: Image.asset('assets/images/levels.png', width: 50));
+                                }
+                            )),
+                      ],
                     ),
-                    const SizedBox(height: 30,),
-                    GestureDetector(
-                      onTap: (){
-                        (widget.game as Breakout).reset();
-                      },
-                      child: const Icon(
-                        Icons.restart_alt,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

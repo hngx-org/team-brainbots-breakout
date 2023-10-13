@@ -25,11 +25,20 @@ final GoRouter routerConfig = GoRouter(
       ),
     ),
     GoRoute(
-      path: RoutesPath.menuScreen,
-      pageBuilder: (context, state) => CupertinoPage<void>(
-        child: const MenuScreen(),
-        key: state.pageKey,
-      ),
+        path: RoutesPath.menuScreen,
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+              transitionDuration: const Duration(milliseconds: 500),
+              barrierDismissible: false,
+              key: state.pageKey,
+              child: const MenuScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child){
+                return FadeTransition(
+                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  child: child,
+                );
+              });
+        }
     ),
     GoRoute(
       path: RoutesPath.levelScreen,
