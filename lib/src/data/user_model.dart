@@ -12,7 +12,7 @@ class UserModel extends ChangeNotifier{
   void init() async{
     prefs = await SharedPreferences.getInstance();
     highScore = ValueNotifier(prefs.getInt('highScore') ?? 0);
-    // levelsUnlocked = ValueNotifier(prefs.getInt('levelsUnlocked') ?? 1);
+    levelsUnlocked = ValueNotifier(prefs.getInt('levelsUnlocked') ?? 1);
 
     highScore.addListener(() {
       prefs.setInt('highScore', highScore.value);

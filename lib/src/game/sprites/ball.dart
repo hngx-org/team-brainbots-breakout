@@ -92,10 +92,10 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
 
 
   void sideReflection(Vector2 ip, PositionComponent other) {
-    final isTop = ip.y == other.position.y;
-    final isBottom = ip.y == other.position.y + other.size.y;
-    final isLeft = ip.x == other.position.x;
-    final isRight = ip.x == other.position.x + other.size.x;
+    final isTop = (ip.y - other.position.y).abs() < 5;
+    final isBottom = (ip.y - (other.position.y + other.size.y)).abs() < 5;
+    final isLeft = (ip.x - other.position.x).abs() < 5;
+    final isRight = (ip.x - (other.position.x + other.size.x)).abs() < 5;
     if (isTop || isBottom) {
       _reflect(Surface.horiontal);
     } else if (isLeft || isRight) {
