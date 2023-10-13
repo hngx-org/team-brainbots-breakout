@@ -44,7 +44,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     
     if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
     
-    if(ball.position.y + ball.height > size.y*0.92){
+    if(ball.position.y + ball.height >= size.y * 0.98){
       gameOver();
     }
 

@@ -19,6 +19,7 @@ class _GameScreenState extends State<GameScreen> {
   late FlameGame game;
   late GameManager gameManager;
   late LevelManager levelManager;
+  bool isVisible = false;
 
   @override
   void initState(){
@@ -29,11 +30,21 @@ class _GameScreenState extends State<GameScreen> {
       gameManager: gameManager,
       levelManager: levelManager
     );
+    Future.delayed(
+      const Duration(milliseconds: 200),
+      (){
+        setState(() {
+          isVisible = true;
+        });
+      }
+    );
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return AnimatedOpacity(
+      opacity: isVisible? 1: 0,
+      duration: const Duration(milliseconds: 200),
+      child: Center(
         child: GameWidget(
           game: game,
           overlayBuilderMap: <String, Widget Function(BuildContext, FlameGame)>{
