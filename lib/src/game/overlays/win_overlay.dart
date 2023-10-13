@@ -88,7 +88,7 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                 Align(
                   alignment: const Alignment(0, 0.12),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -108,7 +108,7 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                                     scale: 1.0 - (0.1 * _resetController.value),
                                     child: Image.asset(
                                       'assets/images/repeat.png',
-                                      width: 50,
+                                      width: 95,
                                     ),
                                   );
                                 }
@@ -141,7 +141,7 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                                 builder: (context, child) {
                                   return Transform.scale(
                                       scale: 1.0 - (0.1 * _levelController.value),
-                                      child: Image.asset('assets/images/levels.png', width: 50));
+                                      child: Image.asset('assets/images/levels.png', width: 95));
                                 }
                             )),
                       ],
