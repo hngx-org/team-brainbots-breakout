@@ -14,7 +14,8 @@ class PauseMenuOverlay extends StatefulWidget {
   State<PauseMenuOverlay> createState() => _PauseMenuOverlayState();
 }
 
-class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProviderStateMixin{
+class _PauseMenuOverlayState extends State<PauseMenuOverlay>
+    with TickerProviderStateMixin{
   late AnimationController _playController;
   late AnimationController _levelController;
   late AnimationController _resetController;
@@ -70,7 +71,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay> with TickerProvider
                 Align(
                   alignment: const Alignment(0, 0.06),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.end,
