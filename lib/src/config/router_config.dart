@@ -20,21 +20,51 @@ final GoRouter routerConfig = GoRouter(
         key: state.pageKey,
       ),
     ),
+    // GoRoute(
+    //   path: RoutesPath.gameScreen,
+    //   pageBuilder: (context, state){
+    //     if(state.extra != null){
+    //       Map args = state.extra as Map<String, dynamic>;
+    //        return CupertinoPage<void>(
+    //         child: GameScreen(level: args['level'],),
+    //         key: state.pageKey,
+    //       );
+    //       }
+    //     return CupertinoPage<void>(
+    //       child: const GameScreen(),
+    //       key: state.pageKey,
+    //     );
+    //   }
+    // ),
     GoRoute(
-      path: RoutesPath.gameScreen,
-      pageBuilder: (context, state){
-        if(state.extra != null){
-          Map args = state.extra as Map<String, dynamic>;
-           return CupertinoPage<void>(
-            child: GameScreen(level: args['level'], user: user,),
-            key: state.pageKey,
-          );
+        path: RoutesPath.gameScreen,
+        pageBuilder: (context, state) {
+          if(state.extra != null){
+            Map args = state.extra as Map<String, dynamic>;
+            return CustomTransitionPage(
+                transitionDuration: const Duration(milliseconds: 1000),
+                barrierDismissible: false,
+                key: state.pageKey,
+                child: GameScreen(level: args['level'], user: user,),
+                transitionsBuilder: (context, animation, secondaryAnimation, child){
+                  return FadeTransition(
+                    opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                    child: child,
+                  );
+                });
           }
-        return CupertinoPage<void>(
-          child: GameScreen(user: user,),
-          key: state.pageKey,
-        );
-      }
+          return CustomTransitionPage(
+              transitionDuration: const Duration(milliseconds: 500),
+              barrierDismissible: false,
+              key: state.pageKey,
+              child: GameScreen(user: user,),
+              transitionsBuilder: (context, animation, secondaryAnimation, child){
+                return FadeTransition(
+                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  child: child,
+                );
+              });
+        }
     ),
     GoRoute(
         path: RoutesPath.menuScreen,

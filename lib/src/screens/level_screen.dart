@@ -1,5 +1,6 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/background.dart';
+import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _LevelScreenState extends State<LevelScreen>
                 'LEVELS',
                 style: GoogleFonts.pressStart2p(
                     fontSize: 27,
-                    color: Colors.orange,
+                    color: MyColor.appColor,
                     decoration: TextDecoration.none),
               )),
           Positioned(
