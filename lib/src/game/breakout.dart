@@ -66,7 +66,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
   void pause(){
     pauseEngine();
-    overlays.add('winOverlay');
+    overlays.add('pauseMenuOverlay');
   }
 
   void resume(){

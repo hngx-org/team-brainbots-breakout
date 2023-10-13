@@ -62,17 +62,31 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/images/window.png',
+                  'assets/gifs/win_gif.gif',
+                  width: MediaQuery.of(context).size.width,
+                ),
+                Image.asset(
+                  'assets/images/big_window.png',
                 ),
                 Align(
-                    alignment: const Alignment(0, -0.13),
+                    alignment: const Alignment(0, -0.23),
                     child: Text(
                       'Level Complete',
                       style: GoogleFonts.pressStart2p(
-                          color: Colors.white, fontSize: 22),
+                          color: Colors.white, fontSize: 20),
                     )),
                 Align(
-                  alignment: const Alignment(0, 0.06),
+                alignment: const Alignment(0, -0.10),
+                child: Text(
+                  'SCORE:${(widget.game as Breakout).gameManager.score.value}',
+                  style: GoogleFonts.pressStart2p(
+                    color: Colors.white.withOpacity(0.8),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                )),
+                Align(
+                  alignment: const Alignment(0, 0.12),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Row(
