@@ -36,10 +36,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   go_router: ^11.1.3
-  flame: ^1.9.1
+  flame: ^1.10.0
   google_fonts: ^6.1.0
   flutter_screenutil: ^5.9.0
   percent_indicator: ^4.2.3
+  flame_audio: ^2.1.2
 
 dev_dependencies:
   flutter_test:
