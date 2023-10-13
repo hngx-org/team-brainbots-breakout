@@ -1,6 +1,7 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/background.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
+import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,26 +18,33 @@ class _LevelScreenState extends State<LevelScreen>
   late AnimationController _homeController;
   late AnimationController _soundController;
   late AnimationController _playController;
+  late UserModel user;
+
   bool isSoundOn = false;
   bool areButtonsVisible = false;
   bool isSelected = false;
   bool playSelected = false;
-  int? selectedTileIndex;
-  List<bool> levelLockStatus = [
-    false,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true
-  ];
+  int selectedTileIndex = 1;
+  late List<bool> levelLockStatus;
+  // List<bool> levelLockStatus = [
+  //   false,
+  //   true,
+  //   true,
+  //   true,
+  //   true,
+  //   true,
+  //   true,
+  //   true,
+  //   true
+  // ];
 
   @override
   void initState() {
     super.initState();
+    user = UserModel();
+    levelLockStatus = List.generate(
+      9,
+      (index) => index + 1 > user.levelsUnlocked.value);
     _homeController = AnimationController(
       vsync: this,
       duration:
@@ -178,7 +186,9 @@ class _LevelScreenState extends State<LevelScreen>
                     playSelected = !playSelected;
                     _playController.reverse();
                   });
-                  // routerConfig.pushReplacement(RoutesPath.gameScreen);
+                  if(!levelLockStatus[selectedTileIndex - 1]){
+                    routerConfig.push(RoutesPath.gameScreen, extra: {'level': selectedTileIndex});
+                  }
                 },
                 child: AnimatedBuilder(
                     animation: _playController,

@@ -50,7 +50,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       if((size + position + velocity * dt).y >= game.size.y || (position + velocity * dt).y <= 0){
         _reflect(Surface.horiontal);
       }
-      velocity += gravity;
+      // velocity += gravity;
       position += velocity * dt;
       super.update(dt);
     }
