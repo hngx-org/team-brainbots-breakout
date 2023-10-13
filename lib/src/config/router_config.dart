@@ -1,10 +1,13 @@
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
+import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:brainbots_breakout/src/screens/game_screen.dart';
 import 'package:brainbots_breakout/src/screens/level_screen.dart';
 import 'package:brainbots_breakout/src/screens/menu_screen.dart';
 import 'package:brainbots_breakout/src/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
+
+final user = UserModel();
 
 final GoRouter routerConfig = GoRouter(
   initialLocation: RoutesPath.splash,
@@ -23,12 +26,12 @@ final GoRouter routerConfig = GoRouter(
         if(state.extra != null){
           Map args = state.extra as Map<String, dynamic>;
            return CupertinoPage<void>(
-            child: GameScreen(level: args['level'],),
+            child: GameScreen(level: args['level'], user: user,),
             key: state.pageKey,
           );
           }
         return CupertinoPage<void>(
-          child: const GameScreen(),
+          child: GameScreen(user: user,),
           key: state.pageKey,
         );
       }
@@ -52,7 +55,7 @@ final GoRouter routerConfig = GoRouter(
     GoRoute(
       path: RoutesPath.levelScreen,
       pageBuilder: (context, state) => CupertinoPage<void>(
-        child: const LevelScreen(),
+        child: LevelScreen(user: user),
         key: state.pageKey,
       ),
     ),

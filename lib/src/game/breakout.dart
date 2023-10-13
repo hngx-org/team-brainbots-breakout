@@ -7,12 +7,13 @@ import 'package:flame/game.dart';
 class Breakout extends FlameGame with HasCollisionDetection{
   final GameManager gameManager;
   final LevelManager levelManager;
+  final UserModel user;
   Breakout({
     required this.gameManager,
-    required this.levelManager
+    required this.levelManager,
+    required this.user,
   });
 
-  late UserModel user;
   late Ball ball;
   late Paddle paddle;
   late List<Brick> bricks;
@@ -21,7 +22,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   @override
   Future<void> onLoad() async{
     super.onLoad();
-    user = UserModel();
     initializeGameStart();
     overlays.add('gameOverlay');
   }
@@ -81,6 +81,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
     resumeEngine();
     gameManager.reset();
     ball.velocity = levelManager.initialVelocity;
+    ball.velocity.x = 0; //TODO: 
+    ball.velocity.y = ball.velocity.y.abs();
     ball.maxVelocity = levelManager.maxVelocity;
     ball.gravity = levelManager.gravity;
     ball.position = size/2 - ball.size/2;
@@ -97,6 +99,12 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void win(){
     gameManager.state = GameState.win;
     print('you win');
+    if(levelManager.level + 1 <= levelManager.maxLevel){
+      if(user.levelsUnlocked.value < levelManager.level + 1){
+        user.levelsUnlocked.value = levelManager.level + 1;
+        print('new level unlocked');
+      }
+    }
     overlays.add('winOverlay');
   }
 
@@ -109,9 +117,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void nextLevel(){
     if (levelManager.level + 1 < levelManager.maxLevel){
       levelManager.level += 1;
-      if(user.levelsUnlocked.value < levelManager.level){
-        user.levelsUnlocked.value = levelManager.level;
-      }
       reset();
     } else {
       // TODO: show something when user has finished game
@@ -119,7 +124,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void setBall(){
-    Vector2 ballSize = Vector2.all(15);
+    Vector2 ballSize = Vector2.all(20);
     Vector2 ballPosition = size/2 - ballSize/2;
     Vector2 initialVelocity = levelManager.initialVelocity;
     Vector2 maxVelocity = levelManager.maxVelocity;
@@ -152,27 +157,31 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void arrangeBricks(int numBricks){
-    Vector2 brickSize = Vector2(30, 10);
-    var random = Random();
-    double x = 0;
-    double y = 75;
+    int n = 7;
     double xSpace = 2;
     double ySpace = 2;
+    double brickWidth = (size.x - ((n+1) * xSpace)) / n; // ensures [n] bricks in a row every time
+    double brickHeight = brickWidth / 3; // maintains 3 : 1 aspect ratio
+    Vector2 brickSize = Vector2(brickWidth, brickHeight);
+    var random = Random();
+    double xPosition = 2;
+    double yPosition = 75;
+    
     bricks = [];
     for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){  
       bricks.add(
          Brick(
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
-          brickPosition: Vector2(x, y),
+          brickPosition: Vector2(xPosition, yPosition),
           strength: levelManager.brickStrength
         )
       );
-      x += brickSize.x + xSpace;
+      xPosition += brickSize.x + xSpace;
 
-      if(x + brickSize.y > size.x){
-        y += brickSize.y + ySpace;
-        x = 0;
+      if(xPosition + brickSize.y > size.x){
+        yPosition += brickSize.y + ySpace;
+        xPosition = 2;
       }
     }
     addAll(bricks);

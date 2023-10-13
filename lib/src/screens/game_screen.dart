@@ -1,3 +1,4 @@
+import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/overlays/game_over_overlay.dart';
@@ -10,8 +11,11 @@ import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
   final int level;
+  final UserModel user;
+  
   const GameScreen({
     this.level = 1,
+    required this.user,
     super.key});
 
   @override
@@ -31,7 +35,8 @@ class _GameScreenState extends State<GameScreen> {
     levelManager = LevelManager(level: widget.level);
     game = Breakout(
       gameManager: gameManager,
-      levelManager: levelManager
+      levelManager: levelManager,
+      user: widget.user
     );
     Future.delayed(
       const Duration(milliseconds: 200),
