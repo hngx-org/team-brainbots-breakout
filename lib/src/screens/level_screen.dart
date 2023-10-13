@@ -8,7 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LevelScreen extends StatefulWidget {
-  const LevelScreen({super.key});
+  final UserModel user;
+  const LevelScreen({
+    required this.user,
+    super.key});
 
   @override
   State<LevelScreen> createState() => _LevelScreenState();
@@ -19,7 +22,6 @@ class _LevelScreenState extends State<LevelScreen>
   late AnimationController _homeController;
   late AnimationController _soundController;
   late AnimationController _playController;
-  late UserModel user;
 
   bool isSoundOn = false;
   bool areButtonsVisible = false;
@@ -31,10 +33,9 @@ class _LevelScreenState extends State<LevelScreen>
   @override
   void initState() {
     super.initState();
-    user = UserModel();
     levelLockStatus = List.generate(
       9,
-      (index) => index + 1 > user.levelsUnlocked.value);
+      (index) => index + 1 > widget.user.levelsUnlocked.value);
     _homeController = AnimationController(
       vsync: this,
       duration:

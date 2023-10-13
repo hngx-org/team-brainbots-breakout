@@ -53,15 +53,15 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   };
 
   final Map<int, BrickSettings> brickConfig = {
-    1: BrickSettings(strength: 1, numBricks: 30),
-    2: BrickSettings(strength: 2, numBricks: 40),
-    3: BrickSettings(strength: 2, numBricks: 50),
-    4: BrickSettings(strength: 2, numBricks: 60),
-    5: BrickSettings(strength: 2, numBricks: 70),
-    6: BrickSettings(strength: 2, numBricks: 80),
-    7: BrickSettings(strength: 2, numBricks: 90),
-    8: BrickSettings(strength: 2, numBricks: 90),
-    9: BrickSettings(strength: 2, numBricks: 100),
+    1: BrickSettings(strength: 1, numBricks: 14),
+    2: BrickSettings(strength: 2, numBricks: 21),
+    3: BrickSettings(strength: 2, numBricks: 28),
+    4: BrickSettings(strength: 2, numBricks: 28),
+    5: BrickSettings(strength: 2, numBricks: 35),
+    6: BrickSettings(strength: 2, numBricks: 35),
+    7: BrickSettings(strength: 2, numBricks: 42),
+    8: BrickSettings(strength: 2, numBricks: 42),
+    9: BrickSettings(strength: 2, numBricks: 49),
   };
 
   
