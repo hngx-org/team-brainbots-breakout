@@ -77,6 +77,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void reset(){
     overlays.remove('gameOverOverlay');
     overlays.remove('winOverlay');
+    overlays.remove('pauseMenuOverlay');
+    resumeEngine();
     gameManager.reset();
     ball.velocity = levelManager.initialVelocity;
     ball.maxVelocity = levelManager.maxVelocity;
