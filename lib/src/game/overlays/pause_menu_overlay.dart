@@ -1,4 +1,5 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
@@ -62,11 +63,18 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                   'assets/images/window.png',
                 ),
                 Align(
-                    alignment: const Alignment(0, -0.13),
+                    alignment: const Alignment(0, -0.115),
                     child: Text(
                       'Paused',
                       style: GoogleFonts.pressStart2p(
-                          color: Colors.white, fontSize: 22),
+                          color: MyColor.appColor, fontSize: 22),
+                    )),
+                Align(
+                    alignment: const Alignment(0, -0.11),
+                    child: Text(
+                      'Paused',
+                      style: GoogleFonts.pressStart2p(
+                          color: MyColor.secondaryColor, fontSize: 22),
                     )),
                 Align(
                   alignment: const Alignment(0, 0.06),

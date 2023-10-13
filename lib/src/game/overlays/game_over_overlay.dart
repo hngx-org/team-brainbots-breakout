@@ -1,4 +1,5 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
@@ -9,16 +10,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class GameOverOverlay extends StatefulWidget {
   final Game game;
-  const GameOverOverlay({
-    required this.game,
-    super.key});
+  const GameOverOverlay({required this.game, super.key});
 
   @override
   State<GameOverOverlay> createState() => _GameOverOverlayState();
 }
 
-class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderStateMixin{
-
+class _GameOverOverlayState extends State<GameOverOverlay>
+    with TickerProviderStateMixin {
   late AnimationController _levelController;
   late AnimationController _resetController;
 
@@ -27,13 +26,11 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
     super.initState();
     _resetController = AnimationController(
       vsync: this,
-      duration:
-      const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     _levelController = AnimationController(
       vsync: this,
-      duration:
-      const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
   }
 
@@ -43,7 +40,6 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
     _resetController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +52,23 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset('assets/images/window.png',),
+                Image.asset(
+                  'assets/images/window.png',
+                ),
                 Align(
-                    alignment: const Alignment(0, -0.13),
-                    child: Text('Game Over',style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 22),)),
+                    alignment: const Alignment(0, -0.115),
+                    child: Text(
+                      'Game Over',
+                      style: GoogleFonts.pressStart2p(
+                          color: MyColor.appColor, fontSize: 22),
+                    )),
+                Align(
+                    alignment: const Alignment(0, -0.11),
+                    child: Text(
+                      'Game Over',
+                      style: GoogleFonts.pressStart2p(
+                          color: MyColor.secondaryColor, fontSize: 22),
+                    )),
                 Align(
                   alignment: const Alignment(0, 0.06),
                   child: Container(
@@ -69,7 +78,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               _resetController.forward().then((value) {
                                 _resetController.reverse();
                               });
@@ -87,8 +96,7 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                                       ),
                                     ),
                                   );
-                                }
-                            )),
+                                })),
                         25.horizontalSpace,
                         GestureDetector(
                             onTap: () {
@@ -102,10 +110,12 @@ class _GameOverOverlayState extends State<GameOverOverlay> with TickerProviderSt
                                 animation: _levelController,
                                 builder: (context, child) {
                                   return Transform.scale(
-                                      scale: 1.0 - (0.1 * _levelController.value),
-                                      child: Image.asset('assets/images/levels.png', width: 95));
-                                }
-                            )),
+                                      scale:
+                                          1.0 - (0.1 * _levelController.value),
+                                      child: Image.asset(
+                                          'assets/images/levels.png',
+                                          width: 95));
+                                })),
                       ],
                     ),
                   ),

@@ -26,17 +26,6 @@ class _LevelScreenState extends State<LevelScreen>
   bool playSelected = false;
   int selectedTileIndex = 1;
   late List<bool> levelLockStatus;
-  // List<bool> levelLockStatus = [
-  //   false,
-  //   true,
-  //   true,
-  //   true,
-  //   true,
-  //   true,
-  //   true,
-  //   true,
-  //   true
-  // ];
 
   @override
   void initState() {
