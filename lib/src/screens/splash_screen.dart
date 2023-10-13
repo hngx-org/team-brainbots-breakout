@@ -29,16 +29,23 @@ class _SplashScreenState extends State<SplashScreen>
   void startImageSwitchTimer() {
     Timer.periodic(const Duration(seconds: 3), (timer) {
       _preloadAssets();
-      routerConfig.push(RoutesPath.menuScreen);
+      routerConfig.pushReplacement(RoutesPath.menuScreen);
       timer.cancel();
     });
   }
 
   Future<void> _preloadAssets() async {
     await Future.wait([
+      // Flame.images.loadAllImages(),
       precacheImage(const AssetImage('assets/images/Stars Small_2.png'), context),
       precacheImage(const AssetImage('assets/images/menu-Tiles.png'), context),
-      Flame.images.loadAllImages()
+      precacheImage(const AssetImage('assets/images/level_card selected.png'), context),
+      precacheImage(const AssetImage('assets/images/level_card.png'), context),
+      precacheImage(const AssetImage('assets/images/sound_off.png'), context),
+      precacheImage(const AssetImage('assets/images/soundOn.png'), context),
+      precacheImage(const AssetImage('assets/images/unactive_star.png'), context),
+      precacheImage(const AssetImage('assets/images/button tile.png'), context),
+      precacheImage(const AssetImage('assets/images/button tile_selected.png'), context),
     ]);
   }
 

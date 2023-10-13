@@ -1,5 +1,6 @@
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/screens/game_screen.dart';
+import 'package:brainbots_breakout/src/screens/level_screen.dart';
 import 'package:brainbots_breakout/src/screens/menu_screen.dart';
 import 'package:brainbots_breakout/src/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -24,9 +25,25 @@ final GoRouter routerConfig = GoRouter(
       ),
     ),
     GoRoute(
-      path: RoutesPath.menuScreen,
+        path: RoutesPath.menuScreen,
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+              transitionDuration: const Duration(milliseconds: 500),
+              barrierDismissible: false,
+              key: state.pageKey,
+              child: const MenuScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child){
+                return FadeTransition(
+                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  child: child,
+                );
+              });
+        }
+    ),
+    GoRoute(
+      path: RoutesPath.levelScreen,
       pageBuilder: (context, state) => CupertinoPage<void>(
-        child: const MenuScreen(),
+        child: const LevelScreen(),
         key: state.pageKey,
       ),
     ),

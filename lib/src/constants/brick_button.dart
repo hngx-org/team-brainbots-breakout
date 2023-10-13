@@ -6,7 +6,7 @@ class BouncyButton extends StatefulWidget {
   final bool isTapped;
   final void Function() onTap;
 
-  BouncyButton({
+  const BouncyButton({super.key,
     required this.text,
     required this.isTapped,
     required this.onTap,
@@ -24,7 +24,7 @@ class _BouncyButtonState extends State<BouncyButton> with SingleTickerProviderSt
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200), // Adjust the duration as needed.
+      duration: const Duration(milliseconds: 200),
     );
   }
 
