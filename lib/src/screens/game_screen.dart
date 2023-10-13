@@ -9,7 +9,10 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  final int level;
+  const GameScreen({
+    this.level = 1,
+    super.key});
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -25,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState(){
     super.initState();
     gameManager = GameManager();
-    levelManager = LevelManager();
+    levelManager = LevelManager(level: widget.level);
     game = Breakout(
       gameManager: gameManager,
       levelManager: levelManager

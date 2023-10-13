@@ -24,16 +24,15 @@ class _GameOverlayState extends State<GameOverlay> {
         height: 40,
         child: Material(
           color: Colors.transparent,
-          child: Stack(
+          child: Row(
             children: [
-              Positioned(
-                left: 10,
-                child: DisplayScore(game: widget.game,)
-              ),
-              Positioned(
-                right: 10,
-                child: PauseButton(game: widget.game)
-              )
+              const SizedBox(width: 10,),
+              DisplayScore(game: widget.game,),
+              const Expanded(child: SizedBox()),
+              DisplayLevel(game: widget.game),
+              const Expanded(child: SizedBox()),
+              PauseButton(game: widget.game),
+              const SizedBox(width: 10,)
             ],
           ),
         ),
@@ -66,6 +65,35 @@ class _DisplayScoreState extends State<DisplayScore> {
   Widget build(BuildContext context) {
     return Text(
       'SCORE:${(widget.game as Breakout).gameManager.score.value}',
+      style: GoogleFonts.pressStart2p(
+        color: Colors.white.withOpacity(0.8),
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
+  }
+}
+class DisplayLevel extends StatefulWidget {
+  final FlameGame game;
+  const DisplayLevel({
+    required this.game,
+    super.key});
+
+  @override
+  State<DisplayLevel> createState() => _DisplayLevelState();
+}
+
+class _DisplayLevelState extends State<DisplayLevel> {
+  
+  @override
+  void initState(){
+    super.initState();
+    (widget.game as Breakout).levelManager.level;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'LEVEL:${(widget.game as Breakout).levelManager.level}',
       style: GoogleFonts.pressStart2p(
         color: Colors.white.withOpacity(0.8),
         fontWeight: FontWeight.bold,
