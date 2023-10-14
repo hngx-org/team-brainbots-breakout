@@ -295,7 +295,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   //sound on
-                  if(!isSoundOff) GestureDetector(
+                  if(isSoundOff) GestureDetector(
                     onTap: () {
                       _soundController.forward().then((value) async {
                         _soundController.reverse();
@@ -303,6 +303,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           isSoundOff = !isSoundOff;
                           soundVolume = 0.3;
                           musicVolume = 0.3;
+                          userConfig.sfxVolume.value = soundVolume;
+                          userConfig.musicVolume.value = soundVolume;
+                          FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
                         });
                       });
                     },
@@ -327,7 +330,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     ),
                   ),
                   //sound off
-                  if(isSoundOff) GestureDetector(
+                  if(!isSoundOff) GestureDetector(
                     onTap: () {
                       _soundController.forward().then((value) async {
                         _soundController.reverse();
@@ -336,6 +339,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           isSoundOff = !isSoundOff;
                           soundVolume = 0;
                           musicVolume = 0;
+                          userConfig.sfxVolume.value = soundVolume;
+                          userConfig.musicVolume.value = soundVolume;
+                          FlameAudio.bgm.stop();
                         });
                       });
                     },

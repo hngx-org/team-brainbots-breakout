@@ -3,6 +3,7 @@ import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/reusables/background.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -242,7 +243,7 @@ class _LevelScreenState extends State<LevelScreen>
               ),
             ),
           ),
-          //sound
+          //sound on/off
           Positioned(
             bottom: 10.0,
             left: 20.0,
@@ -265,12 +266,14 @@ class _LevelScreenState extends State<LevelScreen>
                       _soundController.reverse();
                       await Future.delayed(const Duration(milliseconds: 700));
                       setState(() {
-                        if (userConfig.musicOn.value != userConfig.sfxOn.value){
+                        if (FlameAudio.bgm.isPlaying ){
                           userConfig.musicOn.value = false;
                           userConfig.sfxOn.value = false;
+                          FlameAudio.bgm.pause();
                         } else {
                           userConfig.musicOn.value = !userConfig.musicOn.value;
                           userConfig.sfxOn.value = !userConfig.sfxOn.value;
+                          FlameAudio.bgm.resume();
                         }
                         
                       });
@@ -281,13 +284,13 @@ class _LevelScreenState extends State<LevelScreen>
                     builder: (context, child) {
                       return Transform.scale(
                         scale: 1.0 - (0.1 * _soundController.value),
-                        child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
+                        child: (FlameAudio.bgm.isPlaying)
                             ? Image.asset(
-                                'assets/images/sound_off.png',
+                                'assets/images/soundOn.png',
                                 width: 60,
                               )
                             : Image.asset(
-                                'assets/images/soundOn.png',
+                                'assets/images/sound_off.png',
                                 width: 60,
                               ),
                       );
