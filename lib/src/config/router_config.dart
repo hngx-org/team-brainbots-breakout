@@ -20,22 +20,6 @@ final GoRouter routerConfig = GoRouter(
         key: state.pageKey,
       ),
     ),
-    // GoRoute(
-    //   path: RoutesPath.gameScreen,
-    //   pageBuilder: (context, state){
-    //     if(state.extra != null){
-    //       Map args = state.extra as Map<String, dynamic>;
-    //        return CupertinoPage<void>(
-    //         child: GameScreen(level: args['level'],),
-    //         key: state.pageKey,
-    //       );
-    //       }
-    //     return CupertinoPage<void>(
-    //       child: const GameScreen(),
-    //       key: state.pageKey,
-    //     );
-    //   }
-    // ),
     GoRoute(
         path: RoutesPath.gameScreen,
         pageBuilder: (context, state) {

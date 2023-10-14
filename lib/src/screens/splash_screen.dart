@@ -42,17 +42,11 @@ class _SplashScreenState extends State<SplashScreen>
       precacheImage(const AssetImage('assets/images/level_card selected.png'), context),
       precacheImage(const AssetImage('assets/images/level_card.png'), context),
       precacheImage(const AssetImage('assets/images/sound_off.png'), context),
-      precacheImage(const AssetImage('assets/gifs/background_gif.gif'), context),
       precacheImage(const AssetImage('assets/images/soundOn.png'), context),
       precacheImage(const AssetImage('assets/images/unactive_star.png'), context),
       precacheImage(const AssetImage('assets/images/button tile.png'), context),
       precacheImage(const AssetImage('assets/images/button tile_selected.png'), context),
     ]);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
