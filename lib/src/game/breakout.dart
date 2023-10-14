@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
+import 'package:brainbots_breakout/src/game/world.dart';
 import 'package:flame/game.dart';
 
 class Breakout extends FlameGame with HasCollisionDetection{
@@ -21,6 +22,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
   Future<void> onLoad() async{
     super.onLoad();
     initializeGameStart();
+    add(Stars());
     overlays.add('gameOverlay');
   }
 
