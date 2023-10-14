@@ -1,12 +1,14 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:flame/components.dart';
-import 'package:flame/parallax.dart';
 
-class World extends ParallaxComponent<Breakout> with HasGameRef<Breakout>{
+class Stars extends SpriteComponent with HasGameRef<Breakout>{
   @override
   Future<void> onLoad() async{
-    parallax = await gameRef.loadParallax([
-      
-    ]);
+    sprite = await gameRef.loadSprite(
+      'Stars Small_2.png'
+    );
+    size = gameRef.size;
+    position = Vector2.zero();
+    priority = 0;
   }
 }

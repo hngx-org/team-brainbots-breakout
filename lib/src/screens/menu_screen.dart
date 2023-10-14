@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,10 +33,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isSettingsScreen = false;
   double soundVolume = 0.5;
   double musicVolume = 0.5;
-
-
   late AnimationController _tickController;
   late AnimationController _crossController;
+  late AnimationController _soundController;
 
 
   @override
@@ -53,7 +53,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
     }
     userConfig.musicOn.addListener(() {
       if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
-        FlameAudio.bgm.stop();
+        FlameAudio.bgm.pause();
       }
       if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
         FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
@@ -68,11 +68,14 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
+    _soundController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
   }
 
   @override
   void dispose(){
-    // FlameAudio.bgm.dispose();
     super.dispose();
   }
 
@@ -197,10 +200,10 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     });
                   },
                   onChanged: (value) {
-                  setState(() {
-                    soundVolume = value;
-                  });
-                },),
+                    setState(() {
+                      soundVolume = value;
+                    });
+                  },),
               ),
               //music
               AnimatedOpacity(
@@ -275,11 +278,11 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
                   },
                   onChanged: (value) {
-                  setState(() {
-                    musicVolume = value;
-                    userConfig.musicVolume.value = value;
-                  });
-                },),
+                    setState(() {
+                      musicVolume = value;
+                      userConfig.musicVolume.value = value;
+                    });
+                  },),
               ),
               80.verticalSpace,
               //buttons
@@ -300,21 +303,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     child: AnimatedBuilder(
                         animation: _crossController,
                         builder: (context, child) {
-                        return Transform.scale(
-                          scale: 1.0 - (0.1 * _crossController.value),
-                          child: Stack(
-                            children: [
-                              Image.asset('assets/images/cross.png', width: 50,
-                                color: MyColor.secondaryColor,),
-                              Positioned(
-                                top: 4,
-                                child: Image.asset('assets/images/cross.png', width: 50,
-                                  color: MyColor.appColor,),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                          return Transform.scale(
+                            scale: 1.0 - (0.1 * _crossController.value),
+                            child: Stack(
+                              children: [
+                                Image.asset('assets/images/cross.png', width: 50,
+                                  color: MyColor.secondaryColor,),
+                                Positioned(
+                                  top: 4,
+                                  child: Image.asset('assets/images/cross.png', width: 50,
+                                    color: MyColor.appColor,),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                     ),
                   ),
                   GestureDetector(
@@ -331,21 +334,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     child: AnimatedBuilder(
                         animation: _tickController,
                         builder: (context, child) {
-                        return Transform.scale(
-                          scale: 1.0 - (0.1 * _tickController.value),
-                          child: Stack(
-                            children: [
-                              Image.asset('assets/images/tick.png', width: 50,
-                                color: MyColor.appColor,),
-                              Positioned(
-                                top: 4,
-                                child: Image.asset('assets/images/tick.png', width: 50,
-                                  color: MyColor.secondaryColor,),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                          return Transform.scale(
+                            scale: 1.0 - (0.1 * _tickController.value),
+                            child: Stack(
+                              children: [
+                                Image.asset('assets/images/tick.png', width: 50,
+                                  color: MyColor.appColor,),
+                                Positioned(
+                                  top: 4,
+                                  child: Image.asset('assets/images/tick.png', width: 50,
+                                    color: MyColor.secondaryColor,),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                     ),
                   ),
                 ],
@@ -404,7 +407,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     setState(() {
                       isPlayTapped = !isPlayTapped;
                     });
-                    routerConfig.pushReplacement(RoutesPath.gameScreen);
+                    routerConfig.pushReplacement(RoutesPath.gameScreen, extra: {'level': userConfig.levelsUnlocked.value});
                   },
                   isTapped: isPlayTapped,
                 ),
