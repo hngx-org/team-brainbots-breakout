@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,11 +29,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isHowTapped = false;
   bool areButtonsVisible = false;
   bool isSettingsScreen = false;
-  double soundVolume = 5;
-  double musicVolume = 5;
 
   late AnimationController _tickController;
-  late AnimationController _crossController;
+  late AnimationController _soundController;
 
 
   @override
@@ -50,7 +49,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
     }
     userConfig.musicOn.addListener(() {
       if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
-        FlameAudio.bgm.stop();
+        FlameAudio.bgm.pause();
       }
       if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
         FlameAudio.bgm.play('music/background.mp3');
@@ -62,7 +61,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    _crossController = AnimationController(
+    _soundController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
@@ -70,7 +69,6 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
 
   @override
   void dispose(){
-    // FlameAudio.bgm.dispose();
     super.dispose();
   }
 
@@ -139,7 +137,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                       alignment: Alignment.topLeft,
                       children: [
                         Text(
-                          'SOUND',
+                          'MUSIC',
                           style: GoogleFonts.pressStart2p(
                             color: Colors.orange.withOpacity(0.8),
                             fontWeight: FontWeight.bold,
@@ -151,7 +149,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           top: 4.0,
                           left: 0.0,
                           child: Text(
-                            'SOUND',
+                            'MUSIC',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.yellowAccent,
                               fontWeight: FontWeight.bold,
@@ -162,34 +160,22 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ),
                       ],
                     ),
-                    ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        MyColor.secondaryColor,
-                        BlendMode.hue,
-                      ),
-                      child: Image.asset('assets/gifs/Cad.gif',
-                        width: 60,),
+                    const SizedBox(width: 100),
+                    CupertinoSwitch(
+                      trackColor: Colors.orange.withOpacity(0.25),
+                      thumbColor: Colors.yellowAccent,
+                      activeColor: Colors.orange.withOpacity(0.8),
+                      value: userConfig.musicOn.value,
+                      onChanged: (flag){
+                        setState(() {
+                          userConfig.musicOn.value = flag;
+                        });
+                      }
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45.0),
-                child: Slider(
-                  value: soundVolume,
-                  label: 'Sound',
-                  autofocus: false,
-                  activeColor: MyColor.secondaryColor,
-                  inactiveColor: MyColor.appColor,
-                  max: 10,
-                  min: 1,
-                  secondaryActiveColor: MyColor.appColor,
-                  onChanged: (value) {
-                  setState(() {
-                    soundVolume = value;
-                  });
-                },),
-              ),
+              20.verticalSpace,
               //music
               AnimatedOpacity(
                 opacity: areButtonsVisible ? 1.0 : 0.0,
@@ -204,7 +190,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         alignment: Alignment.topLeft,
                         children: [
                           Text(
-                            'MUSIC',
+                            'SOUND',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.orange.withOpacity(0.8),
                               fontWeight: FontWeight.bold,
@@ -216,7 +202,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                             top: 4.0,
                             left: 0.0,
                             child: Text(
-                              'MUSIC',
+                              'SOUND',
                               style: GoogleFonts.pressStart2p(
                                 color: Colors.yellowAccent,
                                 fontWeight: FontWeight.bold,
@@ -227,35 +213,23 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           ),
                         ],
                       ),
-                      ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          MyColor.secondaryColor,
-                          BlendMode.hue,
-                        ),
-                        child: Image.asset('assets/gifs/Cad.gif',
-                          width: 60,),
+                      const SizedBox(width: 100,),
+                      CupertinoSwitch(
+                        trackColor: Colors.orange.withOpacity(0.25),
+                        thumbColor: Colors.yellowAccent,
+                        activeColor: Colors.orange.withOpacity(0.8),
+                        value: userConfig.sfxOn.value,
+                        onChanged: (flag){
+                          setState(() {
+                            userConfig.sfxOn.value = flag;
+                          });
+                        }
                       ),
                     ],
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45.0),
-                child: Slider(
-                  value: musicVolume,
-                  label: 'Music',
-                  autofocus: false,
-                  activeColor: MyColor.secondaryColor,
-                  inactiveColor: MyColor.appColor,
-                  max: 10,
-                  min: 1,
-                  secondaryActiveColor: MyColor.appColor,
-                  onChanged: (value) {
-                  setState(() {
-                    musicVolume = value;
-                  });
-                },),
-              ),
+            
               80.verticalSpace,
               //buttons
               Row(
@@ -263,35 +237,40 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                 children: [
                   GestureDetector(
                     onTap: () {
-                      _crossController.forward().then((value) async {
-                        _crossController.reverse();
+                      _soundController.forward().then((value) async {
+                        _soundController.reverse();
                         await Future.delayed(const Duration(milliseconds: 700));
                         setState(() {
-                          isSettingsScreen = !isSettingsScreen;
-                          isSettingsTapped = !isSettingsTapped;
+                          if (userConfig.musicOn.value != userConfig.sfxOn.value){
+                            userConfig.musicOn.value = false;
+                            userConfig.sfxOn.value = false;
+                          } else {
+                            userConfig.musicOn.value = !userConfig.musicOn.value;
+                            userConfig.sfxOn.value = !userConfig.sfxOn.value;
+                          }
+                          
                         });
                       });
                     },
                     child: AnimatedBuilder(
-                        animation: _crossController,
-                        builder: (context, child) {
+                      animation: _soundController,
+                      builder: (context, child) {
                         return Transform.scale(
-                          scale: 1.0 - (0.1 * _crossController.value),
-                          child: Stack(
-                            children: [
-                              Image.asset('assets/images/cross.png', width: 50,
-                                color: MyColor.secondaryColor,),
-                              Positioned(
-                                top: 4,
-                                child: Image.asset('assets/images/cross.png', width: 50,
-                                  color: MyColor.appColor,),
-                              ),
-                            ],
-                          ),
+                          scale: 1.0 - (0.1 * _soundController.value),
+                          child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
+                              ? Image.asset(
+                                  'assets/images/sound_off.png',
+                                  width: 60,
+                                )
+                              : Image.asset(
+                                  'assets/images/soundOn.png',
+                                  width: 60,
+                                ),
                         );
-                      }
+                      },
                     ),
                   ),
+                  const SizedBox(width: 45),
                   GestureDetector(
                     onTap: () {
                       _tickController.forward().then((value) async {
