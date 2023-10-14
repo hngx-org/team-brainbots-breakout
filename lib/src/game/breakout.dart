@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:brainbots_breakout/src/data/user_model.dart';
+import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/game.dart';
@@ -7,11 +7,9 @@ import 'package:flame/game.dart';
 class Breakout extends FlameGame with HasCollisionDetection{
   final GameManager gameManager;
   final LevelManager levelManager;
-  final UserModel user;
   Breakout({
     required this.gameManager,
     required this.levelManager,
-    required this.user,
   });
 
   late Ball ball;
@@ -98,11 +96,9 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   void win(){
     gameManager.state = GameState.win;
-    print('you win');
     if(levelManager.level + 1 <= levelManager.maxLevel){
-      if(user.levelsUnlocked.value < levelManager.level + 1){
-        user.levelsUnlocked.value = levelManager.level + 1;
-        print('new level unlocked');
+      if(userConfig.levelsUnlocked.value < levelManager.level + 1){
+        userConfig.levelsUnlocked.value = levelManager.level + 1;
       }
     }
     overlays.add('winOverlay');
@@ -110,7 +106,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   void gameOver(){
     gameManager.state = GameState.gameOver;
-    print('game over');
     overlays.add('gameOverOverlay');
   }
 

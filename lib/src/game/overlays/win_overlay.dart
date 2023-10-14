@@ -1,7 +1,6 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
-import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/overlays/overlay_scrim.dart';
 import 'package:flame/game.dart';

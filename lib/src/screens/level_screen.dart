@@ -2,15 +2,13 @@ import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/constants/background.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
-import 'package:brainbots_breakout/src/data/user_model.dart';
+import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LevelScreen extends StatefulWidget {
-  final UserModel user;
   const LevelScreen({
-    required this.user,
     super.key});
 
   @override
@@ -35,7 +33,7 @@ class _LevelScreenState extends State<LevelScreen>
     super.initState();
     levelLockStatus = List.generate(
       9,
-      (index) => index + 1 > widget.user.levelsUnlocked.value);
+      (index) => index + 1 > userConfig.levelsUnlocked.value);
     _homeController = AnimationController(
       vsync: this,
       duration:
