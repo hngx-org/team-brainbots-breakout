@@ -10,10 +10,14 @@ class CustomBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: mediaQuery.width,
-      height: mediaQuery.height,
-      child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
+    return Stack(
+      children: [
+        SizedBox(
+          width: mediaQuery.width,
+          height: mediaQuery.height,
+          child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
+        ),
+      ],
     );
   }
 }
