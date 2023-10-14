@@ -39,13 +39,13 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite('ball.png');
+    sprite = await gameRef.loadSprite('ball.png'); // adds the ball to the game using the game reference
 
     size = ballSize;
     position = ballPosition;
 
-    hitbox = CircleHitbox();
-    add(hitbox);
+    hitbox = CircleHitbox(); 
+    add(hitbox); // adds a circle hitbox for collision callbacks
     _brickCollisionSound = await FlameAudio.createPool(
       'sfx/brick_collision.mp3',
       maxPlayers: 1,
@@ -63,10 +63,10 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   @override
   void update(dt){
     if(canMove){
-      if((size + position + velocity * _dt).x >= game.size.x || (position + velocity * _dt).x <= 0){
+      if((size + position + velocity * _dt).x >= game.size.x || (position + velocity * _dt).x <= 0){ // checks for collision with vertical walls
         _reflect(Surface.vertical);
       }
-      if((size + position + velocity * _dt).y >= game.size.y || (position + velocity * _dt).y <= 0){
+      if((size + position + velocity * _dt).y >= game.size.y || (position + velocity * _dt).y <= 0){ // checks for collision with horizontal walls
         _reflect(Surface.horiontal);
       }
       // velocity += gravity;
@@ -77,12 +77,12 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
 
   @override
   void onCollision(Set<Vector2>intersectionPoints, PositionComponent other){
-    if(!_hasCollided){
+    if(!_hasCollided){ // ensures the onCollision callback isnt called again till onCollisionEnds
       _hasCollided = true;
       if(other is Paddle){
         _rebound(intersectionPoints, other);
           _paddleCollisionSound.start(volume: userConfig.sfxVolume.value);
-        if ((velocity.x + other.paddleBoost).isNegative){
+        if ((velocity.x + other.paddleBoost).isNegative){ // adds momentum from paddle and ensures it doesnt make the ball exceed its max velocity
           velocity.x = max(-maxVelocity.x, (velocity.x + other.paddleBoost));
         } else {
           velocity.x = min(maxVelocity.x, (velocity.x + other.paddleBoost));
@@ -110,7 +110,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     }
   }
 
-
+  // for reflection on vertical or horizontal sides
   void sideReflection(Vector2 ip, PositionComponent other) {
     final isTop = (ip.y - other.position.y).abs() < 5;
     final isBottom = (ip.y - (other.position.y + other.size.y)).abs() < 5;
@@ -123,6 +123,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     }
   }
 
+  // for reflection on corners
   void cornerReflection(PositionComponent other, Vector2 avg) {
     _reflect(Surface.vertical);
     _reflect(Surface.horiontal);
@@ -136,6 +137,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     super.onCollisionEnd(other);
   }
 
+  // reflects the direction of the ball based on the collision surface
   void _reflect(Surface surface){
     if(surface == Surface.vertical){
       velocity.x *= -1;
