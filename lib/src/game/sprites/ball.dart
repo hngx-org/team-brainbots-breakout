@@ -49,7 +49,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     add(hitbox);
     _brickCollisionSound = await FlameAudio.createPool(
       'sfx/brick_collision.mp3',
-      maxPlayers: 1
+      maxPlayers: 1,
     );
     _paddleCollisionSound = await FlameAudio.createPool(
       'sfx/paddle_collision.mp3',
@@ -86,7 +86,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       if(other is Paddle){
         _rebound(intersectionPoints, other);
         if(!muted){
-          _paddleCollisionSound.start(volume: 0.5);
+          _paddleCollisionSound.start(volume: userConfig.sfxVolume.value);
         }
         if ((velocity.x + other.paddleBoost).isNegative){
           velocity.x = max(-maxVelocity.x, (velocity.x + other.paddleBoost));
@@ -97,7 +97,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       } else if (other is Brick){
         _rebound(intersectionPoints, other);
         if(!muted){
-          _brickCollisionSound.start(volume: 0.5);
+          _brickCollisionSound.start(volume: userConfig.sfxVolume.value);
         }
       }
     }

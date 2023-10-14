@@ -31,8 +31,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isHowTapped = false;
   bool areButtonsVisible = false;
   bool isSettingsScreen = false;
+  bool isSoundOff = false;
   double soundVolume = 0.5;
-  double musicVolume = 0.5;
+  double musicVolume = 0;
   late AnimationController _tickController;
   late AnimationController _crossController;
   late AnimationController _soundController;
@@ -41,6 +42,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
+    musicVolume = userConfig.musicVolume.value;
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         areButtonsVisible = true;
@@ -168,7 +170,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                       ],
                     ),
                     if(isSlidingSound) ColorFiltered(
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: const ColorFilter.mode(
                         MyColor.secondaryColor,
                         BlendMode.hue,
                       ),
@@ -178,6 +180,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   ],
                 ),
               ),
+              // sound slider
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 45.0),
                 child: Slider(
@@ -187,17 +190,18 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   activeColor: MyColor.secondaryColor,
                   inactiveColor: MyColor.appColor,
                   max: 1,
-                  min: 0.1,
+                  min: 0,
                   secondaryActiveColor: MyColor.appColor,
-                  onChangeStart: (value) {
+                  onChangeStart: (value){
                     setState(() {
                       isSlidingSound = true;
                     });
                   },
-                  onChangeEnd: (value) {
+                  onChangeEnd: (value){
                     setState(() {
                       isSlidingSound = false;
                     });
+                     userConfig.sfxVolume.value = value;
                   },
                   onChanged: (value) {
                     setState(() {
@@ -243,7 +247,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ],
                       ),
                       if(isSlidingMusic) ColorFiltered(
-                        colorFilter: ColorFilter.mode(
+                        colorFilter: const ColorFilter.mode(
                           MyColor.secondaryColor,
                           BlendMode.hue,
                         ),
@@ -254,6 +258,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   ),
                 ),
               ),
+              //music slider
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 45.0),
                 child: Slider(
@@ -263,7 +268,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   activeColor: MyColor.secondaryColor,
                   inactiveColor: MyColor.appColor,
                   max: 1,
-                  min: 0.1,
+                  min: 0,
                   secondaryActiveColor: MyColor.appColor,
                   onChangeStart: (value){
                     setState(() {
@@ -289,30 +294,31 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
+                  //sound on
+                  if(!isSoundOff) GestureDetector(
                     onTap: () {
-                      _crossController.forward().then((value) async {
-                        _crossController.reverse();
-                        await Future.delayed(const Duration(milliseconds: 700));
+                      _soundController.forward().then((value) async {
+                        _soundController.reverse();
                         setState(() {
-                          isSettingsScreen = !isSettingsScreen;
-                          isSettingsTapped = !isSettingsTapped;
+                          isSoundOff = !isSoundOff;
+                          soundVolume = 0.3;
+                          musicVolume = 0.3;
                         });
                       });
                     },
                     child: AnimatedBuilder(
-                        animation: _crossController,
+                        animation: _soundController,
                         builder: (context, child) {
                           return Transform.scale(
-                            scale: 1.0 - (0.1 * _crossController.value),
+                            scale: 1.0 - (0.1 * _soundController.value),
                             child: Stack(
                               children: [
-                                Image.asset('assets/images/cross.png', width: 50,
+                                Image.asset('assets/images/soundOn.png', width: 50,
                                   color: MyColor.secondaryColor,),
                                 Positioned(
                                   top: 4,
-                                  child: Image.asset('assets/images/cross.png', width: 50,
-                                    color: MyColor.appColor,),
+                                  child: Image.asset('assets/images/soundOn.png', width: 50,
+                                    ),
                                 ),
                               ],
                             ),
@@ -320,6 +326,40 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         }
                     ),
                   ),
+                  //sound off
+                  if(isSoundOff) GestureDetector(
+                    onTap: () {
+                      _soundController.forward().then((value) async {
+                        _soundController.reverse();
+                        await Future.delayed(const Duration(microseconds: 800));
+                        setState(() {
+                          isSoundOff = !isSoundOff;
+                          soundVolume = 0;
+                          musicVolume = 0;
+                        });
+                      });
+                    },
+                    child: AnimatedBuilder(
+                        animation: _soundController,
+                        builder: (context, child) {
+                          return Transform.scale(
+                            scale: 1.0 - (0.1 * _soundController.value),
+                            child: Stack(
+                              children: [
+                                Image.asset('assets/images/sound_off.png', width: 50,
+                                  color: MyColor.secondaryColor,),
+                                Positioned(
+                                  top: 4,
+                                  child: Image.asset('assets/images/sound_off.png', width: 50,
+                                    ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                    ),
+                  ),
+                  //tick
                   GestureDetector(
                     onTap: () {
                       _tickController.forward().then((value) async {
