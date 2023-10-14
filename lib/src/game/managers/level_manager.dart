@@ -29,27 +29,27 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   LevelManager({this.level = 1});
 
   final Map<int, BallSettings> ballConfig =  {
-    1: BallSettings(initialVelocity: Vector2(0, 500), maxVelocity: Vector2(250, 500), gravity: Vector2(0, 2)),
-    2: BallSettings(initialVelocity: Vector2(0, 600), maxVelocity: Vector2(350, 600), gravity: Vector2(0, 3)),
-    3: BallSettings(initialVelocity: Vector2(0, 700), maxVelocity: Vector2(350, 700), gravity: Vector2(0, 4)),
-    4: BallSettings(initialVelocity: Vector2(0, 800), maxVelocity: Vector2(400, 800), gravity: Vector2(0, 5)),
-    5: BallSettings(initialVelocity: Vector2(0, 900), maxVelocity: Vector2(450, 900), gravity: Vector2(0, 6)),
-    6: BallSettings(initialVelocity: Vector2(0, 1000), maxVelocity: Vector2(500, 1000), gravity: Vector2(0, 7)),
-    7: BallSettings(initialVelocity: Vector2(0, 1100), maxVelocity: Vector2(550, 1100), gravity: Vector2(0, 8)),
-    8: BallSettings(initialVelocity: Vector2(0, 1150), maxVelocity: Vector2(575, 1150), gravity: Vector2(0, 9)),
-    9: BallSettings(initialVelocity: Vector2(0, 1200), maxVelocity: Vector2(600, 1200), gravity: Vector2(0, 10)),
+    1: BallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 50), gravity: Vector2(0, 0.2)),
+    2: BallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 55), gravity: Vector2(0, 0.3)),
+    3: BallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 60), gravity: Vector2(0, 0.4)),
+    4: BallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 65), gravity: Vector2(0, 0.5)),
+    5: BallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 70), gravity: Vector2(0, 0.6)),
+    6: BallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 75), gravity: Vector2(0, 0.7)),
+    7: BallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 80), gravity: Vector2(0, 0.8)),
+    8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
+    9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
   };
 
   final Map<int, PaddleSettings> paddleConfig = {
-    1: PaddleSettings(speedMultiplier: 40),
-    2: PaddleSettings(speedMultiplier: 45),
-    3: PaddleSettings(speedMultiplier: 50),
-    4: PaddleSettings(speedMultiplier: 55),
-    5: PaddleSettings(speedMultiplier: 60),
-    6: PaddleSettings(speedMultiplier: 65),
-    7: PaddleSettings(speedMultiplier: 70),
-    8: PaddleSettings(speedMultiplier: 75),
-    9: PaddleSettings(speedMultiplier: 80),
+    1: PaddleSettings(speedMultiplier: 4.0),
+    2: PaddleSettings(speedMultiplier: 4.5),
+    3: PaddleSettings(speedMultiplier: 5.0),
+    4: PaddleSettings(speedMultiplier: 5.5),
+    5: PaddleSettings(speedMultiplier: 6.0),
+    6: PaddleSettings(speedMultiplier: 6.5),
+    7: PaddleSettings(speedMultiplier: 7.0),
+    8: PaddleSettings(speedMultiplier: 7.5),
+    9: PaddleSettings(speedMultiplier: 8.0),
   };
 
   final Map<int, BrickSettings> brickConfig = {

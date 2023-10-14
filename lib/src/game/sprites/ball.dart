@@ -26,10 +26,12 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   late ShapeHitbox hitbox;
   late AudioPool _brickCollisionSound;
   late AudioPool _paddleCollisionSound;
+  late double _dt;
 
   bool canMove = false;
   bool muted = !userConfig.sfxOn.value;
   bool _hasCollided = false;
+  
 
   bool get isMoving{
     return canMove ? velocity == Vector2.zero(): false;
@@ -56,19 +58,23 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
     userConfig.sfxOn.addListener(() {
       muted = !userConfig.sfxOn.value;
     });
+    // Using this custom value of _dt ensures that v * dt will never be greater than half 
+    // the height of the smallest object in the game (Brick) when the ball is moving at max speed(100).
+    // This ensures that onCollision will always be called even when frame rate is very low
+    _dt = (game.size.y/(8*3) / 2) / 100;
   }
 
   @override
   void update(dt){
     if(canMove){
-      if((size + position + velocity * dt).x >= game.size.x || (position + velocity * dt).x <= 0){
+      if((size + position + velocity * _dt).x >= game.size.x || (position + velocity * _dt).x <= 0){
         _reflect(Surface.vertical);
       }
-      if((size + position + velocity * dt).y >= game.size.y || (position + velocity * dt).y <= 0){
+      if((size + position + velocity * _dt).y >= game.size.y || (position + velocity * _dt).y <= 0){
         _reflect(Surface.horiontal);
       }
       // velocity += gravity;
-      position += velocity * dt;
+      position += velocity * _dt;
       super.update(dt);
     }
   }
