@@ -20,18 +20,18 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite('paddle.png');
+    sprite = await gameRef.loadSprite('paddle.png'); // adds the paddle sprite to the game
     size = paddleSize;
     position = paddlePosition;
     paddleBoost = 0;
     hitbox = RectangleHitbox();
-    add(hitbox);
+    add(hitbox); // adds a hitbox that would enable collision callbacks
   }
 
   @override
   void onDragUpdate(DragUpdateEvent event){
     super.onDragUpdate(event);
-    if(canMove){
+    if(canMove){ // adds a paddle boost while the user is dragging the paddle to give the ball momentum
       if(!(position.x + event.delta.x < 0) && !(position.x + width + event.delta.x > game.size.x)){
           position.x += event.delta.x;
         }
@@ -47,6 +47,6 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   @override
   void onDragEnd(DragEndEvent event){
     super.onDragEnd(event);
-    paddleBoost = 0;
+    paddleBoost = 0; // reset the paddle boost to 0 when dragging is done
   }
 }
