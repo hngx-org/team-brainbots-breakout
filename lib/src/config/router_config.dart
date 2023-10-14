@@ -1,5 +1,4 @@
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
-import 'package:brainbots_breakout/src/data/user_model.dart';
 import 'package:brainbots_breakout/src/screens/game_screen.dart';
 import 'package:brainbots_breakout/src/screens/level_screen.dart';
 import 'package:brainbots_breakout/src/screens/menu_screen.dart';
@@ -7,7 +6,6 @@ import 'package:brainbots_breakout/src/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
 
-final user = UserModel();
 
 final GoRouter routerConfig = GoRouter(
   initialLocation: RoutesPath.splash,
@@ -29,7 +27,7 @@ final GoRouter routerConfig = GoRouter(
                 transitionDuration: const Duration(milliseconds: 1000),
                 barrierDismissible: false,
                 key: state.pageKey,
-                child: GameScreen(level: args['level'], user: user,),
+                child: GameScreen(level: args['level']),
                 transitionsBuilder: (context, animation, secondaryAnimation, child){
                   return FadeTransition(
                     opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
@@ -41,7 +39,7 @@ final GoRouter routerConfig = GoRouter(
               transitionDuration: const Duration(milliseconds: 500),
               barrierDismissible: false,
               key: state.pageKey,
-              child: GameScreen(user: user,),
+              child: const GameScreen(),
               transitionsBuilder: (context, animation, secondaryAnimation, child){
                 return FadeTransition(
                   opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
@@ -69,7 +67,7 @@ final GoRouter routerConfig = GoRouter(
     GoRoute(
       path: RoutesPath.levelScreen,
       pageBuilder: (context, state) => CupertinoPage<void>(
-        child: LevelScreen(user: user),
+        child: const LevelScreen(),
         key: state.pageKey,
       ),
     ),

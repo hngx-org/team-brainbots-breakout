@@ -7,6 +7,8 @@ import 'package:brainbots_breakout/src/constants/brick_button.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
+import 'package:brainbots_breakout/src/config/user_config.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,6 +44,20 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
       });
     });
 
+    FlameAudio.bgm.initialize();
+    if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
+      FlameAudio.bgm.play('music/background.mp3');
+    }
+    userConfig.musicOn.addListener(() {
+      if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
+        FlameAudio.bgm.stop();
+      }
+      if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
+        FlameAudio.bgm.play('music/background.mp3');
+      }
+    });
+
+
     _tickController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -50,6 +66,12 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
+  }
+
+  @override
+  void dispose(){
+    // FlameAudio.bgm.dispose();
+    super.dispose();
   }
 
   @override
