@@ -30,13 +30,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
   Future<void> update(dt) async{
     super.update(dt);
 
-    if(needBricks){
+    if(needBricks){ // if no bricks are left, arrange new bricks
       arrangeBricks(levelManager.numBricks);
       needBricks = false;
     }
     paddle.canMove = true;
 
-    if(!gameManager.isPlaying){
+    if(!gameManager.isPlaying){ // freezes the ball and paddle if the game is not in a playing state
       ball.canMove = false;
       paddle.canMove = false;
     }
@@ -45,14 +45,15 @@ class Breakout extends FlameGame with HasCollisionDetection{
       paddle.canMove = true;
     }
     
+    //returns from update() if the game is not in a playing state
     if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
     
-    if(ball.position.y + ball.height >= size.y * 0.98){
+    if(ball.position.y + ball.height >= size.y * 0.98){ // checks if the ball has gone below the paddle
       gameOver();
     }
 
-    bricks = bricks.where((element) => !element.isRemoved).toList();
-    gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength;
+    bricks = bricks.where((element) => !element.isRemoved).toList(); // updates the bricks list to contain only bricks that havent been broken
+    gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength; // calculates score based on number of bricks broken
     if(bricks.isEmpty){
       win();
     }
@@ -74,12 +75,12 @@ class Breakout extends FlameGame with HasCollisionDetection{
     overlays.remove('pauseMenuOverlay');
   }
 
-  void reset(){
+  void reset(){ // resets the game config
     overlays.remove('gameOverOverlay');
     overlays.remove('winOverlay');
     overlays.remove('pauseMenuOverlay');
     resumeEngine();
-    gameManager.reset();
+    gameManager.reset(); // resets the score
     ball.velocity = levelManager.initialVelocity;
     ball.velocity.x = 0; //TODO: 
     ball.velocity.y = ball.velocity.y.abs();
@@ -98,7 +99,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   void win(){
     gameManager.state = GameState.win;
-    if(levelManager.level + 1 <= levelManager.maxLevel){
+    if(levelManager.level + 1 <= levelManager.maxLevel){ // unlocks a new level if there are more available levels
       if(userConfig.levelsUnlocked.value < levelManager.level + 1){
         userConfig.levelsUnlocked.value = levelManager.level + 1;
       }
@@ -112,15 +113,15 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void nextLevel(){
-    if (levelManager.level + 1 < levelManager.maxLevel){
+    if (levelManager.level + 1 < levelManager.maxLevel){ // goes to the next level if there is a next level
       levelManager.level += 1;
       reset();
     } else {
-      // TODO: show something when user has finished game
+      // TODO: show something when user has finished all the levels
     }
   }
 
-  void setBall(){
+  void setBall(){ // sets the size, position and velocity of the ball at the start of the game
     Vector2 ballSize = Vector2.all(20);
     Vector2 ballPosition = size/2 - ballSize/2;
     Vector2 initialVelocity = levelManager.initialVelocity;
@@ -137,7 +138,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     add(ball);
   }
 
-  void setPaddle(){
+  void setPaddle(){ // sets the size and position of the paddle
     Vector2 paddleSize = Vector2(100, 25);
     Vector2 paddlePosition = Vector2(
       size.x/2 - paddleSize.x/2,
@@ -153,7 +154,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     add(paddle);
   }
 
-  void arrangeBricks(int numBricks){
+  void arrangeBricks(int numBricks){ // lays out the bricks on the screen
     int n = 7;
     double xSpace = 2;
     double ySpace = 2;
@@ -184,7 +185,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     addAll(bricks);
   }
   
-  void initializeGameStart(){
+  void initializeGameStart(){ // called only at the start of the game in onLoad();
     setBall();
     setPaddle();
     reset();

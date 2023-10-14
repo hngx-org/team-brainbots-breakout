@@ -9,6 +9,9 @@ class Stars extends SpriteComponent with HasGameRef<Breakout>{
     );
     size = gameRef.size;
     position = Vector2.zero();
-    priority = 0;
+    // setting priority to zero ensures that this sprite is rendered behind the others
+    // the priority of the others have been set to 1
+    priority = 0; 
+
   }
 }
