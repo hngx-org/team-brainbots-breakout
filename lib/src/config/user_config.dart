@@ -5,6 +5,8 @@ class UserConfig extends ChangeNotifier{
   late ValueNotifier<int> highScore;
   late ValueNotifier<int> levelsUnlocked;
   late ValueNotifier<bool> musicOn;
+  late ValueNotifier<double> musicVolume;
+  late ValueNotifier<double> sfxVolume;
   late ValueNotifier<bool> sfxOn;
   late SharedPreferences prefs;
 
@@ -15,6 +17,8 @@ class UserConfig extends ChangeNotifier{
     levelsUnlocked = ValueNotifier(prefs.getInt('levelsUnlocked') ?? 1);
 
     musicOn = ValueNotifier(prefs.getBool('musicOn') ?? true);
+    musicVolume = ValueNotifier(prefs.getDouble('musicVolume') ?? 0.5);
+    sfxVolume = ValueNotifier(prefs.getDouble('sfxVolume') ?? 0.5);
     sfxOn = ValueNotifier(prefs.getBool('sfxOn') ?? true);
 
 
@@ -27,6 +31,12 @@ class UserConfig extends ChangeNotifier{
 
     musicOn.addListener(() {
       prefs.setBool('musicOn', musicOn.value);
+    });
+    musicVolume.addListener(() {
+      prefs.setDouble('musicVolume', musicVolume.value);
+    });
+    sfxVolume.addListener(() {
+      prefs.setDouble('sfxVolume', sfxVolume.value);
     });
     sfxOn.addListener(() {
       prefs.setBool('sfxOn', sfxOn.value);

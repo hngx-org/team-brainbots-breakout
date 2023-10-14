@@ -2,8 +2,8 @@
 import 'dart:async';
 
 import 'package:brainbots_breakout/src/config/router_config.dart';
-import 'package:brainbots_breakout/src/constants/background.dart';
-import 'package:brainbots_breakout/src/constants/brick_button.dart';
+import 'package:brainbots_breakout/src/reusables/background.dart';
+import 'package:brainbots_breakout/src/reusables/brick_button.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
@@ -25,11 +25,14 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isPlayTapped = false;
   bool isLevelTapped = false;
   bool isSettingsTapped = false;
+  bool isSlidingMusic = false;
+  bool isSlidingSound = false;
   bool isHowTapped = false;
   bool areButtonsVisible = false;
   bool isSettingsScreen = false;
-  double soundVolume = 5;
-  double musicVolume = 5;
+  double soundVolume = 0.5;
+  double musicVolume = 0.5;
+
 
   late AnimationController _tickController;
   late AnimationController _crossController;
@@ -46,17 +49,16 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
 
     FlameAudio.bgm.initialize();
     if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
-      FlameAudio.bgm.play('music/background.mp3');
+      FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
     }
     userConfig.musicOn.addListener(() {
       if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
         FlameAudio.bgm.stop();
       }
       if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
-        FlameAudio.bgm.play('music/background.mp3');
+        FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
       }
     });
-
 
     _tickController = AnimationController(
       vsync: this,
@@ -162,13 +164,13 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ),
                       ],
                     ),
-                    ColorFiltered(
+                    if(isSlidingSound) ColorFiltered(
                       colorFilter: ColorFilter.mode(
                         MyColor.secondaryColor,
                         BlendMode.hue,
                       ),
-                      child: Image.asset('assets/gifs/Cad.gif',
-                        width: 60,),
+                      child: Image.asset('assets/gifs/sound_waves.gif',
+                        width: 30,),
                     ),
                   ],
                 ),
@@ -181,9 +183,19 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   autofocus: false,
                   activeColor: MyColor.secondaryColor,
                   inactiveColor: MyColor.appColor,
-                  max: 10,
-                  min: 1,
+                  max: 1,
+                  min: 0.1,
                   secondaryActiveColor: MyColor.appColor,
+                  onChangeStart: (value) {
+                    setState(() {
+                      isSlidingSound = true;
+                    });
+                  },
+                  onChangeEnd: (value) {
+                    setState(() {
+                      isSlidingSound = false;
+                    });
+                  },
                   onChanged: (value) {
                   setState(() {
                     soundVolume = value;
@@ -227,13 +239,13 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           ),
                         ],
                       ),
-                      ColorFiltered(
+                      if(isSlidingMusic) ColorFiltered(
                         colorFilter: ColorFilter.mode(
                           MyColor.secondaryColor,
                           BlendMode.hue,
                         ),
-                        child: Image.asset('assets/gifs/Cad.gif',
-                          width: 60,),
+                        child: Image.asset('assets/gifs/sound_waves.gif',
+                          width: 30,),
                       ),
                     ],
                   ),
@@ -247,12 +259,25 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                   autofocus: false,
                   activeColor: MyColor.secondaryColor,
                   inactiveColor: MyColor.appColor,
-                  max: 10,
-                  min: 1,
+                  max: 1,
+                  min: 0.1,
                   secondaryActiveColor: MyColor.appColor,
+                  onChangeStart: (value){
+                    setState(() {
+                      isSlidingMusic = true;
+                    });
+                  },
+                  onChangeEnd: (value){
+                    setState(() {
+                      isSlidingMusic = false;
+                    });
+                    FlameAudio.bgm.stop();
+                    FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
+                  },
                   onChanged: (value) {
                   setState(() {
                     musicVolume = value;
+                    userConfig.musicVolume.value = value;
                   });
                 },),
               ),

@@ -1,8 +1,8 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
-import 'package:brainbots_breakout/src/constants/background.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
+import 'package:brainbots_breakout/src/reusables/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
