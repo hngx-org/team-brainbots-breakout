@@ -16,10 +16,10 @@ class UserConfig extends ChangeNotifier{
     highScore = ValueNotifier(prefs.getInt('highScore') ?? 0);
     levelsUnlocked = ValueNotifier(prefs.getInt('levelsUnlocked') ?? 1);
 
-    musicOn = ValueNotifier(prefs.getBool('musicOn') ?? true);
+    musicOn = ValueNotifier(prefs.getBool('musicOn')!);
     musicVolume = ValueNotifier(prefs.getDouble('musicVolume') ?? 0.5);
     sfxVolume = ValueNotifier(prefs.getDouble('sfxVolume') ?? 0.5);
-    sfxOn = ValueNotifier(prefs.getBool('sfxOn') ?? true);
+    sfxOn = ValueNotifier(prefs.getBool('sfxOn')!);
 
 
     highScore.addListener(() {
