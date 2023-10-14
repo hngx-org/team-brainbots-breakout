@@ -12,9 +12,9 @@ class OverlayScrim extends StatelessWidget {
     return Stack(
       children: [
         Opacity(
-          opacity: 0.32,
+          opacity: 0.5,
           child: Container(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         Center(child: child)
