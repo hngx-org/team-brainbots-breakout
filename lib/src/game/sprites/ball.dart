@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 enum Surface {vertical, horiontal}
 
@@ -22,7 +24,11 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   });
 
   late ShapeHitbox hitbox;
+  late AudioPool _brickCollisionSound;
+  late AudioPool _paddleCollisionSound;
+
   bool canMove = false;
+  bool muted = !userConfig.sfxOn.value;
   bool _hasCollided = false;
 
   bool get isMoving{
@@ -39,6 +45,17 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
 
     hitbox = CircleHitbox();
     add(hitbox);
+    _brickCollisionSound = await FlameAudio.createPool(
+      'sfx/brick_collision.mp3',
+      maxPlayers: 1
+    );
+    _paddleCollisionSound = await FlameAudio.createPool(
+      'sfx/paddle_collision.mp3',
+      maxPlayers: 1
+    );
+    userConfig.sfxOn.addListener(() {
+      muted = !userConfig.sfxOn.value;
+    });
   }
 
   @override
@@ -62,6 +79,9 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       _hasCollided = true;
       if(other is Paddle){
         _rebound(intersectionPoints, other);
+        if(!muted){
+          _paddleCollisionSound.start(volume: 0.5);
+        }
         if ((velocity.x + other.paddleBoost).isNegative){
           velocity.x = max(-maxVelocity.x, (velocity.x + other.paddleBoost));
         } else {
@@ -70,8 +90,10 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
         
       } else if (other is Brick){
         _rebound(intersectionPoints, other);
+        if(!muted){
+          _brickCollisionSound.start(volume: 0.5);
+        }
       }
-
     }
     super.onCollision(intersectionPoints, other);
   }
