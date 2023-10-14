@@ -29,7 +29,6 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
   late double _dt;
 
   bool canMove = false;
-  bool muted = !userConfig.sfxOn.value;
   bool _hasCollided = false;
   
 
@@ -55,9 +54,6 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       'sfx/paddle_collision.mp3',
       maxPlayers: 1
     );
-    userConfig.sfxOn.addListener(() {
-      muted = !userConfig.sfxOn.value;
-    });
     // Using this custom value of _dt ensures that v * dt will never be greater than half 
     // the height of the smallest object in the game (Brick) when the ball is moving at max speed(100).
     // This ensures that onCollision will always be called even when frame rate is very low
@@ -85,9 +81,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
       _hasCollided = true;
       if(other is Paddle){
         _rebound(intersectionPoints, other);
-        if(!muted){
           _paddleCollisionSound.start(volume: userConfig.sfxVolume.value);
-        }
         if ((velocity.x + other.paddleBoost).isNegative){
           velocity.x = max(-maxVelocity.x, (velocity.x + other.paddleBoost));
         } else {
@@ -96,9 +90,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks{
         
       } else if (other is Brick){
         _rebound(intersectionPoints, other);
-        if(!muted){
           _brickCollisionSound.start(volume: userConfig.sfxVolume.value);
-        }
       }
     }
     super.onCollision(intersectionPoints, other);
