@@ -358,7 +358,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     setState(() {
                       isPlayTapped = !isPlayTapped;
                     });
-                    routerConfig.pushReplacement(RoutesPath.gameScreen);
+                    routerConfig.pushReplacement(RoutesPath.gameScreen, extra: {'level': userConfig.levelsUnlocked.value});
                   },
                   isTapped: isPlayTapped,
                 ),

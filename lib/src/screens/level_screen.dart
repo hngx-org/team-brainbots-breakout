@@ -25,7 +25,7 @@ class _LevelScreenState extends State<LevelScreen>
   bool areButtonsVisible = false;
   bool isSelected = false;
   bool playSelected = false;
-  int selectedTileIndex = 1;
+  int selectedTileIndex = userConfig.levelsUnlocked.value;
   late List<bool> levelLockStatus;
 
   @override
@@ -259,22 +259,40 @@ class _LevelScreenState extends State<LevelScreen>
                 opacity: areButtonsVisible ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 1200),
                 curve: Curves.easeIn,
-                child: AnimatedBuilder(
-                  animation: _soundController,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: 1.0 - (0.1 * _soundController.value),
-                      child: isSoundOn
-                          ? Image.asset(
-                              'assets/images/soundOn.png',
-                              width: 60,
-                            )
-                          : Image.asset(
-                              'assets/images/sound_off.png',
-                              width: 60,
-                            ),
-                    );
+                child: GestureDetector(
+                  onTap: () {
+                    _soundController.forward().then((value) async {
+                      _soundController.reverse();
+                      await Future.delayed(const Duration(milliseconds: 700));
+                      setState(() {
+                        if (userConfig.musicOn.value != userConfig.sfxOn.value){
+                          userConfig.musicOn.value = false;
+                          userConfig.sfxOn.value = false;
+                        } else {
+                          userConfig.musicOn.value = !userConfig.musicOn.value;
+                          userConfig.sfxOn.value = !userConfig.sfxOn.value;
+                        }
+                        
+                      });
+                    });
                   },
+                  child: AnimatedBuilder(
+                    animation: _soundController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: 1.0 - (0.1 * _soundController.value),
+                        child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
+                            ? Image.asset(
+                                'assets/images/sound_off.png',
+                                width: 60,
+                              )
+                            : Image.asset(
+                                'assets/images/soundOn.png',
+                                width: 60,
+                              ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
