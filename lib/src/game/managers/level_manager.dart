@@ -55,17 +55,6 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
     9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
   };
-  final Map<int, ExtraBallSettings> extraBallConfig =  {
-    1: ExtraBallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 50), gravity: Vector2(0, 0.2)),
-    2: ExtraBallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 55), gravity: Vector2(0, 0.3)),
-    3: ExtraBallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 60), gravity: Vector2(0, 0.4)),
-    4: ExtraBallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 65), gravity: Vector2(0, 0.5)),
-    5: ExtraBallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 70), gravity: Vector2(0, 0.6)),
-    6: ExtraBallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 75), gravity: Vector2(0, 0.7)),
-    7: ExtraBallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 80), gravity: Vector2(0, 0.8)),
-    8: ExtraBallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
-    9: ExtraBallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
-  };
 
   final Map<int, PaddleSettings> paddleConfig = {
     1: PaddleSettings(speedMultiplier: 4.0),
@@ -116,12 +105,6 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     }
     return Vector2.zero();
   }
-  Vector2 get extraBallVelocity{
-    if (extraBallConfig[level] != null){
-      return extraBallConfig[level]!.initialVelocity;
-    }
-    return Vector2.zero();
-  }
 
   Vector2 get maxVelocity{
     if (ballConfig[level] != null){
@@ -136,19 +119,7 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     }
     return Vector2.zero();
   }
-  Vector2 get extraBallMaxVelocity{
-    if (extraBallConfig[level] != null){
-      return extraBallConfig[level]!.maxVelocity;
-    }
-    return Vector2.zero();
-  }
 
-  Vector2 get extraBallGravity{
-    if (extraBallConfig[level] != null){
-      return extraBallConfig[level]!.gravity;
-    }
-    return Vector2.zero();
-  }
 
   double get paddleSpeedMultiplier{
     if (paddleConfig[level] != null){
