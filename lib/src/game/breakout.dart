@@ -294,7 +294,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
 ////////////////////////////////
   void arrangeBricks(int numBricks){ // lays out the bricks on the screen
-    int n = 7;
+    const int n = 7;
     double xSpace = 2;
     double ySpace = 2;
     double brickWidth = (size.x - ((n+1) * xSpace)) / n; // ensures [n] bricks in a row every time
@@ -306,13 +306,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     
     bricks = [];
     for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){
-      bool hasPowerUp = random.nextDouble() < 0.3;
+      bool hasPowerUp = random.nextDouble() < 0.1;
       bricks.add(
          Brick(
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
           brickPosition: Vector2(xPosition, yPosition),
-          strength: levelManager.brickStrength, isPowerUp: hasPowerUp
+          strength: levelManager.brickStrength,
+          isPowerUp: hasPowerUp
         )
       );
       xPosition += brickSize.x + xSpace;

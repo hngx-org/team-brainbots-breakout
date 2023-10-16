@@ -1,4 +1,5 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
+import 'package:brainbots_breakout/src/game/managers/managers.dart';
 import 'package:brainbots_breakout/src/game/sprites/paddle.dart';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
@@ -106,13 +107,10 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
 
   @override
   void update(double dt) {
-      position.y += velocity.y * dt;
-      super.update(dt);
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-    game = null;
+    super.update(dt);
+    position.y += velocity.y * dt;
+    if(gameRef.gameManager.state == GameState.gameOver){
+      removeFromParent(); // removes the powerup when game is over
+    }
   }
 }
