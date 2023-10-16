@@ -5,14 +5,28 @@ import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 
 enum PowerUpType {
-  doubleSize,
-  halfSize,
+  enlarge,
+  shrink,
   extraBall,
-  superBall,
-  lazers,
-  slowDown,
-  speedUp,
+  fireBall,
+  laser,
+  magnet,
+  slow,
+  fast,
   none
+}
+String _getPowerupPath(PowerUpType type){
+  return switch(type){
+    PowerUpType.enlarge => 'game/powerups/enlarge.png',
+    PowerUpType.shrink => 'game/powerups/shrink.png',
+    PowerUpType.extraBall => 'game/powerups/extra_ball.png',
+    PowerUpType.fireBall => 'game/powerups/fire_ball.png',
+    PowerUpType.laser => 'game/powerups/laser.png',
+    PowerUpType.magnet => 'game/powerups/magnet.png',
+    PowerUpType.slow => 'game/powerups/slow.png',
+    PowerUpType.fast => 'game/powerups/fast.png',
+    PowerUpType.none => '',
+  };
 }
 
 class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks {
@@ -40,10 +54,7 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
   Future<void> onLoad() async {
     await super.onLoad();
     if(powerUpSelected != PowerUpType.none) {
-      final spriteAssetPath = '${powerUpSelected
-          .toString()
-          .split('.')
-          .last}.png';
+      final spriteAssetPath = _getPowerupPath(powerUpSelected);
       sprite = await gameRef.loadSprite(spriteAssetPath);
 
       size = powerUpSize;
@@ -79,25 +90,28 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
   void applyPowerUp(Breakout game) {
     // Handle power-up effects here based on the powerUpType.
     switch (powerUpSelected) {
-      case PowerUpType.doubleSize:
+      case PowerUpType.enlarge:
         gameRef.setDoublePaddle();
         break;
-      case PowerUpType.halfSize:
+      case PowerUpType.shrink:
         gameRef.setHalfPaddle();
         break;
       case PowerUpType.extraBall:
         gameRef.setExtraBall();
         break;
-      case PowerUpType.superBall:
+      case PowerUpType.fireBall:
       // TODO: Implement the superBall power-up effect.
         break;
-      case PowerUpType.lazers:
+      case PowerUpType.laser:
       // TODO: Implement the lazers power-up effect.
         break;
-      case PowerUpType.slowDown:
+      case PowerUpType.magnet:
+      // TODO: Implement the magnet power-up effect.
+        break;
+      case PowerUpType.slow:
       // TODO: Implement the slowDown power-up effect.
         break;
-      case PowerUpType.speedUp:
+      case PowerUpType.fast:
       // TODO: Implement the speedUp power-up effect.
         break;
       case PowerUpType.none:

@@ -235,7 +235,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
   //on collision with paddle////////
 
   Future<void> setDoublePaddle() async {
-      if (!paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
+      if (!paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
         Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
         Vector2 paddlePosition = paddle.paddlePosition;
         double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
@@ -244,16 +244,16 @@ class Breakout extends FlameGame with HasCollisionDetection{
           ..paddleSize = paddleSize
           ..paddlePosition = paddlePosition
           ..speedMultiplier = paddleSpeedMultiplier
-          ..powerUpTypes.add(PowerUpType.doubleSize);
+          ..powerUpTypes.add(PowerUpType.enlarge);
 
         add(paddle);
       }
   }
 
   Future<void> setHalfPaddle() async {
-      if (!paddle.powerUpTypes.contains(PowerUpType.halfSize)) {
+      if (!paddle.powerUpTypes.contains(PowerUpType.shrink)) {
         Vector2 paddleSize;
-        if (paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
+        if (paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
           paddleSize = Vector2(60, 25);
         }
         else{
@@ -267,7 +267,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
           ..paddleSize = paddleSize
           ..paddlePosition = paddlePosition
           ..speedMultiplier = paddleSpeedMultiplier
-          ..powerUpTypes.add(PowerUpType.halfSize);
+          ..powerUpTypes.add(PowerUpType.shrink);
 
         add(paddle);
       }

@@ -52,8 +52,8 @@ class _BouncyButtonState extends State<BouncyButton> with SingleTickerProviderSt
               alignment: Alignment.center,
               children: [
                 Image.asset(!widget.isTapped
-                    ? 'assets/images/menu-Tiles.png'
-                    : 'assets/images/menu_tile_cracked.png', width: 170),
+                    ? 'assets/images/others/menu_tile.png'
+                    : 'assets/images/others/menu_tile_cracked.png', width: 170),
                 Text(
                   widget.text,
                   style: GoogleFonts.pressStart2p(color: Colors.yellowAccent, fontSize: 12),

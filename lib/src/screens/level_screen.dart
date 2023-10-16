@@ -132,8 +132,8 @@ class _LevelScreenState extends State<LevelScreen>
                                     children: [
                                       Image.asset(
                                         currentTileIndex == selectedTileIndex
-                                            ? 'assets/images/level_card selected.png'
-                                            : 'assets/images/level_card.png',
+                                            ? 'assets/images/others/level_card_selected.png'
+                                            : 'assets/images/others/level_card.png',
                                       ),
                                       isLevelLocked
                                           ? const Icon(
@@ -195,8 +195,8 @@ class _LevelScreenState extends State<LevelScreen>
                               alignment: Alignment.center,
                               children: [
                                 !playSelected
-                                    ? Image.asset('assets/images/button tile.png')
-                                    : Image.asset('assets/images/button tile_selected.png')
+                                    ? Image.asset('assets/images/others/button_tile.png')
+                                    : Image.asset('assets/images/others/button_tile_selected.png')
                                 ,
                                 Text(
                                   'PLAY',
@@ -233,7 +233,7 @@ class _LevelScreenState extends State<LevelScreen>
                       duration: const Duration(milliseconds: 1400),
                       curve: Curves.easeIn,
                       child: Image.asset(
-                        'assets/images/home_button.png',
+                        'assets/images/others/home_button.png',
                         width: 60,
                       ),
                     ),
@@ -283,11 +283,11 @@ class _LevelScreenState extends State<LevelScreen>
                         scale: 1.0 - (0.1 * _soundController.value),
                         child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
                             ? Image.asset(
-                                'assets/images/sound_off.png',
+                                'assets/images/others/sound_off.png',
                                 width: 60,
                               )
                             : Image.asset(
-                                'assets/images/soundOn.png',
+                                'assets/images/others/sound_on.png',
                                 width: 60,
                               ),
                       );

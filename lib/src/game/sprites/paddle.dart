@@ -23,7 +23,7 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite('paddle.png'); // adds the paddle sprite to the game
+    sprite = await gameRef.loadSprite('game/paddles/default.png'); // adds the paddle sprite to the game
     size = paddleSize;
     position = paddlePosition;
     paddleBoost = 0;
@@ -62,7 +62,7 @@ class Paddle extends SpriteComponent with HasGameRef, CollisionCallbacks, DragCa
   @override
   Future<void> onMount() async {
     super.onMount();
-    sprite = await gameRef.loadSprite('paddle.png');
+    sprite = await gameRef.loadSprite('game/paddles/default.png');
     size = paddleSize;
     position = paddlePosition;
     paddleBoost = 0;

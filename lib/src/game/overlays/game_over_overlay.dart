@@ -53,7 +53,7 @@ class _GameOverOverlayState extends State<GameOverOverlay>
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/images/window.png',
+                  'assets/images/others/window.png',
                 ),
                 Align(
                     alignment: const Alignment(0, -0.115),
@@ -91,7 +91,7 @@ class _GameOverOverlayState extends State<GameOverOverlay>
                                     scale: 1.0 - (0.1 * _resetController.value),
                                     child: Container(
                                       child: Image.asset(
-                                        'assets/images/repeat.png',
+                                        'assets/images/others/repeat.png',
                                         width: 95,
                                       ),
                                     ),
@@ -113,7 +113,7 @@ class _GameOverOverlayState extends State<GameOverOverlay>
                                       scale:
                                           1.0 - (0.1 * _levelController.value),
                                       child: Image.asset(
-                                          'assets/images/levels.png',
+                                          'assets/images/others/levels.png',
                                           width: 95));
                                 })),
                       ],
