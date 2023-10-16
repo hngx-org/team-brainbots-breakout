@@ -1,5 +1,6 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/sprites/ball.dart';
+import 'package:brainbots_breakout/src/game/sprites/extra_ball.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -12,9 +13,11 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   Vector2 brickSize;
   Vector2 brickPosition;
   int strength;
+  bool isPowerUp;
 
   Brick({
     required this.brickColor,
+    required this.isPowerUp,
     required this.brickSize,
     required this.brickPosition,
     required this.strength,
@@ -53,6 +56,23 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
       }
       if (strength == 0){
         removeFromParent();
+        if (isPowerUp) {
+          gameRef.spawnPowerUp(this); // Call spawnPowerUp when a brick with isPowerUp set to true is destroyed.
+        }
+      }
+    }
+    else if(other is ExtraBall && !_hasCollided){ // the _hasCollided flag ensures that the onCollision is not called again till collision ends
+      _hasCollided = true;
+      strength -= 1;
+      if(strength == 1){
+        current = BrickState.cracked;
+        return;
+      }
+      if (strength == 0){
+        removeFromParent();
+        if (isPowerUp) {
+          gameRef.spawnPowerUp(this); // Call spawnPowerUp when a brick with isPowerUp set to true is destroyed.
+        }
       }
     }
     super.onCollision(intersectionPoints, other);

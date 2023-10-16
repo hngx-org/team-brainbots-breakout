@@ -7,9 +7,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 
-enum Surface {vertical, horiontal}
-
-class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks{
+class ExtraBall extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks{
 
   Vector2 ballSize;
   Vector2 ballPosition;
@@ -17,7 +15,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
   Vector2 maxVelocity;
   Vector2 gravity;
 
-  Ball({
+  ExtraBall({
     required this.ballSize,
     required this.ballPosition,
     required this.velocity,

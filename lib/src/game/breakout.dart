@@ -1,8 +1,12 @@
 import 'dart:math';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
+import 'package:brainbots_breakout/src/game/sprites/extra_ball.dart';
+import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:brainbots_breakout/src/game/world.dart';
+import 'package:brainbots_breakout/src/reusables/utily/util.dart';
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
 class Breakout extends FlameGame with HasCollisionDetection{
@@ -14,9 +18,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
   });
 
   late Ball ball;
+  ExtraBall? extraBall;
   late Paddle paddle;
+  late PowerUp powerUp;
   late List<Brick> bricks;
   bool needBricks = false;
+
+  final List<PowerUp> powerUpsToRemove = [];
+  bool isExtraBall = false;
 
   @override
   Future<void> onLoad() async{
@@ -38,19 +47,29 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
     if(!gameManager.isPlaying){ // freezes the ball and paddle if the game is not in a playing state
       ball.canMove = false;
+      if (extraBall != null) {
+        extraBall!.canMove = false;
+      }
       paddle.canMove = false;
     }
     else{
       ball.canMove = true;
+      if (extraBall != null) {
+        extraBall!.canMove = true;
+      }
       paddle.canMove = true;
     }
     
     //returns from update() if the game is not in a playing state
     if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
-    
-    if(ball.position.y + ball.height >= size.y * 0.98){ // checks if the ball has gone below the paddle
+
+    bool isBallOffScreen = ball.position.y + ball.height >= size.y * 0.98;
+    bool isExtraBallOffScreen = extraBall != null && extraBall!.position.y + extraBall!.height >= size.y * 0.98;
+
+    if (isBallOffScreen || (isExtraBall && isExtraBallOffScreen)) {
       gameOver();
     }
+
 
     bricks = bricks.where((element) => !element.isRemoved).toList(); // updates the bricks list to contain only bricks that havent been broken
     gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength; // calculates score based on number of bricks broken
@@ -81,17 +100,49 @@ class Breakout extends FlameGame with HasCollisionDetection{
     overlays.remove('pauseMenuOverlay');
     resumeEngine();
     gameManager.reset(); // resets the score
+
+    if (powerUp.isMounted) {
+      for (final child in children) {
+        if (child is PowerUp) {
+          powerUpsToRemove.add(child);
+          powerUp.onRemove();
+          powerUp.removeFromParent();
+        }
+      }
+    }
+
+    if (powerUp.isMounted) {
+      powerUpsToRemove.clear();
+    }
     ball.velocity = levelManager.initialVelocity;
     ball.velocity.x = 0; //TODO: 
     ball.velocity.y = ball.velocity.y.abs();
     ball.maxVelocity = levelManager.maxVelocity;
     ball.gravity = levelManager.gravity;
     ball.position = size/2 - ball.size/2;
-    paddle.position = Vector2(
-      size.x/2 - paddle.size.x/2,
-      size.y * 0.9
+//extra ball
+    if (isMounted) {
+      for (final child in children) {
+        if (child is ExtraBall) {
+          extraBall?.removeFromParent();
+          extraBall?.onRemove();
+        }
+      }
+    }
+    Vector2 paddleSize = Vector2(100, 25);
+    Vector2 paddlePosition = Vector2(
+        size.x/2 - paddleSize.x/2,
+        size.y * 0.9
     );
-    paddle.speedMultiplier = levelManager.paddleSpeedMultiplier;
+    double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
+    if (paddle.isMounted) {
+      paddle
+        ..paddleSize = paddleSize
+        ..paddlePosition = paddlePosition
+        ..speedMultiplier = paddleSpeedMultiplier
+        ..powerUpTypes.clear();
+      add(paddle);
+    }
     needBricks = true;
     gameManager.state = GameState.intro;
     overlays.add('introOverlay');
@@ -108,6 +159,20 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void gameOver(){
+    powerUp.velocity = Vector2(0, 0);
+    if (powerUp.isMounted) {
+      for (final child in children) {
+        if (child is PowerUp) {
+          powerUpsToRemove.add(child);
+          powerUp.onRemove();
+          powerUp.removeFromParent();
+        }
+      }
+    }
+
+    if (powerUp.isMounted) {
+      powerUpsToRemove.clear();
+    }
     gameManager.state = GameState.gameOver;
     overlays.add('gameOverOverlay');
   }
@@ -124,17 +189,16 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void setBall(){ // sets the size, position and velocity of the ball at the start of the game
     Vector2 ballSize = Vector2.all(20);
     Vector2 ballPosition = size/2 - ballSize/2;
-    Vector2 initialVelocity = levelManager.initialVelocity;
     Vector2 maxVelocity = levelManager.maxVelocity;
     Vector2 gravity = levelManager.gravity;
 
     ball = Ball(
       ballSize: ballSize,
       ballPosition: ballPosition,
-      velocity: initialVelocity,
       maxVelocity: maxVelocity,
-      gravity: gravity,
+      gravity: gravity, velocity: levelManager.initialVelocity,
     );
+    ball.velocity = levelManager.initialVelocity;
     add(ball);
   }
 
@@ -149,11 +213,86 @@ class Breakout extends FlameGame with HasCollisionDetection{
     paddle = Paddle(
       paddleSize: paddleSize,
       paddlePosition: paddlePosition,
-      speedMultiplier: paddleSpeedMultiplier
+      speedMultiplier: paddleSpeedMultiplier, powerUpTypes: []
     );
     add(paddle);
   }
 
+  void resetPaddle(PowerUpType powerUpType){ // sets the size and position of the paddle
+    Vector2 paddleSize = Vector2(100, 25);
+    Vector2 paddlePosition = paddle.paddlePosition;
+    double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
+
+    paddle
+      ..paddleSize = paddleSize
+      ..paddlePosition = paddlePosition
+      ..speedMultiplier = paddleSpeedMultiplier
+      ..powerUpTypes.remove(powerUpType);
+
+    add(paddle);
+  }
+
+  //on collision with paddle////////
+
+  Future<void> setDoublePaddle() async {
+      if (!paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
+        Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
+        Vector2 paddlePosition = paddle.paddlePosition;
+        double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
+
+        paddle
+          ..paddleSize = paddleSize
+          ..paddlePosition = paddlePosition
+          ..speedMultiplier = paddleSpeedMultiplier
+          ..powerUpTypes.add(PowerUpType.doubleSize);
+
+        add(paddle);
+      }
+  }
+
+  Future<void> setHalfPaddle() async {
+      if (!paddle.powerUpTypes.contains(PowerUpType.halfSize)) {
+        Vector2 paddleSize;
+        if (paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
+          paddleSize = Vector2(60, 25);
+        }
+        else{
+          paddleSize = Vector2(paddle.paddleSize.x - 40, 25);
+        }
+
+        Vector2 paddlePosition = paddle.paddlePosition;
+        double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
+
+        paddle
+          ..paddleSize = paddleSize
+          ..paddlePosition = paddlePosition
+          ..speedMultiplier = paddleSpeedMultiplier
+          ..powerUpTypes.add(PowerUpType.halfSize);
+
+        add(paddle);
+      }
+  }
+
+  void setExtraBall(){
+    if(!isExtraBall) {
+      isExtraBall = true;
+        Vector2 ballSize = Vector2.all(20);
+        Vector2 ballPosition = ball.ballPosition;
+        Vector2 maxVelocity = levelManager.extraBallMaxVelocity;
+        Vector2 gravity = levelManager.extraBallGravity;
+
+        extraBall = ExtraBall(
+          ballSize: ballSize,
+          ballPosition: ballPosition,
+          maxVelocity: maxVelocity,
+          gravity: gravity, velocity:levelManager.extraBallVelocity,
+        );
+        add(extraBall!);
+    }
+  }
+
+
+////////////////////////////////
   void arrangeBricks(int numBricks){ // lays out the bricks on the screen
     int n = 7;
     double xSpace = 2;
@@ -166,13 +305,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     double yPosition = 75;
     
     bricks = [];
-    for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){  
+    for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){
+      bool hasPowerUp = random.nextDouble() < 0.3;
       bricks.add(
          Brick(
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
           brickPosition: Vector2(xPosition, yPosition),
-          strength: levelManager.brickStrength
+          strength: levelManager.brickStrength, isPowerUp: hasPowerUp
         )
       );
       xPosition += brickSize.x + xSpace;
@@ -188,6 +328,34 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void initializeGameStart(){ // called only at the start of the game in onLoad();
     setBall();
     setPaddle();
+    initPowerUp();
     reset();
   }
+
+  void initPowerUp() {
+      final powerUpType = Util.getRandomPowerUpType();
+
+      powerUp = PowerUp(powerUpSelected: powerUpType,
+        velocity: levelManager.powerUpVelocity,
+        powerUpSize: Vector2.all(1), powerUpPosition: Vector2.all(1),);
+      powerUp.position = Vector2.all(1); // Set the position where the power-up should appear.
+
+      add(powerUp);
+  }
+
+  void spawnPowerUp(Brick destroyedBrick) {
+    if (destroyedBrick.isPowerUp) {
+      final powerUpType = Util.getRandomPowerUpType();
+      // const powerUpType = PowerUpType.extraBall;
+
+      powerUp = PowerUp(powerUpSelected: powerUpType,
+        velocity: levelManager.powerUpVelocity,
+        powerUpSize: destroyedBrick.brickSize, powerUpPosition: destroyedBrick.brickPosition,);
+      powerUp.position = destroyedBrick.position; // Set the position where the power-up should appear.
+
+      powerUpsToRemove.add(powerUp);
+      add(powerUp);
+    }
+  }
+
 }
