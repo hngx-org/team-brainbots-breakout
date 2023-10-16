@@ -31,8 +31,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isHowTapped = false;
   bool areButtonsVisible = false;
   bool isSettingsScreen = false;
-  bool isSoundOff = false;
-  double soundVolume = 0.5;
+  bool isSoundOn = false;
+  double soundVolume = 0;
   double musicVolume = 0;
   late AnimationController _tickController;
   late AnimationController _crossController;
@@ -42,25 +42,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    musicVolume = userConfig.musicVolume.value;
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         areButtonsVisible = true;
+        musicVolume = userConfig.musicVolume.value;
+        soundVolume = userConfig.sfxVolume.value;
       });
     });
 
     FlameAudio.bgm.initialize();
-    if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
+    if(!FlameAudio.bgm.isPlaying && userConfig.musicVolume.value > 0){
       FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
+      setState(() {
+        isSoundOn = true;
+      });
     }
-    userConfig.musicOn.addListener(() {
-      if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
-        FlameAudio.bgm.pause();
-      }
-      if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
-        FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
-      }
-    });
 
     _tickController = AnimationController(
       vsync: this,
@@ -295,14 +291,16 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   //sound on
-                  if(isSoundOff) GestureDetector(
+                  if(!isSoundOn) GestureDetector(
                     onTap: () {
                       _soundController.forward().then((value) async {
                         _soundController.reverse();
                         setState(() {
-                          isSoundOff = !isSoundOff;
+                          isSoundOn = !isSoundOn;
                           soundVolume = 0.3;
                           musicVolume = 0.3;
+                          userConfig.sfxOn.value = true;
+                          userConfig.musicOn.value = true;
                           userConfig.sfxVolume.value = soundVolume;
                           userConfig.musicVolume.value = soundVolume;
                           FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
@@ -330,15 +328,17 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     ),
                   ),
                   //sound off
-                  if(!isSoundOff) GestureDetector(
+                  if(isSoundOn) GestureDetector(
                     onTap: () {
                       _soundController.forward().then((value) async {
                         _soundController.reverse();
                         await Future.delayed(const Duration(microseconds: 800));
                         setState(() {
-                          isSoundOff = !isSoundOff;
+                          isSoundOn = !isSoundOn;
                           soundVolume = 0;
                           musicVolume = 0;
+                          userConfig.sfxOn.value = false;
+                          userConfig.musicOn.value = false;
                           userConfig.sfxVolume.value = soundVolume;
                           userConfig.musicVolume.value = soundVolume;
                           FlameAudio.bgm.stop();
