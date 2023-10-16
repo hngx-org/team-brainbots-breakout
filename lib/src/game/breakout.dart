@@ -59,6 +59,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
       }
       paddle.canMove = true;
     }
+
     
     //returns from update() if the game is not in a playing state
     if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
@@ -66,10 +67,22 @@ class Breakout extends FlameGame with HasCollisionDetection{
     bool isBallOffScreen = ball.position.y + ball.height >= size.y * 0.98;
     bool isExtraBallOffScreen = extraBall != null && extraBall!.position.y + extraBall!.height >= size.y * 0.98;
 
-    if (isBallOffScreen || (isExtraBall && isExtraBallOffScreen)) {
+    if (isBallOffScreen && extraBall != null) {
+      // Remove the main ball from the parent when it goes off the screen while there's an extra ball.
+      ball.removeFromParent();
+    }
+    else if ( (extraBall != null && isExtraBallOffScreen) && (!isBallOffScreen)) {
+      extraBall!.removeFromParent();
+    }
+    else if (isExtraBallOffScreen && (ball == null) ) {
       gameOver();
     }
+    else if ((ball == null && isExtraBallOffScreen) ||
+        ((!gameManager.isIntro && extraBall == null)  && isBallOffScreen)){
+      gameOver();
+    }else if (isBallOffScreen  ) {
 
+    }
 
     bricks = bricks.where((element) => !element.isRemoved).toList(); // updates the bricks list to contain only bricks that havent been broken
     gameManager.score.value = (levelManager.numBricks - bricks.length) * levelManager.brickStrength; // calculates score based on number of bricks broken
@@ -110,12 +123,12 @@ class Breakout extends FlameGame with HasCollisionDetection{
         }
       }
     }
-
     if (powerUp.isMounted) {
       powerUpsToRemove.clear();
     }
+
     ball.velocity = levelManager.initialVelocity;
-    ball.velocity.x = 0; //TODO: 
+    ball.velocity.x = 0; //TODO:
     ball.velocity.y = ball.velocity.y.abs();
     ball.maxVelocity = levelManager.maxVelocity;
     ball.gravity = levelManager.gravity;
@@ -233,7 +246,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   //on collision with paddle////////
-
   Future<void> setDoublePaddle() async {
       if (!paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
         Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
@@ -312,7 +324,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
           brickSize: brickSize,
           brickPosition: Vector2(xPosition, yPosition),
-          strength: levelManager.brickStrength, isPowerUp: hasPowerUp
+          strength: levelManager.brickStrength, isPowerUp: true
         )
       );
       xPosition += brickSize.x + xSpace;
@@ -345,8 +357,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   void spawnPowerUp(Brick destroyedBrick) {
     if (destroyedBrick.isPowerUp) {
-      final powerUpType = Util.getRandomPowerUpType();
-      // const powerUpType = PowerUpType.extraBall;
+      // final powerUpType = Util.getRandomPowerUpType();
+      const powerUpType = PowerUpType.extraBall;
 
       powerUp = PowerUp(powerUpSelected: powerUpType,
         velocity: levelManager.powerUpVelocity,
