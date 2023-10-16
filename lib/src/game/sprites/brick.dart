@@ -17,10 +17,10 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
 
   Brick({
     required this.brickColor,
-    required this.isPowerUp,
     required this.brickSize,
     required this.brickPosition,
     required this.strength,
+    required this.isPowerUp,
   });
   late ShapeHitbox hitbox;
   late BrickState brickState;

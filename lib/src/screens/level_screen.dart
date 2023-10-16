@@ -1,9 +1,8 @@
 import 'package:brainbots_breakout/src/config/router_config.dart';
+import 'package:brainbots_breakout/src/reusables/background.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
-import 'package:brainbots_breakout/src/reusables/background.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,9 +31,6 @@ class _LevelScreenState extends State<LevelScreen>
   @override
   void initState() {
     super.initState();
-    setState(() {
-      isSoundOn = userConfig.sfxOn.value || userConfig.musicOn.value;
-    });
     levelLockStatus = List.generate(
       9,
       (index) => index + 1 > userConfig.levelsUnlocked.value);
@@ -246,7 +242,7 @@ class _LevelScreenState extends State<LevelScreen>
               ),
             ),
           ),
-          //sound on/off
+          //sound
           Positioned(
             bottom: 10.0,
             left: 20.0,
@@ -269,18 +265,12 @@ class _LevelScreenState extends State<LevelScreen>
                       _soundController.reverse();
                       await Future.delayed(const Duration(milliseconds: 700));
                       setState(() {
-                        if (FlameAudio.bgm.isPlaying || userConfig.sfxVolume.value > 0){
+                        if (userConfig.musicOn.value != userConfig.sfxOn.value){
                           userConfig.musicOn.value = false;
                           userConfig.sfxOn.value = false;
-                          userConfig.musicVolume.value = 0;
-                          userConfig.sfxVolume.value = 0;
-                          FlameAudio.bgm.stop();
                         } else {
                           userConfig.musicOn.value = !userConfig.musicOn.value;
                           userConfig.sfxOn.value = !userConfig.sfxOn.value;
-                          userConfig.musicVolume.value = 0.3;
-                          userConfig.sfxVolume.value = 0.3;
-                          FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
                         }
                         
                       });
@@ -291,7 +281,7 @@ class _LevelScreenState extends State<LevelScreen>
                     builder: (context, child) {
                       return Transform.scale(
                         scale: 1.0 - (0.1 * _soundController.value),
-                        child: (FlameAudio.bgm.isPlaying || userConfig.sfxVolume.value > 0)
+                        child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
                             ? Image.asset(
                                 'assets/images/sound_off.png',
                                 width: 60,

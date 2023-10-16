@@ -26,16 +26,11 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
   bool isPlayTapped = false;
   bool isLevelTapped = false;
   bool isSettingsTapped = false;
-  bool isSlidingMusic = false;
-  bool isSlidingSound = false;
   bool isHowTapped = false;
   bool areButtonsVisible = false;
   bool isSettingsScreen = false;
-  bool isSoundOn = false;
-  double soundVolume = 0;
-  double musicVolume = 0;
+
   late AnimationController _tickController;
-  late AnimationController _crossController;
   late AnimationController _soundController;
 
 
@@ -45,24 +40,24 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         areButtonsVisible = true;
-        musicVolume = userConfig.musicVolume.value;
-        soundVolume = userConfig.sfxVolume.value;
       });
     });
 
     FlameAudio.bgm.initialize();
-    if(!FlameAudio.bgm.isPlaying && userConfig.musicVolume.value > 0){
-      FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
-      setState(() {
-        isSoundOn = true;
-      });
+    if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
+      FlameAudio.bgm.play('music/background.mp3');
     }
+    userConfig.musicOn.addListener(() {
+      if(FlameAudio.bgm.isPlaying && !userConfig.musicOn.value){
+        FlameAudio.bgm.stop();
+      }
+      if(!FlameAudio.bgm.isPlaying && userConfig.musicOn.value){
+        FlameAudio.bgm.play('music/background.mp3');
+      }
+    });
+
 
     _tickController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _crossController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
@@ -142,7 +137,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                       alignment: Alignment.topLeft,
                       children: [
                         Text(
-                          'SOUND',
+                          'MUSIC',
                           style: GoogleFonts.pressStart2p(
                             color: Colors.orange.withOpacity(0.8),
                             fontWeight: FontWeight.bold,
@@ -154,7 +149,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           top: 4.0,
                           left: 0.0,
                           child: Text(
-                            'SOUND',
+                            'MUSIC',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.yellowAccent,
                               fontWeight: FontWeight.bold,
@@ -165,46 +160,22 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ),
                       ],
                     ),
-                    if(isSlidingSound) ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                        MyColor.secondaryColor,
-                        BlendMode.hue,
-                      ),
-                      child: Image.asset('assets/gifs/sound_waves.gif',
-                        width: 30,),
+                    const SizedBox(width: 100),
+                    CupertinoSwitch(
+                      trackColor: Colors.orange.withOpacity(0.25),
+                      thumbColor: Colors.yellowAccent,
+                      activeColor: Colors.orange.withOpacity(0.8),
+                      value: userConfig.musicOn.value,
+                      onChanged: (flag){
+                        setState(() {
+                          userConfig.musicOn.value = flag;
+                        });
+                      }
                     ),
                   ],
                 ),
               ),
-              // sound slider
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45.0),
-                child: Slider(
-                  value: soundVolume,
-                  label: 'Sound',
-                  autofocus: false,
-                  activeColor: MyColor.secondaryColor,
-                  inactiveColor: MyColor.appColor,
-                  max: 1,
-                  min: 0,
-                  secondaryActiveColor: MyColor.appColor,
-                  onChangeStart: (value){
-                    setState(() {
-                      isSlidingSound = true;
-                    });
-                  },
-                  onChangeEnd: (value){
-                    setState(() {
-                      isSlidingSound = false;
-                    });
-                     userConfig.sfxVolume.value = value;
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      soundVolume = value;
-                    });
-                  },),
-              ),
+              20.verticalSpace,
               //music
               AnimatedOpacity(
                 opacity: areButtonsVisible ? 1.0 : 0.0,
@@ -219,7 +190,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         alignment: Alignment.topLeft,
                         children: [
                           Text(
-                            'MUSIC',
+                            'SOUND',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.orange.withOpacity(0.8),
                               fontWeight: FontWeight.bold,
@@ -231,7 +202,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                             top: 4.0,
                             left: 0.0,
                             child: Text(
-                              'MUSIC',
+                              'SOUND',
                               style: GoogleFonts.pressStart2p(
                                 color: Colors.yellowAccent,
                                 fontWeight: FontWeight.bold,
@@ -242,130 +213,64 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           ),
                         ],
                       ),
-                      if(isSlidingMusic) ColorFiltered(
-                        colorFilter: const ColorFilter.mode(
-                          MyColor.secondaryColor,
-                          BlendMode.hue,
-                        ),
-                        child: Image.asset('assets/gifs/sound_waves.gif',
-                          width: 30,),
+                      const SizedBox(width: 100,),
+                      CupertinoSwitch(
+                        trackColor: Colors.orange.withOpacity(0.25),
+                        thumbColor: Colors.yellowAccent,
+                        activeColor: Colors.orange.withOpacity(0.8),
+                        value: userConfig.sfxOn.value,
+                        onChanged: (flag){
+                          setState(() {
+                            userConfig.sfxOn.value = flag;
+                          });
+                        }
                       ),
                     ],
                   ),
                 ),
               ),
-              //music slider
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45.0),
-                child: Slider(
-                  value: musicVolume,
-                  label: 'Music',
-                  autofocus: false,
-                  activeColor: MyColor.secondaryColor,
-                  inactiveColor: MyColor.appColor,
-                  max: 1,
-                  min: 0,
-                  secondaryActiveColor: MyColor.appColor,
-                  onChangeStart: (value){
-                    setState(() {
-                      isSlidingMusic = true;
-                    });
-                  },
-                  onChangeEnd: (value){
-                    setState(() {
-                      isSlidingMusic = false;
-                    });
-                    FlameAudio.bgm.stop();
-                    FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      musicVolume = value;
-                      userConfig.musicVolume.value = value;
-                    });
-                  },),
-              ),
+            
               80.verticalSpace,
               //buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  //sound on
-                  if(!isSoundOn) GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       _soundController.forward().then((value) async {
                         _soundController.reverse();
+                        await Future.delayed(const Duration(milliseconds: 700));
                         setState(() {
-                          isSoundOn = !isSoundOn;
-                          soundVolume = 0.3;
-                          musicVolume = 0.3;
-                          userConfig.sfxOn.value = true;
-                          userConfig.musicOn.value = true;
-                          userConfig.sfxVolume.value = soundVolume;
-                          userConfig.musicVolume.value = soundVolume;
-                          FlameAudio.bgm.play('music/background.mp3', volume: userConfig.musicVolume.value);
+                          if (userConfig.musicOn.value != userConfig.sfxOn.value){
+                            userConfig.musicOn.value = false;
+                            userConfig.sfxOn.value = false;
+                          } else {
+                            userConfig.musicOn.value = !userConfig.musicOn.value;
+                            userConfig.sfxOn.value = !userConfig.sfxOn.value;
+                          }
+                          
                         });
                       });
                     },
                     child: AnimatedBuilder(
-                        animation: _soundController,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: 1.0 - (0.1 * _soundController.value),
-                            child: Stack(
-                              children: [
-                                Image.asset('assets/images/soundOn.png', width: 50,
-                                  color: MyColor.secondaryColor,),
-                                Positioned(
-                                  top: 4,
-                                  child: Image.asset('assets/images/soundOn.png', width: 50,
-                                    ),
+                      animation: _soundController,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: 1.0 - (0.1 * _soundController.value),
+                          child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
+                              ? Image.asset(
+                                  'assets/images/sound_off.png',
+                                  width: 60,
+                                )
+                              : Image.asset(
+                                  'assets/images/soundOn.png',
+                                  width: 60,
                                 ),
-                              ],
-                            ),
-                          );
-                        }
+                        );
+                      },
                     ),
                   ),
-                  //sound off
-                  if(isSoundOn) GestureDetector(
-                    onTap: () {
-                      _soundController.forward().then((value) async {
-                        _soundController.reverse();
-                        await Future.delayed(const Duration(microseconds: 800));
-                        setState(() {
-                          isSoundOn = !isSoundOn;
-                          soundVolume = 0;
-                          musicVolume = 0;
-                          userConfig.sfxOn.value = false;
-                          userConfig.musicOn.value = false;
-                          userConfig.sfxVolume.value = soundVolume;
-                          userConfig.musicVolume.value = soundVolume;
-                          FlameAudio.bgm.stop();
-                        });
-                      });
-                    },
-                    child: AnimatedBuilder(
-                        animation: _soundController,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: 1.0 - (0.1 * _soundController.value),
-                            child: Stack(
-                              children: [
-                                Image.asset('assets/images/sound_off.png', width: 50,
-                                  color: MyColor.secondaryColor,),
-                                Positioned(
-                                  top: 4,
-                                  child: Image.asset('assets/images/sound_off.png', width: 50,
-                                    ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                    ),
-                  ),
-                  //tick
+                  const SizedBox(width: 45),
                   GestureDetector(
                     onTap: () {
                       _tickController.forward().then((value) async {
@@ -380,21 +285,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                     child: AnimatedBuilder(
                         animation: _tickController,
                         builder: (context, child) {
-                          return Transform.scale(
-                            scale: 1.0 - (0.1 * _tickController.value),
-                            child: Stack(
-                              children: [
-                                Image.asset('assets/images/tick.png', width: 50,
-                                  color: MyColor.appColor,),
-                                Positioned(
-                                  top: 4,
-                                  child: Image.asset('assets/images/tick.png', width: 50,
-                                    color: MyColor.secondaryColor,),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
+                        return Transform.scale(
+                          scale: 1.0 - (0.1 * _tickController.value),
+                          child: Stack(
+                            children: [
+                              Image.asset('assets/images/tick.png', width: 50,
+                                color: MyColor.appColor,),
+                              Positioned(
+                                top: 4,
+                                child: Image.asset('assets/images/tick.png', width: 50,
+                                  color: MyColor.secondaryColor,),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     ),
                   ),
                 ],
