@@ -259,11 +259,11 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           scale: 1.0 - (0.1 * _soundController.value),
                           child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
                               ? Image.asset(
-                                  'assets/images/sound_off.png',
+                                  'assets/images/others/sound_off.png',
                                   width: 60,
                                 )
                               : Image.asset(
-                                  'assets/images/soundOn.png',
+                                  'assets/images/others/sound_on.png',
                                   width: 60,
                                 ),
                         );
@@ -289,11 +289,11 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           scale: 1.0 - (0.1 * _tickController.value),
                           child: Stack(
                             children: [
-                              Image.asset('assets/images/tick.png', width: 50,
+                              Image.asset('assets/images/others/tick.png', width: 50,
                                 color: MyColor.appColor,),
                               Positioned(
                                 top: 4,
-                                child: Image.asset('assets/images/tick.png', width: 50,
+                                child: Image.asset('assets/images/others/tick.png', width: 50,
                                   color: MyColor.secondaryColor,),
                               ),
                             ],

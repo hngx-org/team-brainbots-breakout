@@ -43,7 +43,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite('ball.png'); // adds the ball to the game using the game reference
+    sprite = await gameRef.loadSprite('game/ball.png'); // adds the ball to the game using the game reference
 
     size = ballSize;
     position = ballPosition;
@@ -97,20 +97,20 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
 
       }
       else if (other is Brick){
-        if (gameRef.paddle.powerUpTypes.contains(PowerUpType.doubleSize)) {
+        if (gameRef.paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
           doubleSizePUCount += 1;
           print('double count $doubleSizePUCount');
           if(doubleSizePUCount == 3){
             doubleSizePUCount = 0;
-            gameRef.resetPaddle(PowerUpType.doubleSize);
+            gameRef.resetPaddle(PowerUpType.enlarge);
           }
         }
-        else if (gameRef.paddle.powerUpTypes.contains(PowerUpType.halfSize)) {
+        else if (gameRef.paddle.powerUpTypes.contains(PowerUpType.shrink)) {
           halfSizePUCount += 1;
           print('half count $halfSizePUCount');
           if(halfSizePUCount == 3){
             halfSizePUCount = 0;
-            gameRef.resetPaddle(PowerUpType.halfSize);
+            gameRef.resetPaddle(PowerUpType.shrink);
           }
         }
         _rebound(intersectionPoints, other);

@@ -15,7 +15,7 @@ class CustomBackground extends StatelessWidget {
         SizedBox(
           width: mediaQuery.width,
           height: mediaQuery.height,
-          child: Image.asset('assets/images/Stars Small_2.png', fit: BoxFit.cover,),
+          child: Image.asset('assets/images/others/stars_background.png', fit: BoxFit.cover,),
         ),
       ],
     );
