@@ -17,10 +17,10 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
 
   Brick({
     required this.brickColor,
-    required this.isPowerUp,
     required this.brickSize,
     required this.brickPosition,
     required this.strength,
+    required this.isPowerUp,
   });
   late ShapeHitbox hitbox;
   late BrickState brickState;
@@ -30,8 +30,8 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   Future<void> onLoad() async {
     super.onLoad();
 
-    Sprite normal = await gameRef.loadSprite('tile_${brickColor.name}.png');
-    Sprite cracked = await gameRef.loadSprite('tile_${brickColor.name}_cracked.png');
+    Sprite normal = await gameRef.loadSprite('game/bricks/${brickColor.name}.png');
+    Sprite cracked = await gameRef.loadSprite('game/bricks/${brickColor.name}_cracked.png');
     sprites = <BrickState, Sprite>{ // adds the two different sprites
       BrickState.normal: normal,
       BrickState.cracked: cracked,

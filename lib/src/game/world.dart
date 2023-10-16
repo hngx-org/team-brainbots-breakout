@@ -5,7 +5,7 @@ class Stars extends SpriteComponent with HasGameRef<Breakout>{
   @override
   Future<void> onLoad() async{
     sprite = await gameRef.loadSprite(
-      'Stars Small_2.png'
+      'others/stars_background.png'
     );
     size = gameRef.size;
     position = Vector2.zero();

@@ -60,7 +60,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/images/window.png',
+                  'assets/images/others/window.png',
                 ),
                 Align(
                     alignment: const Alignment(0, -0.115),
@@ -98,7 +98,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 return Transform.scale(
                                   scale: 1.0 - (0.1 * _resetController.value),
                                   child: Image.asset(
-                          'assets/images/repeat.png',
+                          'assets/images/others/repeat.png',
                           width: 95,
                         ),
                                 );
@@ -117,7 +117,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 builder: (context, child) {
                                   return Transform.scale(
                                     scale: 1.0 - (0.1 * _playController.value),
-                                  child: Image.asset('assets/images/play.png',
+                                  child: Image.asset('assets/images/others/play.png',
                                       width: 95),
                                 );
                               }
@@ -134,7 +134,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 builder: (context, child) {
                                 return Transform.scale(
                                     scale: 1.0 - (0.1 * _levelController.value),
-                                    child: Image.asset('assets/images/levels.png', width: 95));
+                                    child: Image.asset('assets/images/others/levels.png', width: 95));
                               }
                             )),
                       ],

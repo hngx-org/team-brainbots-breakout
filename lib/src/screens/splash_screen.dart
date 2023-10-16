@@ -36,16 +36,15 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _preloadAssets() async {
     await Future.wait([
       // Flame.images.loadAllImages(),
-      precacheImage(const AssetImage('assets/images/Stars Small_2.png'), context),
-      precacheImage(const AssetImage('assets/images/menu-Tiles.png'), context),
-      precacheImage(const AssetImage('assets/images/menu_tile_cracked.png'), context),
-      precacheImage(const AssetImage('assets/images/level_card selected.png'), context),
-      precacheImage(const AssetImage('assets/images/level_card.png'), context),
-      precacheImage(const AssetImage('assets/images/sound_off.png'), context),
-      precacheImage(const AssetImage('assets/images/soundOn.png'), context),
-      precacheImage(const AssetImage('assets/images/unactive_star.png'), context),
-      precacheImage(const AssetImage('assets/images/button tile.png'), context),
-      precacheImage(const AssetImage('assets/images/button tile_selected.png'), context),
+      precacheImage(const AssetImage('assets/images/others/stars_background.png'), context),
+      precacheImage(const AssetImage('assets/images/others/menu_tile.png'), context),
+      precacheImage(const AssetImage('assets/images/others/menu_tile_cracked.png'), context),
+      precacheImage(const AssetImage('assets/images/others/level_card_selected.png'), context),
+      precacheImage(const AssetImage('assets/images/others/level_card.png'), context),
+      precacheImage(const AssetImage('assets/images/others/sound_off.png'), context),
+      precacheImage(const AssetImage('assets/images/others/sound_on.png'), context),
+      precacheImage(const AssetImage('assets/images/others/button_tile.png'), context),
+      precacheImage(const AssetImage('assets/images/others/button_tile_selected.png'), context),
     ]);
   }
 
