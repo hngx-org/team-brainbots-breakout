@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
-import 'package:brainbots_breakout/src/game/sprites/extra_ball.dart';
 import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:brainbots_breakout/src/game/world.dart';
@@ -17,15 +16,14 @@ class Breakout extends FlameGame with HasCollisionDetection{
     required this.levelManager,
   });
 
-  late Ball ball;
-  ExtraBall? extraBall;
+  List<Ball> balls = [];
+  int nextBallIndex = 0;
   late Paddle paddle;
   late PowerUp powerUp;
   late List<Brick> bricks;
   bool needBricks = false;
 
   final List<PowerUp> powerUpsToRemove = [];
-  bool isExtraBall = false;
 
   @override
   Future<void> onLoad() async{
@@ -46,27 +44,40 @@ class Breakout extends FlameGame with HasCollisionDetection{
     paddle.canMove = true;
 
     if(!gameManager.isPlaying){ // freezes the ball and paddle if the game is not in a playing state
-      ball.canMove = false;
-      if (extraBall != null) {
-        extraBall!.canMove = false;
+      for (var ball in balls) {
+        ball.canMove = false;
       }
       paddle.canMove = false;
     }
     else{
-      ball.canMove = true;
-      if (extraBall != null) {
-        extraBall!.canMove = true;
+      for (var ball in balls) {
+        ball.canMove = true;
       }
       paddle.canMove = true;
+    }
+
+    if(powerUp.position.y + powerUp.height >= size.y * 0.98){
+      powerUp.removeFromParent();
     }
     
     //returns from update() if the game is not in a playing state
     if(gameManager.isGameOver || gameManager.isPaused || gameManager.isWin) return;
 
-    bool isBallOffScreen = ball.position.y + ball.height >= size.y * 0.98;
-    bool isExtraBallOffScreen = extraBall != null && extraBall!.position.y + extraBall!.height >= size.y * 0.98;
+    List<Ball> ballsToRemove = [];
 
-    if (isBallOffScreen || (isExtraBall && isExtraBallOffScreen)) {
+    for (var ball in balls) {
+      if (ball.position.y + ball.height >= size.y * 0.98) {
+        ballsToRemove.add(ball);
+      }
+    }
+
+// Remove the balls that went out of the screen
+    for (var ball in ballsToRemove) {
+      ball.removeFromParent();
+      balls.remove(ball);
+    }
+
+    if (balls.isEmpty) {
       gameOver();
     }
 
@@ -77,8 +88,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
       win();
     }
   }
-
-  
 
   void start(){
     overlays.remove('introOverlay');
@@ -101,34 +110,39 @@ class Breakout extends FlameGame with HasCollisionDetection{
     resumeEngine();
     gameManager.reset(); // resets the score
 
-    if (powerUp.isMounted) {
-      for (final child in children) {
-        if (child is PowerUp) {
-          powerUpsToRemove.add(child);
-          powerUp.onRemove();
-          powerUp.removeFromParent();
-        }
+    if (powerUp != null) {
+      // Make a copy of the list to avoid concurrent modification
+      final List<PowerUp> powerUpsToRemoveCopy = List.from(powerUpsToRemove);
+
+      for (var p in powerUpsToRemoveCopy) {
+        powerUpsToRemove.remove(p);
+        p.removeFromParent();
       }
+      powerUpsToRemoveCopy.clear();
     }
 
-    if (powerUp.isMounted) {
-      powerUpsToRemove.clear();
+
+    while (balls.length > 1) {
+      var ballToRemove = balls.removeLast();
+      ballToRemove.removeFromParent();
     }
-    ball.velocity = levelManager.initialVelocity;
-    ball.velocity.x = 0; //TODO: 
-    ball.velocity.y = ball.velocity.y.abs();
-    ball.maxVelocity = levelManager.maxVelocity;
-    ball.gravity = levelManager.gravity;
-    ball.position = size/2 - ball.size/2;
-//extra ball
-    if (isMounted) {
-      for (final child in children) {
-        if (child is ExtraBall) {
-          extraBall?.removeFromParent();
-          extraBall?.onRemove();
-        }
-      }
+    nextBallIndex = 0;
+
+    // Set the properties for the remaining ball
+    if (balls.isNotEmpty) {
+      print('balls ${balls.length}');
+      var ball = balls[0];
+      ball.velocity = levelManager.initialVelocity;
+      ball.velocity.x = 0; // Set the X velocity as needed
+      ball.velocity.y = ball.velocity.y.abs();
+      ball.maxVelocity = levelManager.maxVelocity;
+      ball.gravity = levelManager.gravity;
+      ball.position = size / 2 - ball.size / 2;
     }
+    else{
+      setBall();
+    }
+
     Vector2 paddleSize = Vector2(100, 25);
     Vector2 paddlePosition = Vector2(
         size.x/2 - paddleSize.x/2,
@@ -159,20 +173,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void gameOver(){
-    powerUp.velocity = Vector2(0, 0);
-    if (powerUp.isMounted) {
-      for (final child in children) {
-        if (child is PowerUp) {
-          powerUpsToRemove.add(child);
-          powerUp.onRemove();
-          powerUp.removeFromParent();
-        }
-      }
-    }
-
-    if (powerUp.isMounted) {
-      powerUpsToRemove.clear();
-    }
     gameManager.state = GameState.gameOver;
     overlays.add('gameOverOverlay');
   }
@@ -192,13 +192,18 @@ class Breakout extends FlameGame with HasCollisionDetection{
     Vector2 maxVelocity = levelManager.maxVelocity;
     Vector2 gravity = levelManager.gravity;
 
-    ball = Ball(
+    var ball = Ball(
       ballSize: ballSize,
       ballPosition: ballPosition,
       maxVelocity: maxVelocity,
       gravity: gravity, velocity: levelManager.initialVelocity,
     );
     ball.velocity = levelManager.initialVelocity;
+
+    balls.clear();
+
+    // Add the ball to the list
+    balls.add(ball);
     add(ball);
   }
 
@@ -233,7 +238,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   //on collision with paddle////////
-
   Future<void> setDoublePaddle() async {
       if (!paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
         Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
@@ -274,25 +278,32 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void setExtraBall(){
-    if(!isExtraBall) {
-      isExtraBall = true;
         Vector2 ballSize = Vector2.all(20);
-        Vector2 ballPosition = ball.ballPosition;
-        Vector2 maxVelocity = levelManager.extraBallMaxVelocity;
-        Vector2 gravity = levelManager.extraBallGravity;
+        Vector2 ballPosition = Vector2(
+          paddle.paddlePosition.x,
+          paddle.paddlePosition.y - 100,
+        );
+        Vector2 maxVelocity = levelManager.maxVelocity;
+        Vector2 gravity = levelManager.gravity;
+        Vector2 velocity = Vector2(0, -50);
 
-        extraBall = ExtraBall(
+        nextBallIndex++;
+        var extraBall = Ball(
           ballSize: ballSize,
           ballPosition: ballPosition,
           maxVelocity: maxVelocity,
-          gravity: gravity, velocity:levelManager.extraBallVelocity,
+          gravity: gravity, velocity: velocity,
         );
-        add(extraBall!);
+        var newBalls = List<Ball>.from(balls);
+        newBalls.add(extraBall);
+
+        // Replace the original balls list with the new list
+        balls = newBalls;
+
+        add(extraBall);
     }
-  }
-
-
 ////////////////////////////////
+
   void arrangeBricks(int numBricks){ // lays out the bricks on the screen
     const int n = 7;
     double xSpace = 2;

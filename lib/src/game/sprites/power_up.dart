@@ -74,6 +74,7 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
       applyPowerUp(game);
       if(isMounted) {
         removeFromParent();
+        removeFromParent();
       }
     }}
     super.onCollision(intersectionPoints, other);
