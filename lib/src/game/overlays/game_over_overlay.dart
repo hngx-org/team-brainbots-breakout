@@ -89,11 +89,9 @@ class _GameOverOverlayState extends State<GameOverOverlay>
                                 builder: (context, child) {
                                   return Transform.scale(
                                     scale: 1.0 - (0.1 * _resetController.value),
-                                    child: Container(
-                                      child: Image.asset(
-                                        'assets/images/others/repeat.png',
-                                        width: 95,
-                                      ),
+                                    child: Image.asset(
+                                      'assets/images/others/repeat.png',
+                                      width: 95,
                                     ),
                                   );
                                 })),

@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:brainbots_breakout/src/game/breakout.dart';
+import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,5 +19,10 @@ class GameManager extends Component with HasGameRef<Breakout>{
   void reset(){
     state = GameState.intro;
     score.value = 0;
+  }
+  PowerUpType getRandomPowerUpType(int level) { //TODO: return special powerups for different levels
+    final random = Random();
+    var powerUps = PowerUpType.values;
+    return powerUps[random.nextInt(powerUps.length)];
   }
 }
