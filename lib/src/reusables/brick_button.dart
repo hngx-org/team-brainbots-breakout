@@ -13,7 +13,7 @@ class BouncyButton extends StatefulWidget {
   });
 
   @override
-  _BouncyButtonState createState() => _BouncyButtonState();
+  State<BouncyButton> createState() => _BouncyButtonState();
 }
 
 class _BouncyButtonState extends State<BouncyButton> with SingleTickerProviderStateMixin {

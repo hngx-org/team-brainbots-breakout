@@ -2,20 +2,10 @@ import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:flame/components.dart';
 
 class BallSettings{
-  Vector2 initialVelocity;
-  Vector2 maxVelocity;
-  Vector2 gravity;
+  final Vector2 initialVelocity;
+  final Vector2 maxVelocity;
+  final Vector2 gravity;
   BallSettings({
-    required this.initialVelocity,
-    required this.maxVelocity,
-    required this.gravity,
-  });
-}
-class ExtraBallSettings{
-  Vector2 initialVelocity;
-  Vector2 maxVelocity;
-  Vector2 gravity;
-  ExtraBallSettings({
     required this.initialVelocity,
     required this.maxVelocity,
     required this.gravity,
@@ -23,25 +13,29 @@ class ExtraBallSettings{
 }
 
 class PaddleSettings{
-  double speedMultiplier;
+  final double speedMultiplier;
   PaddleSettings({required this.speedMultiplier});
 }
 
 class BrickSettings{
-  int strength;
-  int numBricks;
+  final double strength;
+  final int numBricks;
   BrickSettings({required this.strength, required this.numBricks});
 }
 
 class PowerUpSettings {
-  Vector2 velocity;
+  final Vector2 velocity;
+  final Duration duration;
 
-  PowerUpSettings({required this.velocity});
+  PowerUpSettings({
+    required this.velocity,
+    required this.duration
+  });
 }
 
 class LevelManager extends Component with HasGameRef<Breakout>{
   int level;
-  int maxLevel = 9;
+  final int maxLevel = 9;
   LevelManager({this.level = 1});
 
   final Map<int, BallSettings> ballConfig =  {
@@ -81,23 +75,17 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   };
 
   final Map<int, PowerUpSettings> powerUpConfig = {
-    1: PowerUpSettings(velocity: Vector2(0, 50)),
-    2: PowerUpSettings(velocity: Vector2(0, 55)),
-    3: PowerUpSettings(velocity: Vector2(0, 60)),
-    4: PowerUpSettings(velocity: Vector2(0, 65)),
-    5: PowerUpSettings(velocity: Vector2(0, 70)),
-    6: PowerUpSettings(velocity: Vector2(0, 75)),
-    7: PowerUpSettings(velocity: Vector2(0, 80)),
-    8: PowerUpSettings(velocity: Vector2(0, 85)),
-    9: PowerUpSettings(velocity: Vector2(0, 90)),
+    1: PowerUpSettings(velocity: Vector2(0, 50), duration: const Duration(seconds: 3)),
+    2: PowerUpSettings(velocity: Vector2(0, 55), duration: const Duration(seconds: 3)),
+    3: PowerUpSettings(velocity: Vector2(0, 60), duration: const Duration(seconds: 3)),
+    4: PowerUpSettings(velocity: Vector2(0, 65), duration: const Duration(seconds: 3)),
+    5: PowerUpSettings(velocity: Vector2(0, 70), duration: const Duration(seconds: 3)),
+    6: PowerUpSettings(velocity: Vector2(0, 75), duration: const Duration(seconds: 3)),
+    7: PowerUpSettings(velocity: Vector2(0, 80), duration: const Duration(seconds: 3)),
+    8: PowerUpSettings(velocity: Vector2(0, 85), duration: const Duration(seconds: 3)),
+    9: PowerUpSettings(velocity: Vector2(0, 90), duration: const Duration(seconds: 3)),
   };
 
-  Vector2 get powerUpVelocity{
-    if (powerUpConfig[level] != null){
-      return powerUpConfig[level]!.velocity;
-    }
-    return Vector2.zero();
-  }
 
   Vector2 get initialVelocity{
     if (ballConfig[level] != null){
@@ -128,7 +116,7 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     return 0;
   }
 
-  int get brickStrength{
+  double get brickStrength{
     if (brickConfig[level] != null){
       return brickConfig[level]!.strength;
     }
@@ -140,5 +128,19 @@ class LevelManager extends Component with HasGameRef<Breakout>{
       return brickConfig[level]!.numBricks;
     }
     return 0;
+  }
+
+  Vector2 get powerUpVelocity{
+    if (powerUpConfig[level] != null){
+      return powerUpConfig[level]!.velocity;
+    }
+    return Vector2.zero();
+  }
+
+  Duration get powerUpDuration{
+    if(powerUpConfig[level] != null){
+      return powerUpConfig[level]!.duration;
+    }
+    return const Duration(seconds: 0);
   }
 }

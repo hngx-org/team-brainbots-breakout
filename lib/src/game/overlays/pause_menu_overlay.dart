@@ -111,7 +111,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                                 (widget.game as Breakout).resume();
                               });
                               (widget.game as Breakout).resume();
-                              print('tap');},
+                              },
                             child: AnimatedBuilder(
                                 animation: _playController,
                                 builder: (context, child) {

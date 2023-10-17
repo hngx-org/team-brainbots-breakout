@@ -1,5 +1,6 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/sprites/ball.dart';
+import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -9,17 +10,17 @@ enum BrickColor
 
 class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCallbacks{
   BrickColor brickColor;
-  Vector2 brickSize;
-  Vector2 brickPosition;
-  int strength;
-  bool isPowerUp;
+  final Vector2 brickSize;
+  final Vector2 brickPosition;
+  double strength;
+  final bool hasPowerUp;
 
   Brick({
     required this.brickColor,
     required this.brickSize,
     required this.brickPosition,
     required this.strength,
-    required this.isPowerUp,
+    required this.hasPowerUp,
   });
   late ShapeHitbox hitbox;
   late BrickState brickState;
@@ -29,8 +30,8 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   Future<void> onLoad() async {
     super.onLoad();
 
-    Sprite normal = await gameRef.loadSprite('game/bricks/${brickColor.name}.png');
-    Sprite cracked = await gameRef.loadSprite('game/bricks/${brickColor.name}_cracked.png');
+    Sprite normal = await game.loadSprite('game/bricks/${brickColor.name}.png');
+    Sprite cracked = await game.loadSprite('game/bricks/${brickColor.name}_cracked.png');
     sprites = <BrickState, Sprite>{ // adds the two different sprites
       BrickState.normal: normal,
       BrickState.cracked: cracked,
@@ -55,9 +56,6 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
       }
       if (strength == 0){
         removeFromParent();
-        if (isPowerUp) {
-          gameRef.spawnPowerUp(this); // Call spawnPowerUp when a brick with isPowerUp set to true is destroyed.
-        }
       }
     }
     super.onCollision(intersectionPoints, other);
@@ -69,5 +67,20 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
       _hasCollided = false;
     }
     super.onCollisionEnd(other);
+  }
+
+  @override
+  void onRemove(){
+    super.onRemove();
+    if (hasPowerUp) {
+      final powerUpType = game.gameManager.getRandomPowerUpType(game.levelManager.level);
+      var powerUp = PowerUp(
+        powerUpType: powerUpType,
+        velocity: game.levelManager.powerUpVelocity,
+        powerUpSize: size,
+        powerUpPosition: position,
+      );
+      game.add(powerUp);
+    }
   }
 }
