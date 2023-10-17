@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/breakout.dart';
-import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -11,16 +10,16 @@ enum Surface {vertical, horiontal}
 
 class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks{
 
-  Vector2 ballSize;
-  Vector2 ballPosition;
-  Vector2 velocity;
-  Vector2 maxVelocity;
-  Vector2 gravity;
+  final Vector2 ballSize;
+  final Vector2 ballPosition;
+  final Vector2 initialVelocity;
+  late final Vector2 maxVelocity;
+  final Vector2 gravity;
 
   Ball({
     required this.ballSize,
     required this.ballPosition,
-    required this.velocity,
+    required this.initialVelocity,
     required this.maxVelocity,
     required this.gravity,
   });
@@ -32,9 +31,9 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
 
   bool canMove = false;
   bool _hasCollided = false;
+  Vector2 velocity = Vector2.zero();
   int doubleSizePUCount = 0;
   int halfSizePUCount = 0;
-
 
   bool get isMoving{
     return canMove ? velocity == Vector2.zero(): false;
@@ -43,7 +42,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite('game/ball.png'); // adds the ball to the game using the game reference
+    sprite = await game.loadSprite('game/ball.png'); // adds the ball to the game using the game reference
 
     size = ballSize;
     position = ballPosition;
@@ -62,6 +61,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
     // the height of the smallest object in the game (Brick) when the ball is moving at max speed(100).
     // This ensures that onCollision will always be called even when frame rate is very low
     _dt = (game.size.y/(8*3) / 2) / 100;
+    velocity = initialVelocity;
   }
 
   @override
@@ -75,7 +75,6 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
       }
       // velocity += gravity;
       position += velocity * _dt;
-      ballPosition += velocity * _dt;
       super.update(dt);
     }
   }
@@ -97,22 +96,6 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
 
       }
       else if (other is Brick){
-        if (gameRef.paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
-          doubleSizePUCount += 1;
-          print('double count $doubleSizePUCount');
-          if(doubleSizePUCount == 3){
-            doubleSizePUCount = 0;
-            gameRef.resetEnlargedOrShrunkPaddle(PowerUpType.enlarge);
-          }
-        }
-        else if (gameRef.paddle.powerUpTypes.contains(PowerUpType.shrink)) {
-          halfSizePUCount += 1;
-          print('half count $halfSizePUCount');
-          if(halfSizePUCount == 3){
-            halfSizePUCount = 0;
-            gameRef.resetEnlargedOrShrunkPaddle(PowerUpType.shrink);
-          }
-        }
         _rebound(intersectionPoints, other);
         if(userConfig.sfxOn.value){
           _brickCollisionSound.start();

@@ -1,6 +1,4 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
-import 'package:brainbots_breakout/src/game/managers/managers.dart';
-import 'package:brainbots_breakout/src/game/sprites/ball.dart';
 import 'package:brainbots_breakout/src/game/sprites/paddle.dart';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
@@ -14,7 +12,6 @@ enum PowerUpType {
   magnet,
   slow,
   fast,
-  none
 }
 String _getPowerupPath(PowerUpType type){
   return switch(type){
@@ -26,60 +23,54 @@ String _getPowerupPath(PowerUpType type){
     PowerUpType.magnet => 'game/powerups/magnet.png',
     PowerUpType.slow => 'game/powerups/slow.png',
     PowerUpType.fast => 'game/powerups/fast.png',
-    PowerUpType.none => '',
   };
 }
 
 class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks {
-  PowerUpType powerUpSelected;
+  PowerUpType powerUpType;
   Vector2 velocity;
   Vector2 powerUpSize;
   Vector2 powerUpPosition;
 
   PowerUp({
-    required this.powerUpSelected,
+    required this.powerUpType,
     required this.powerUpSize,
     required this.powerUpPosition,
     required this.velocity,
   });
 
   late ShapeHitbox hitbox;
-  bool canMove = false;
   bool _hasCollided = false;
 
-  bool get isMoving{
-    return canMove ? velocity == Vector2.zero(): false;
-  }
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    if(powerUpSelected != PowerUpType.none) {
-      final spriteAssetPath = _getPowerupPath(powerUpSelected);
-      sprite = await gameRef.loadSprite(spriteAssetPath);
+    final spriteAssetPath = _getPowerupPath(powerUpType);
+    sprite = await game.loadSprite(spriteAssetPath);
 
-      size = powerUpSize;
-      position = powerUpPosition;
+    size = powerUpSize;
+    position = powerUpPosition;
 
-        hitbox = RectangleHitbox();
+    hitbox = RectangleHitbox();
 
-      add(hitbox);
-    }
+    add(hitbox);
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other ){
-    if(!_hasCollided){ // ensures the onCollision callback isnt called again till onCollisionEnds
+    if(!_hasCollided){
       _hasCollided = true;
-    if (other is Paddle) {
-      applyPowerUp(game);
-      if(isMounted) {
-        removeFromParent();
-        removeFromParent();
+      if (other is Paddle) {
+        if(isMounted) {
+          game.addExtraBall();
+          removeFromParent();
+        }
       }
-    }}
+    }
     super.onCollision(intersectionPoints, other);
   }
+
   @override
   void onCollisionEnd(PositionComponent other){
     if(_hasCollided){
@@ -88,45 +79,17 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
     super.onCollisionEnd(other);
   }
 
-  void applyPowerUp(Breakout game) {
-    // Handle power-up effects here based on the powerUpType.
-    switch (powerUpSelected) {
-      case PowerUpType.enlarge:
-        gameRef.setEnlargedPaddle();
-        break;
-      case PowerUpType.shrink:
-        gameRef.setShrunkPaddle();
-        break;
-      case PowerUpType.extraBall:
-        gameRef.setExtraBall();
-        break;
-      case PowerUpType.fireBall:
-      // TODO: Implement the superBall power-up effect.
-        break;
-      case PowerUpType.laser:
-      // TODO: Implement the lazers power-up effect.
-        break;
-      case PowerUpType.magnet:
-      // TODO: Implement the magnet power-up effect.
-        break;
-      case PowerUpType.slow:
-        gameRef.setSlowBall();
-        break;
-      case PowerUpType.fast:
-        gameRef.setFastBall();
-        break;
-      case PowerUpType.none:
-        // TODO: Handle this case.
-    }
-  }
-
   @override
   void update(double dt) {
     super.update(dt);
     position.y += velocity.y * dt;
-    if(gameRef.gameManager.state == GameState.gameOver){
+    if(!(game.gameManager.isPlaying || game.gameManager.isPaused)){
       removeFromParent(); // removes the powerup when game is over
     }
+    if(position.y + height >= game.size.y * 0.98){
+      removeFromParent(); // removes the powerup when its below the paddle
+    }
   }
+
 }
 
