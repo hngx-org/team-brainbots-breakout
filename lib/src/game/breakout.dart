@@ -130,7 +130,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
     // Set the properties for the remaining ball
     if (balls.isNotEmpty) {
-      print('balls ${balls.length}');
       var ball = balls[0];
       ball.velocity = levelManager.initialVelocity;
       ball.velocity.x = 0; // Set the X velocity as needed
@@ -223,87 +222,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
     add(paddle);
   }
 
-  void resetPaddle(PowerUpType powerUpType){ // sets the size and position of the paddle
-    Vector2 paddleSize = Vector2(100, 25);
-    Vector2 paddlePosition = paddle.paddlePosition;
-    double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
-
-    paddle
-      ..paddleSize = paddleSize
-      ..paddlePosition = paddlePosition
-      ..speedMultiplier = paddleSpeedMultiplier
-      ..powerUpTypes.remove(powerUpType);
-
-    add(paddle);
-  }
-
-  //on collision with paddle////////
-  Future<void> setDoublePaddle() async {
-      if (!paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
-        Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
-        Vector2 paddlePosition = paddle.paddlePosition;
-        double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
-
-        paddle
-          ..paddleSize = paddleSize
-          ..paddlePosition = paddlePosition
-          ..speedMultiplier = paddleSpeedMultiplier
-          ..powerUpTypes.add(PowerUpType.enlarge);
-
-        add(paddle);
-      }
-  }
-
-  Future<void> setHalfPaddle() async {
-      if (!paddle.powerUpTypes.contains(PowerUpType.shrink)) {
-        Vector2 paddleSize;
-        if (paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
-          paddleSize = Vector2(60, 25);
-        }
-        else{
-          paddleSize = Vector2(paddle.paddleSize.x - 40, 25);
-        }
-
-        Vector2 paddlePosition = paddle.paddlePosition;
-        double paddleSpeedMultiplier = levelManager.paddleSpeedMultiplier;
-
-        paddle
-          ..paddleSize = paddleSize
-          ..paddlePosition = paddlePosition
-          ..speedMultiplier = paddleSpeedMultiplier
-          ..powerUpTypes.add(PowerUpType.shrink);
-
-        add(paddle);
-      }
-  }
-
-  void setExtraBall(){
-        Vector2 ballSize = Vector2.all(20);
-        Vector2 ballPosition = Vector2(
-          paddle.paddlePosition.x,
-          paddle.paddlePosition.y - 100,
-        );
-        Vector2 maxVelocity = levelManager.maxVelocity;
-        Vector2 gravity = levelManager.gravity;
-        Vector2 velocity = Vector2(0, -50);
-
-        nextBallIndex++;
-        var extraBall = Ball(
-          ballSize: ballSize,
-          ballPosition: ballPosition,
-          maxVelocity: maxVelocity,
-          gravity: gravity, velocity: velocity,
-        );
-        var newBalls = List<Ball>.from(balls);
-        newBalls.add(extraBall);
-
-        // Replace the original balls list with the new list
-        balls = newBalls;
-
-        add(extraBall);
-    }
-////////////////////////////////
-
   void arrangeBricks(int numBricks){ // lays out the bricks on the screen
     const int n = 7;
     double xSpace = 2;
@@ -317,7 +235,9 @@ class Breakout extends FlameGame with HasCollisionDetection{
     
     bricks = [];
     for(var brickIndex = 0; brickIndex < numBricks; brickIndex ++){
-      bool hasPowerUp = random.nextDouble() < 0.1;
+      // bool hasPowerUp = random.nextDouble() < levelManager.powerUpConfig[levelManager.level]!.probability;
+      bool hasPowerUp = random.nextDouble() < 0.6;
+
       bricks.add(
          Brick(
           brickColor: BrickColor.values[random.nextInt(BrickColor.values.length - 1)],
@@ -370,4 +290,138 @@ class Breakout extends FlameGame with HasCollisionDetection{
     }
   }
 
+
+  /////////power up placements///////
+
+  Future<void> setEnlargedPaddle() async {
+    if (!paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
+      Vector2 paddleSize;
+      Vector2 paddlePosition;
+      if (paddle.paddlePosition.x + paddle.paddleSize.x + 60 >= size.x) {
+        // Adjust the x position to keep the paddle within the screen
+        paddle.paddlePosition.x = size.x - paddle.paddleSize.x - 60;
+        paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
+        paddlePosition = Vector2(paddle.paddlePosition.x, paddle.paddlePosition.y);
+      }
+      else{
+        paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
+        paddlePosition = paddle.paddlePosition;
+      }
+
+      paddle
+        ..paddleSize = paddleSize
+        ..paddlePosition = paddlePosition
+        ..powerUpTypes.add(PowerUpType.enlarge)
+        ..powerUpTypes.remove(PowerUpType.shrink);
+
+      add(paddle);
+    }
+    else if (paddle.powerUpTypes.contains(PowerUpType.enlarge) && paddle.paddleSize == Vector2(100, 25)) {
+      Vector2 paddleSize = Vector2(paddle.paddleSize.x + 60, 25);
+
+      paddle
+        ..paddleSize = paddleSize
+        ..powerUpTypes.add(PowerUpType.enlarge)
+        ..powerUpTypes.remove(PowerUpType.shrink);
+
+      add(paddle);
+    }
+  }
+  Future<void> setShrunkPaddle() async {
+    if (!paddle.powerUpTypes.contains(PowerUpType.shrink)) {
+      Vector2 paddleSize;
+      if (!paddle.powerUpTypes.contains(PowerUpType.enlarge)) {
+        paddleSize = Vector2(60, 25);
+      }
+      else{
+        paddleSize = Vector2(paddle.paddleSize.x - 60, 25);
+      }
+
+
+      paddle
+        ..paddleSize = paddleSize
+        ..powerUpTypes.add(PowerUpType.shrink)
+        ..powerUpTypes.remove(PowerUpType.enlarge);
+
+      add(paddle);
+    }
+  }
+  Future<void> setExtraBall() async{
+    Vector2 ballSize = Vector2.all(20);
+    Vector2 ballPosition = Vector2(
+      paddle.paddlePosition.x,
+      paddle.paddlePosition.y - 100,
+    );
+    Vector2 maxVelocity = levelManager.maxVelocity;
+    Vector2 gravity = levelManager.gravity;
+    Vector2 velocity = Vector2(0, -50);
+
+    nextBallIndex++;
+    var extraBall = Ball(
+      ballSize: ballSize,
+      ballPosition: ballPosition,
+      maxVelocity: maxVelocity,
+      gravity: gravity, velocity: velocity,
+    );
+    var newBalls = List<Ball>.from(balls);
+    newBalls.add(extraBall);
+
+    // Replace the original balls list with the new list
+    balls = newBalls;
+
+    add(extraBall);
+  }
+  Future<void> setSlowBall() async{
+    Vector2 maxVelocity;
+    Vector2 velocity;
+    for (var ball in balls) {
+      maxVelocity = Vector2(ball.maxVelocity.x - 15, ball.maxVelocity.y - 25,);
+      velocity = ball.velocity;
+
+      ball
+          ..maxVelocity = maxVelocity
+          ..velocity = velocity;
+
+      add(ball);
+    }
+  }
+  Future<void> setFastBall() async{
+    Vector2 maxVelocity;
+    Vector2 velocity;
+    for (var ball in balls) {
+      maxVelocity = Vector2(ball.maxVelocity.x + 15, ball.maxVelocity.y + 25,);
+      velocity = ball.velocity;
+
+      ball
+          ..maxVelocity = maxVelocity
+          ..velocity = velocity;
+
+      add(ball);
+    }
+  }
+
+  //reset powerUps section///
+  void resetEnlargedOrShrunkPaddle(PowerUpType powerUpType){
+    if(powerUpType == PowerUpType.enlarge && paddle.powerUpTypes.contains(PowerUpType.shrink)){
+      paddle.powerUpTypes.remove(powerUpType);
+
+      add(paddle);
+      return;
+    }
+
+    if(powerUpType == PowerUpType.shrink && paddle.powerUpTypes.contains(PowerUpType.enlarge)){
+      paddle.powerUpTypes.remove(powerUpType);
+
+      add(paddle);
+      return;
+    }
+
+    Vector2 paddleSize = Vector2(100, 25);
+
+    paddle
+      ..paddleSize = paddleSize
+      ..powerUpTypes.remove(powerUpType);
+
+    add(paddle);
+  }
 }

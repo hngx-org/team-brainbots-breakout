@@ -35,26 +35,15 @@ class BrickSettings{
 
 class PowerUpSettings {
   Vector2 velocity;
-
-  PowerUpSettings({required this.velocity});
+  double probability;
+  PowerUpSettings({required this.velocity, required this.probability});
 }
 
 class LevelManager extends Component with HasGameRef<Breakout>{
   int level;
   int maxLevel = 9;
-  LevelManager({this.level = 1});
 
-  final Map<int, BallSettings> ballConfig =  {
-    1: BallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 50), gravity: Vector2(0, 0.2)),
-    2: BallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 55), gravity: Vector2(0, 0.3)),
-    3: BallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 60), gravity: Vector2(0, 0.4)),
-    4: BallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 65), gravity: Vector2(0, 0.5)),
-    5: BallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 70), gravity: Vector2(0, 0.6)),
-    6: BallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 75), gravity: Vector2(0, 0.7)),
-    7: BallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 80), gravity: Vector2(0, 0.8)),
-    8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
-    9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
-  };
+  LevelManager({this.level = 1});
 
   final Map<int, PaddleSettings> paddleConfig = {
     1: PaddleSettings(speedMultiplier: 4.0),
@@ -80,17 +69,30 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     9: BrickSettings(strength: 1, numBricks: 49),
   };
 
-  final Map<int, PowerUpSettings> powerUpConfig = {
-    1: PowerUpSettings(velocity: Vector2(0, 50)),
-    2: PowerUpSettings(velocity: Vector2(0, 55)),
-    3: PowerUpSettings(velocity: Vector2(0, 60)),
-    4: PowerUpSettings(velocity: Vector2(0, 65)),
-    5: PowerUpSettings(velocity: Vector2(0, 70)),
-    6: PowerUpSettings(velocity: Vector2(0, 75)),
-    7: PowerUpSettings(velocity: Vector2(0, 80)),
-    8: PowerUpSettings(velocity: Vector2(0, 85)),
-    9: PowerUpSettings(velocity: Vector2(0, 90)),
+  final Map<int, BallSettings> ballConfig =  {
+    1: BallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 50), gravity: Vector2(0, 0.2)),
+    2: BallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 55), gravity: Vector2(0, 0.3)),
+    3: BallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 60), gravity: Vector2(0, 0.4)),
+    4: BallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 65), gravity: Vector2(0, 0.5)),
+    5: BallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 70), gravity: Vector2(0, 0.6)),
+    6: BallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 75), gravity: Vector2(0, 0.7)),
+    7: BallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 80), gravity: Vector2(0, 0.8)),
+    8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
+    9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
   };
+
+  final Map<int, PowerUpSettings> powerUpConfig = {
+    1: PowerUpSettings(velocity: Vector2(0, 50), probability: 0.3),
+    2: PowerUpSettings(velocity: Vector2(0, 55), probability: 0.35),
+    3: PowerUpSettings(velocity: Vector2(0, 60), probability: 0.40),
+    4: PowerUpSettings(velocity: Vector2(0, 65), probability: 0.45),
+    5: PowerUpSettings(velocity: Vector2(0, 70), probability: 0.5),
+    6: PowerUpSettings(velocity: Vector2(0, 75), probability: 0.55),
+    7: PowerUpSettings(velocity: Vector2(0, 80), probability: 0.6),
+    8: PowerUpSettings(velocity: Vector2(0, 85), probability: 0.65),
+    9: PowerUpSettings(velocity: Vector2(0, 90), probability: 0.7),
+  };
+
 
   Vector2 get powerUpVelocity{
     if (powerUpConfig[level] != null){

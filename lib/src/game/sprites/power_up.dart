@@ -1,5 +1,6 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
+import 'package:brainbots_breakout/src/game/sprites/ball.dart';
 import 'package:brainbots_breakout/src/game/sprites/paddle.dart';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
@@ -87,15 +88,14 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
     super.onCollisionEnd(other);
   }
 
-
   void applyPowerUp(Breakout game) {
     // Handle power-up effects here based on the powerUpType.
     switch (powerUpSelected) {
       case PowerUpType.enlarge:
-        gameRef.setDoublePaddle();
+        gameRef.setEnlargedPaddle();
         break;
       case PowerUpType.shrink:
-        gameRef.setHalfPaddle();
+        gameRef.setShrunkPaddle();
         break;
       case PowerUpType.extraBall:
         gameRef.setExtraBall();
@@ -110,10 +110,10 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
       // TODO: Implement the magnet power-up effect.
         break;
       case PowerUpType.slow:
-      // TODO: Implement the slowDown power-up effect.
+        gameRef.setSlowBall();
         break;
       case PowerUpType.fast:
-      // TODO: Implement the speedUp power-up effect.
+        gameRef.setFastBall();
         break;
       case PowerUpType.none:
         // TODO: Handle this case.
@@ -129,3 +129,4 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
     }
   }
 }
+

@@ -102,7 +102,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
           print('double count $doubleSizePUCount');
           if(doubleSizePUCount == 3){
             doubleSizePUCount = 0;
-            gameRef.resetPaddle(PowerUpType.enlarge);
+            gameRef.resetEnlargedOrShrunkPaddle(PowerUpType.enlarge);
           }
         }
         else if (gameRef.paddle.powerUpTypes.contains(PowerUpType.shrink)) {
@@ -110,7 +110,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
           print('half count $halfSizePUCount');
           if(halfSizePUCount == 3){
             halfSizePUCount = 0;
-            gameRef.resetPaddle(PowerUpType.shrink);
+            gameRef.resetEnlargedOrShrunkPaddle(PowerUpType.shrink);
           }
         }
         _rebound(intersectionPoints, other);
