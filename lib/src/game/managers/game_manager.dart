@@ -126,7 +126,10 @@ class GameManager extends Component with HasGameRef<Breakout>{
     int totalSeconds = time.value;
     int minutes = totalSeconds ~/ 60; // Integer division to get minutes
     int seconds = totalSeconds % 60; // Modulo operation to get remaining seconds
-    String timeInMinutesAndSeconds = '$minutes:${seconds.toString().padLeft(2, '0')} mins';
+
+    String minutesText = minutes == 1 ? 'min' : 'mins';
+
+    String timeInMinutesAndSeconds = '$minutes:${seconds.toString().padLeft(2, '0')} $minutesText';
     return timeInMinutesAndSeconds;
   }
 }

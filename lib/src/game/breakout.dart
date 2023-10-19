@@ -42,6 +42,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
   Future<void> update(dt) async{
     super.update(dt);
 
+    userConfig.totalGameTime.value += gameManager.score.value;
+
     for(Laser laser in lasers){
       if(!gameManager.isPlaying){
         laser.removeFromParent();
