@@ -7,7 +7,6 @@ enum PowerUpType {
   enlarge,
   shrink,
   extraBall,
-  fireBall,
   laser,
   magnet,
   slow,
@@ -18,7 +17,6 @@ String _getPowerupPath(PowerUpType type){
     PowerUpType.enlarge => 'game/powerups/enlarge.png',
     PowerUpType.shrink => 'game/powerups/shrink.png',
     PowerUpType.extraBall => 'game/powerups/extra_ball.png',
-    PowerUpType.fireBall => 'game/powerups/fire_ball.png',
     PowerUpType.laser => 'game/powerups/laser.png',
     PowerUpType.magnet => 'game/powerups/magnet.png',
     PowerUpType.slow => 'game/powerups/slow.png',
@@ -63,7 +61,6 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
       _hasCollided = true;
       if (other is Paddle) {
         if(isMounted) {
-          game.addExtraBall();
           removeFromParent();
         }
       }

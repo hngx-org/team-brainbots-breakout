@@ -162,8 +162,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ),
                       ],
                     ),
-                    userConfig.musicOn.value ? 10.horizontalSpace : SizedBox.shrink(),
-                    userConfig.musicOn.value ? Image.asset('assets/gifs/sound_waves.gif', width: 40.w,) : SizedBox.shrink(),
+                    userConfig.musicOn.value ? 10.horizontalSpace : const SizedBox.shrink(),
+                    userConfig.musicOn.value ? Image.asset('assets/gifs/sound_waves.gif', width: 40.w,) : const SizedBox.shrink(),
                     !userConfig.musicOn.value ? 100.horizontalSpace : 50.horizontalSpace,
                     CupertinoSwitch(
                       trackColor: Colors.orange.withOpacity(0.25),

@@ -7,7 +7,8 @@ import 'package:flame/components.dart' hide Timer;
 import 'package:flame/events.dart';
 
 enum PaddleType {normal, laser, magnet}
-class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, CollisionCallbacks, DragCallbacks{
+class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, CollisionCallbacks,
+    DragCallbacks, TapCallbacks {
   final Vector2 paddleSize;
   final Vector2 paddlePosition;
   double speedMultiplier;
@@ -106,6 +107,7 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
       }
 
       paddleBoost = event.delta.x * speedMultiplier;
+
     }
   }
 
@@ -115,14 +117,18 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
     paddleBoost = 0;
   }
 
+  // @override
+  // void onTapDown(TapDownEvent event) {
+  //   if(game.isPaddleMagnetic) {
+  //     game.shootMagnetizedBall();
+  //   }
+  // }
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other){
     if(other is PowerUp){
       if(other.powerUpType == PowerUpType.laser){
         _applyLaserPowerUp();
-      }
-      if(other.powerUpType == PowerUpType.magnet){
-        _applyMagnetPowerUp();
       }
       if(other.powerUpType == PowerUpType.enlarge){
         _applyEnlargePowerUp();
@@ -131,10 +137,13 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
         _applyShrinkPowerUp();
       }
       if(other.powerUpType == PowerUpType.slow){
-        _applySlowBallPowerUp();
+        gameRef.applySlowBallPowerUp();
       }
       if(other.powerUpType == PowerUpType.fast){
-        _applyFastBallPowerUp();
+        gameRef.applyFastBallPowerUp();
+      }
+      if(other.powerUpType == PowerUpType.extraBall){
+        game.addExtraBall();
       }
     }
     super.onCollision(intersectionPoints, other);
@@ -143,6 +152,8 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
   void _applyLaserPowerUp(){
     if(!(_shouldActivateLaser || current != PaddleType.normal)){
       _shouldActivateLaser = true;
+      game.overlays.add('laserPaddleOverlay', );
+      Future.delayed(const Duration(milliseconds: 800)).then((value) => game.overlays.remove('laserPaddleOverlay'));
       Future.delayed(
         game.levelManager.powerUpDuration,
         (){
@@ -154,47 +165,32 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
       _spawnLasers();
     }
   }
-  
-  void _applyMagnetPowerUp(){
-    if(!(_shouldActivateMagnet || current != PaddleType.normal)){
-      _shouldActivateMagnet = true;
-      Future.delayed(
-        game.levelManager.powerUpDuration,
-        (){
-          if(isMounted){
-            current = PaddleType.normal;
-          }
-        }
-      );
-    }
-  }
 
   void _spawnLasers(){
     _laserTimer = Timer.periodic(
-      const Duration(milliseconds: 500), 
+      const Duration(milliseconds: 1800),
       (timer){
         if(current == PaddleType.laser){
           Vector2 laserSize = Vector2(7.6, 16.4);
-          game.addAll([
-            Laser(
+          final lasers = [Laser(
               initialPosition: Vector2(
-                x,
-                y - laserSize.y
+                  x,
+                  y - laserSize.y
               ),
               laserSize: laserSize,
               velocity: Vector2(0, -40),
-              damage: 0.1
-            ),
-            Laser(
-              initialPosition: Vector2(
-                x + width - laserSize.x,
-                y - laserSize.y
-              ),
-              laserSize: laserSize,
-              velocity: Vector2(0, -40),
-              damage: 0.1
-            ),
-          ]);
+              damage: 0.1,
+          ),Laser(
+                initialPosition: Vector2(
+                    x + width - laserSize.x,
+                    y - laserSize.y
+                ),
+                laserSize: laserSize,
+                velocity: Vector2(0, -40),
+                damage: 0.1
+            ),];
+          game.lasers.addAll(lasers);
+          game.addAll(lasers);
         }
         else {
           timer.cancel();
@@ -204,6 +200,8 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
   }
 
   void _applyEnlargePowerUp(){
+    game.overlays.add('enlargedPaddleOverlay', );
+    Future.delayed(const Duration(milliseconds: 800)).then((value) => game.overlays.remove('enlargedPaddleOverlay', ));
     double increment = 60;
     if(!_isEnlarged){
       _isEnlarged = true;
@@ -233,6 +231,8 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
   void _applyShrinkPowerUp(){
     double decremnet = 60;
     if(!_isShrinked){
+      game.overlays.add('shrinkPaddleOverlay', );
+      Future.delayed(const Duration(milliseconds: 800)).then((value) => game.overlays.remove('shrinkPaddleOverlay', ));
       _isShrinked = true;
       size.x -= decremnet;
       position.x += decremnet/2;
@@ -254,37 +254,6 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
           }
         }
       );
-    }
-  }
-
-
-  Future<void> _applySlowBallPowerUp() async{
-    Vector2 maxVelocity;
-    Vector2 velocity;
-    for (var ball in game.balls) {
-      maxVelocity = Vector2(ball.maxVelocity.x - 15, ball.maxVelocity.y - 25,);
-      velocity = ball.velocity;
-
-      ball
-        ..maxVelocity = maxVelocity
-        ..velocity = velocity;
-
-      add(ball);
-    }
-  }
-
-  Future<void> _applyFastBallPowerUp() async{
-    Vector2 maxVelocity;
-    Vector2 velocity;
-    for (var ball in game.balls) {
-      maxVelocity = Vector2(ball.maxVelocity.x + 15, ball.maxVelocity.y + 25,);
-      velocity = ball.velocity;
-
-      ball
-        ..maxVelocity = maxVelocity
-        ..velocity = velocity;
-
-      add(ball);
     }
   }
 
