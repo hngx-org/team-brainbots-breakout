@@ -1,6 +1,5 @@
 import 'package:brainbots_breakout/src/game/breakout.dart';
 import 'package:brainbots_breakout/src/game/sprites/ball.dart';
-import 'package:brainbots_breakout/src/game/sprites/laser.dart';
 import 'package:brainbots_breakout/src/game/sprites/power_up.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -26,8 +25,6 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   late ShapeHitbox hitbox;
   late BrickState brickState;
   bool _hasCollided = false;
-  bool isPowerUpBrickCracked = false;
-  double storedBrickStrength = 0.0;
 
   @override
   Future<void> onLoad() async {
@@ -52,32 +49,13 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   Future<void> onCollision(Set<Vector2> intersectionPoints, PositionComponent other) async{
     if(other is Ball && !_hasCollided){ // the _hasCollided flag ensures that the onCollision is not called again till collision ends
       _hasCollided = true;
+      strength -= 1;
+      if(strength == 1){
+        current = BrickState.cracked;
+        return;
+      }
+      if (strength == 0){
         removeFromParent();
-    }
-    if(other is Laser && !_hasCollided){ // the _hasCollided flag ensures that the onCollision is not called again till collision ends
-      _hasCollided = true;
-      bool isLaserTraveling = other.isLaserTraveling;
-      if (isLaserTraveling) {
-        strength -= 0.5;
-        if (strength <= 0){
-          removeFromParent();
-        }
-        if(strength >= 0.1 && strength <= 1){
-          if (hasPowerUp && !isPowerUpBrickCracked) {
-            final powerUpType = game.gameManager.getRandomPowerUpType(game.levelManager.level);
-            var powerUp = PowerUp(
-              powerUpType: powerUpType,
-              velocity: game.levelManager.powerUpVelocity,
-              powerUpSize: size,
-              powerUpPosition: position,
-            );
-            game.add(powerUp);
-
-            isPowerUpBrickCracked = true;
-          }
-          current = BrickState.cracked;
-          return;
-        }
       }
     }
     super.onCollision(intersectionPoints, other);
@@ -86,7 +64,6 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
   @override
   Future<void> onCollisionEnd(PositionComponent other) async {
     if(_hasCollided){
-      game.gameManager.score.value += 1;
       _hasCollided = false;
     }
     super.onCollisionEnd(other);

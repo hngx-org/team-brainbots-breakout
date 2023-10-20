@@ -4,7 +4,6 @@ import 'package:brainbots_breakout/src/game/overlays/game_over_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/game_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/intro_overlay.dart';
 import 'package:brainbots_breakout/src/game/overlays/pause_menu_overlay.dart';
-import 'package:brainbots_breakout/src/game/overlays/powerup_flash_message.dart';
 import 'package:brainbots_breakout/src/game/overlays/win_overlay.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +57,6 @@ class _GameScreenState extends State<GameScreen> {
             'introOverlay': (context, game) => IntroOverlay(game: game),
             'gameOverOverlay': (context, game) => GameOverOverlay(game: game),
             'winOverlay': (context, game) => WinOverlay(game: game),
-            'extraBallOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Extra ball!',),
-            'slowBallOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Slow ball!',),
-            'fastBallOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Fast ball!',),
-            'shrinkPaddleOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Paddle shrunk!',),
-            'enlargedPaddleOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Paddle enlarged!',),
-            'magneticPaddleOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Magnetic Paddle!',),
-            'laserPaddleOverlay': (context, game) => PowerUpFlashMessage(game: game, flashMessage: 'Laser Paddle!',),
           },
         ),
       ),

@@ -13,7 +13,7 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
   final Vector2 ballSize;
   final Vector2 ballPosition;
   final Vector2 initialVelocity;
-  Vector2 maxVelocity;
+  final Vector2 maxVelocity;
   final Vector2 gravity;
 
   Ball({
@@ -85,17 +85,14 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
       _hasCollided = true;
       if(other is Paddle){
         _rebound(intersectionPoints, other);
-
         if(userConfig.sfxOn.value){
           _paddleCollisionSound.start();
         }
-
         if ((velocity.x + other.paddleBoost).isNegative){ // adds momentum from paddle and ensures it doesnt make the ball exceed its max velocity
           velocity.x = max(-maxVelocity.x, (velocity.x + other.paddleBoost));
         } else {
           velocity.x = min(maxVelocity.x, (velocity.x + other.paddleBoost));
         }
-
 
       }
       else if (other is Brick){
@@ -159,5 +156,4 @@ class Ball extends SpriteComponent with HasGameRef<Breakout>, CollisionCallbacks
       velocity.y *= -1;
     }
   }
-
 }
