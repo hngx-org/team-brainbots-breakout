@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserConfig extends ChangeNotifier{
   late ValueNotifier<int> highScore;
   late ValueNotifier<int> noGamesPlayed;
+  late ValueNotifier<int> noGamesWon;
   late ValueNotifier<Duration> totalGameTime;
   late ValueNotifier<Duration> bestTime;
   late ValueNotifier<int> levelsUnlocked;
@@ -16,6 +17,7 @@ class UserConfig extends ChangeNotifier{
 
     highScore = ValueNotifier(prefs.getInt('highScore') ?? 0);
     noGamesPlayed = ValueNotifier(prefs.getInt('noGamesPlayed') ?? 0);
+    noGamesWon = ValueNotifier(prefs.getInt('noGamesWon') ?? 0);
     totalGameTime = ValueNotifier(Duration(seconds: prefs.getInt('totalGameTime') ?? 0));
     bestTime = ValueNotifier(Duration(seconds: prefs.getInt('bestTime') ?? 0));
     levelsUnlocked = ValueNotifier(prefs.getInt('levelsUnlocked') ?? 1);
@@ -29,6 +31,9 @@ class UserConfig extends ChangeNotifier{
     });
     noGamesPlayed.addListener(() {
       prefs.setInt('noGamesPlayed', noGamesPlayed.value);
+    });
+    noGamesWon.addListener(() {
+      prefs.setInt('noGamesWon', noGamesWon.value);
     });
     totalGameTime.addListener(() {
       prefs.setInt('totalGameTime', totalGameTime.value.inSeconds);
