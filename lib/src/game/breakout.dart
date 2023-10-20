@@ -113,6 +113,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void pause(){
     pauseEngine();
     if (gameManager.isPaused) {
+      print('here');
       gameTimer!.cancel();
     }
     overlays.add('pauseMenuOverlay');
@@ -232,7 +233,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     for (var brickIndex = 0; brickIndex < numPatterns; brickIndex++) {
       // Adjust brick position according to the pattern
       if (pattern[rowIndex][brickIndex % n] == 1) {
-        bool hasPowerUp = random.nextDouble() < 0.8;
+        bool hasPowerUp = random.nextDouble() < 0.3;
 
         bricks.add(
             Brick(
@@ -257,7 +258,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     addAll(bricks);
   }
 
-  //ball power up area
+  //ball powerup area
   void addExtraBall(){
     if (extraBallsOnScreen <= 2) {
       extraBallsOnScreen += 1;
