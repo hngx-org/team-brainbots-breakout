@@ -77,6 +77,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     overlays.remove('introOverlay');
     gameManager.state = GameState.playing;
     gameManager.gameStopwatch.start();
+    userConfig.noGamesPlayed.value += 1;
   }
   void pause(){
     pauseEngine();

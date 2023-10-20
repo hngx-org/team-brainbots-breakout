@@ -5,7 +5,6 @@ import 'package:brainbots_breakout/src/config/router_config.dart';
 import 'package:brainbots_breakout/src/reusables/background.dart';
 import 'package:brainbots_breakout/src/reusables/brick_button.dart';
 import 'package:brainbots_breakout/src/constants/color.dart';
-import 'dart:io';
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:flame_audio/flame_audio.dart';
