@@ -16,14 +16,12 @@ class Laser extends SpriteComponent with HasGameRef<Breakout>, CollisionCallback
   });
   late double _dt;
   late ShapeHitbox hitbox;
-  bool isLaserTraveling = false;
   @override
   void onLoad() async{
     sprite = await  game.loadSprite('game/laser.png');
     position = initialPosition;
     size = laserSize;
     _dt = (game.size.y/(8*3) / 2) / 100;
-    isLaserTraveling = true;
 
     hitbox = RectangleHitbox();
     add(hitbox);

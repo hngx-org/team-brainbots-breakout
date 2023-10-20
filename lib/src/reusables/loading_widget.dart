@@ -16,8 +16,8 @@ class LoadingWidget extends StatelessWidget {
       alignment: MainAxisAlignment.center,
       animationDuration: 2000,
       percent: 0.9,
-      center: Text('loading...', style: GoogleFonts.pressStart2p(
-          color: Colors.black, fontSize: 12),),
+      center: Text("", style: GoogleFonts.pressStart2p(
+          color: Colors.white),),
       barRadius: const Radius.circular(10),
       progressColor: Colors.yellowAccent,
     );
