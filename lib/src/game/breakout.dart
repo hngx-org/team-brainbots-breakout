@@ -113,7 +113,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   void pause(){
     pauseEngine();
     if (gameManager.isPaused) {
-      print('here');
       gameTimer!.cancel();
     }
     overlays.add('pauseMenuOverlay');
@@ -347,7 +346,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     }
   }
 
-  //end of ball powerup area
+  //end of ball power up area
 
   void initializeGameStart(){
     setPaddle();

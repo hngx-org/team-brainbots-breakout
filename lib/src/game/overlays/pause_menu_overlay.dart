@@ -69,7 +69,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                 Align(
                     alignment: const Alignment(0, -0.215),
                     child: Text(
-                      'TIME:$formattedTime',
+                      'Time $formattedTime',
                       style: GoogleFonts.pressStart2p(
                           color: MyColor.appColor, fontSize: 22),
                     )),

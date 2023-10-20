@@ -121,11 +121,10 @@ class GameManager extends Component with HasGameRef<Breakout>{
     return generatedPattern;
   }
 
-
   String formatTime(int seconds){
     int totalSeconds = time.value;
-    int minutes = totalSeconds ~/ 60; // Integer division to get minutes
-    int seconds = totalSeconds % 60; // Modulo operation to get remaining seconds
+    int minutes = totalSeconds ~/ 60;
+    int seconds = totalSeconds % 60;
 
     String minutesText = minutes == 1 ? 'min' : 'mins';
 

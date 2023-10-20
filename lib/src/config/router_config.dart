@@ -3,6 +3,7 @@ import 'package:brainbots_breakout/src/screens/game_screen.dart';
 import 'package:brainbots_breakout/src/screens/level_screen.dart';
 import 'package:brainbots_breakout/src/screens/menu_and_settings_screen.dart';
 import 'package:brainbots_breakout/src/screens/splash_screen.dart';
+import 'package:brainbots_breakout/src/screens/stats_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -68,6 +69,13 @@ final GoRouter routerConfig = GoRouter(
       path: RoutesPath.levelScreen,
       pageBuilder: (context, state) => CupertinoPage<void>(
         child: const LevelScreen(),
+        key: state.pageKey,
+      ),
+    ),
+    GoRoute(
+      path: RoutesPath.statsScreen,
+      pageBuilder: (context, state) => CupertinoPage<void>(
+        child: const StatsScreen(),
         key: state.pageKey,
       ),
     ),
