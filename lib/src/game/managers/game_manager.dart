@@ -28,7 +28,7 @@ class GameManager extends Component with HasGameRef<Breakout>{
 
     if (level % 2 == 0) {
       powerUps = [PowerUpType.fast, PowerUpType.enlarge];
-      if (random.nextDouble() < 0.9) {
+      if (random.nextDouble() < 0.4) {
         powerUps.add(PowerUpType.laser); // 20% chance for laser
       }
       if (random.nextDouble() < 0.4) {
