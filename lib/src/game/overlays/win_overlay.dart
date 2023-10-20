@@ -100,7 +100,7 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                 Align(
                 alignment: const Alignment(0, 0),
                 child: Text(
-                  'Time $time',
+                  'TIME:${(widget.game as Breakout).gameManager.score.value}',
                   style: GoogleFonts.pressStart2p(
                     color: MyColor.secondaryColor.withOpacity(0.8),
                     fontWeight: FontWeight.bold,

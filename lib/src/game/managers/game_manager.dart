@@ -28,7 +28,7 @@ class GameManager extends Component with HasGameRef<Breakout>{
 
     if (level % 2 == 0) {
       powerUps = [PowerUpType.fast, PowerUpType.enlarge];
-      if (random.nextDouble() < 0.4) {
+      if (random.nextDouble() < 0.9) {
         powerUps.add(PowerUpType.laser); // 20% chance for laser
       }
       if (random.nextDouble() < 0.4) {
@@ -123,8 +123,8 @@ class GameManager extends Component with HasGameRef<Breakout>{
 
   String formatTime(int seconds){
     int totalSeconds = time.value;
-    int minutes = totalSeconds ~/ 60;
-    int seconds = totalSeconds % 60;
+    int minutes = totalSeconds ~/ 60; // Integer division to get minutes
+    int seconds = totalSeconds % 60; // Modulo operation to get remaining seconds
 
     String minutesText = minutes == 1 ? 'min' : 'mins';
 

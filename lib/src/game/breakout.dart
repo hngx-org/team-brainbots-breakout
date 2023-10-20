@@ -232,7 +232,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     for (var brickIndex = 0; brickIndex < numPatterns; brickIndex++) {
       // Adjust brick position according to the pattern
       if (pattern[rowIndex][brickIndex % n] == 1) {
-        bool hasPowerUp = random.nextDouble() < 0.3;
+        bool hasPowerUp = random.nextDouble() < 0.8;
 
         bricks.add(
             Brick(
