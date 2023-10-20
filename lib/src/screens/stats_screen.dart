@@ -109,6 +109,33 @@ class _StatsScreenState extends State<StatsScreen> with TickerProviderStateMixin
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
+                      'No Games Won',
+                      style: GoogleFonts.pressStart2p(
+                        color: Colors.yellowAccent,
+                        fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          letterSpacing: -2.5,
+                          wordSpacing: -1
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    20.verticalSpace,
+                    Text(
+                      '${userConfig.noGamesWon.value}',
+                      style: GoogleFonts.pressStart2p(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                40.verticalSpace,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
                       'Total Game Time',
                       style: GoogleFonts.pressStart2p(
                         color: Colors.yellowAccent,

@@ -118,6 +118,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
       }
     }
     gameManager.gameStopwatch.stop();
+    userConfig.noGamesWon.value += 1;
     userConfig.totalGameTime.value += gameManager.gameStopwatch.elapsed;
     if(gameManager.gameStopwatch.elapsed < userConfig.bestTime.value){
       userConfig.bestTime.value = gameManager.gameStopwatch.elapsed;
