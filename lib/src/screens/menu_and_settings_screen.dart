@@ -90,48 +90,110 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
               child: CustomBackground(mediaQuery: mediaQuery)),
           //menu
           if(!isSettingsScreen ) menuContent(),
-          if(isSettingsScreen) Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //settings
-              AnimatedOpacity(
-                opacity: areButtonsVisible ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.easeIn,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
+          if(isSettingsScreen) settingsContent()
+        ],
+      ),
+    );
+  }
+
+  Column settingsContent() {
+    return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //settings
+            AnimatedOpacity(
+              opacity: areButtonsVisible ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeIn,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    'SETTINGS',
+                    style: GoogleFonts.pressStart2p(
+                      color: Colors.orange.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Positioned(
+                    top: 5.0,
+                    left: 0.0,
+                    child: Text(
                       'SETTINGS',
                       style: GoogleFonts.pressStart2p(
-                        color: Colors.orange.withOpacity(0.8),
+                        color: Colors.yellowAccent,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Positioned(
-                      top: 5.0,
-                      left: 0.0,
-                      child: Text(
-                        'SETTINGS',
+                  ),
+                ],
+              ),
+            ),
+            80.verticalSpace,
+            //sound
+            AnimatedOpacity(
+              opacity: areButtonsVisible ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeIn,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    alignment: Alignment.topLeft,
+                    children: [
+                      Text(
+                        'MUSIC',
                         style: GoogleFonts.pressStart2p(
-                          color: Colors.yellowAccent,
+                          color: Colors.orange.withOpacity(0.8),
                           fontWeight: FontWeight.bold,
-                          fontSize: 32,
+                          fontSize: 22,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    ),
-                  ],
-                ),
+                      Positioned(
+                        top: 4.0,
+                        left: 0.0,
+                        child: Text(
+                          'MUSIC',
+                          style: GoogleFonts.pressStart2p(
+                            color: Colors.yellowAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  userConfig.musicOn.value ? 10.horizontalSpace : const SizedBox.shrink(),
+                  userConfig.musicOn.value ? Image.asset('assets/gifs/sound_waves.gif', width: 40.w,) : const SizedBox.shrink(),
+                  !userConfig.musicOn.value ? 100.horizontalSpace : 50.horizontalSpace,
+                  CupertinoSwitch(
+                    trackColor: Colors.orange.withOpacity(0.25),
+                    thumbColor: Colors.yellowAccent,
+                    activeColor: Colors.orange.withOpacity(0.8),
+                    value: userConfig.musicOn.value,
+                    onChanged: (flag){
+                      setState(() {
+                        userConfig.musicOn.value = flag;
+                      });
+                    }
+                  ),
+                ],
               ),
-              80.verticalSpace,
-              //sound
-              AnimatedOpacity(
-                opacity: areButtonsVisible ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.easeIn,
+            ),
+            20.verticalSpace,
+            //music
+            AnimatedOpacity(
+              opacity: areButtonsVisible ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeIn,
+              child: Align(
+                alignment: const Alignment(-0.4, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -139,7 +201,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                       alignment: Alignment.topLeft,
                       children: [
                         Text(
-                          'MUSIC',
+                          'SOUND',
                           style: GoogleFonts.pressStart2p(
                             color: Colors.orange.withOpacity(0.8),
                             fontWeight: FontWeight.bold,
@@ -151,7 +213,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                           top: 4.0,
                           left: 0.0,
                           child: Text(
-                            'MUSIC',
+                            'SOUND',
                             style: GoogleFonts.pressStart2p(
                               color: Colors.yellowAccent,
                               fontWeight: FontWeight.bold,
@@ -162,155 +224,99 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
                         ),
                       ],
                     ),
-                    const SizedBox(width: 100),
+                    const SizedBox(width: 100,),
                     CupertinoSwitch(
                       trackColor: Colors.orange.withOpacity(0.25),
                       thumbColor: Colors.yellowAccent,
                       activeColor: Colors.orange.withOpacity(0.8),
-                      value: userConfig.musicOn.value,
+                      value: userConfig.sfxOn.value,
                       onChanged: (flag){
                         setState(() {
-                          userConfig.musicOn.value = flag;
+                          userConfig.sfxOn.value = flag;
                         });
                       }
                     ),
                   ],
                 ),
               ),
-              20.verticalSpace,
-              //music
-              AnimatedOpacity(
-                opacity: areButtonsVisible ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.easeIn,
-                child: Align(
-                  alignment: const Alignment(-0.4, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.topLeft,
-                        children: [
-                          Text(
-                            'SOUND',
-                            style: GoogleFonts.pressStart2p(
-                              color: Colors.orange.withOpacity(0.8),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Positioned(
-                            top: 4.0,
-                            left: 0.0,
-                            child: Text(
-                              'SOUND',
-                              style: GoogleFonts.pressStart2p(
-                                color: Colors.yellowAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 100,),
-                      CupertinoSwitch(
-                        trackColor: Colors.orange.withOpacity(0.25),
-                        thumbColor: Colors.yellowAccent,
-                        activeColor: Colors.orange.withOpacity(0.8),
-                        value: userConfig.sfxOn.value,
-                        onChanged: (flag){
-                          setState(() {
-                            userConfig.sfxOn.value = flag;
-                          });
+            ),
+
+            80.verticalSpace,
+            //buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _soundController.forward().then((value) async {
+                      _soundController.reverse();
+                      await Future.delayed(const Duration(milliseconds: 700));
+                      setState(() {
+                        if (userConfig.musicOn.value != userConfig.sfxOn.value){
+                          userConfig.musicOn.value = false;
+                          userConfig.sfxOn.value = false;
+                        } else {
+                          userConfig.musicOn.value = !userConfig.musicOn.value;
+                          userConfig.sfxOn.value = !userConfig.sfxOn.value;
                         }
-                      ),
-                    ],
+
+                      });
+                    });
+                  },
+                  child: AnimatedBuilder(
+                    animation: _soundController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: 1.0 - (0.1 * _soundController.value),
+                        child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
+                            ? Image.asset(
+                                'assets/images/others/sound_off.png',
+                                width: 60,
+                              )
+                            : Image.asset(
+                                'assets/images/others/sound_on.png',
+                                width: 60,
+                              ),
+                      );
+                    },
                   ),
                 ),
-              ),
-            
-              80.verticalSpace,
-              //buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _soundController.forward().then((value) async {
-                        _soundController.reverse();
-                        await Future.delayed(const Duration(milliseconds: 700));
-                        setState(() {
-                          if (userConfig.musicOn.value != userConfig.sfxOn.value){
-                            userConfig.musicOn.value = false;
-                            userConfig.sfxOn.value = false;
-                          } else {
-                            userConfig.musicOn.value = !userConfig.musicOn.value;
-                            userConfig.sfxOn.value = !userConfig.sfxOn.value;
-                          }
-                          
-                        });
+                const SizedBox(width: 45),
+                GestureDetector(
+                  onTap: () {
+                    _tickController.forward().then((value) async {
+                      _tickController.reverse();
+                      await Future.delayed(const Duration(milliseconds: 700));
+                      setState(() {
+                        isSettingsScreen = !isSettingsScreen;
+                        isSettingsTapped = !isSettingsTapped;
                       });
-                    },
-                    child: AnimatedBuilder(
-                      animation: _soundController,
+                    });
+                  },
+                  child: AnimatedBuilder(
+                      animation: _tickController,
                       builder: (context, child) {
-                        return Transform.scale(
-                          scale: 1.0 - (0.1 * _soundController.value),
-                          child: (userConfig.musicOn.value && userConfig.sfxOn.value) || (userConfig.musicOn.value ^ userConfig.sfxOn.value)
-                              ? Image.asset(
-                                  'assets/images/others/sound_off.png',
-                                  width: 60,
-                                )
-                              : Image.asset(
-                                  'assets/images/others/sound_on.png',
-                                  width: 60,
-                                ),
-                        );
-                      },
-                    ),
+                      return Transform.scale(
+                        scale: 1.0 - (0.1 * _tickController.value),
+                        child: Stack(
+                          children: [
+                            Image.asset('assets/images/others/tick.png', width: 50,
+                              color: MyColor.appColor,),
+                            Positioned(
+                              top: 4,
+                              child: Image.asset('assets/images/others/tick.png', width: 50,
+                                color: MyColor.secondaryColor,),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   ),
-                  const SizedBox(width: 45),
-                  GestureDetector(
-                    onTap: () {
-                      _tickController.forward().then((value) async {
-                        _tickController.reverse();
-                        await Future.delayed(const Duration(milliseconds: 700));
-                        setState(() {
-                          isSettingsScreen = !isSettingsScreen;
-                          isSettingsTapped = !isSettingsTapped;
-                        });
-                      });
-                    },
-                    child: AnimatedBuilder(
-                        animation: _tickController,
-                        builder: (context, child) {
-                        return Transform.scale(
-                          scale: 1.0 - (0.1 * _tickController.value),
-                          child: Stack(
-                            children: [
-                              Image.asset('assets/images/others/tick.png', width: 50,
-                                color: MyColor.appColor,),
-                              Positioned(
-                                top: 4,
-                                child: Image.asset('assets/images/others/tick.png', width: 50,
-                                  color: MyColor.secondaryColor,),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    ),
-                  ),
-                ],
-              )
-            ],
-          )
-        ],
-      ),
-    );
+                ),
+              ],
+            )
+          ],
+        );
   }
 
   Column menuContent() {

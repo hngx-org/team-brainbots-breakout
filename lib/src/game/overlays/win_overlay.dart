@@ -22,6 +22,8 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
   late AnimationController _playController;
   late AnimationController _levelController;
   late AnimationController _resetController;
+  int time = 0;
+  String formattedTime = '';
 
   @override
   void initState() {
@@ -41,6 +43,9 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
       duration:
       const Duration(milliseconds: 200),
     );
+
+    time = (widget.game as Breakout).gameManager.time.value;
+    formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
   }
 
   @override
@@ -50,7 +55,6 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
     _resetController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -94,7 +98,17 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                   ),
                 )),
                 Align(
-                  alignment: const Alignment(0, 0.12),
+                alignment: const Alignment(0, 0),
+                child: Text(
+                  'TIME:$time',
+                  style: GoogleFonts.pressStart2p(
+                    color: MyColor.secondaryColor.withOpacity(0.8),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                )),
+                Align(
+                  alignment: const Alignment(0, 0.16),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
