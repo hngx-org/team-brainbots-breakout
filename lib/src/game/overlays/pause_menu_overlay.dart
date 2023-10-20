@@ -20,6 +20,8 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
   late AnimationController _playController;
   late AnimationController _levelController;
   late AnimationController _resetController;
+  int time = 0;
+  String formattedTime = '';
 
   @override
   void initState() {
@@ -39,6 +41,9 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
       duration:
       const Duration(milliseconds: 200),
     );
+
+    time = (widget.game as Breakout).gameManager.time.value;
+    formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
   }
 
   @override
@@ -50,6 +55,8 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
   }
   @override
   Widget build(BuildContext context) {
+
+
     return Material(
       color: Colors.transparent,
       child: Center(
@@ -59,6 +66,13 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
             child: Stack(
               alignment: Alignment.center,
               children: [
+                Align(
+                    alignment: const Alignment(0, -0.215),
+                    child: Text(
+                      'TIME:$formattedTime',
+                      style: GoogleFonts.pressStart2p(
+                          color: MyColor.appColor, fontSize: 22),
+                    )),
                 Image.asset(
                   'assets/images/others/window.png',
                 ),

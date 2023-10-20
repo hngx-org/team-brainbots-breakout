@@ -1,7 +1,7 @@
 import 'package:brainbots_breakout/src/constants/routes_path.dart';
 import 'package:brainbots_breakout/src/screens/game_screen.dart';
 import 'package:brainbots_breakout/src/screens/level_screen.dart';
-import 'package:brainbots_breakout/src/screens/menu_screen.dart';
+import 'package:brainbots_breakout/src/screens/menu_and_settings_screen.dart';
 import 'package:brainbots_breakout/src/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';

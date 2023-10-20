@@ -19,8 +19,8 @@ class PaddleSettings{
 
 class BrickSettings{
   final double strength;
-  final int numBricks;
-  BrickSettings({required this.strength, required this.numBricks});
+  final int patternCount;
+  BrickSettings({required this.strength, required this.patternCount});
 }
 
 class PowerUpSettings {
@@ -38,18 +38,6 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   final int maxLevel = 9;
   LevelManager({this.level = 1});
 
-  final Map<int, BallSettings> ballConfig =  {
-    1: BallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 50), gravity: Vector2(0, 0.2)),
-    2: BallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 55), gravity: Vector2(0, 0.3)),
-    3: BallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 60), gravity: Vector2(0, 0.4)),
-    4: BallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 65), gravity: Vector2(0, 0.5)),
-    5: BallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 70), gravity: Vector2(0, 0.6)),
-    6: BallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 75), gravity: Vector2(0, 0.7)),
-    7: BallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 80), gravity: Vector2(0, 0.8)),
-    8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 90), gravity: Vector2(0, 0.9)),
-    9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 100), gravity: Vector2(0, 1.0)),
-  };
-
   final Map<int, PaddleSettings> paddleConfig = {
     1: PaddleSettings(speedMultiplier: 4.0),
     2: PaddleSettings(speedMultiplier: 4.5),
@@ -63,29 +51,39 @@ class LevelManager extends Component with HasGameRef<Breakout>{
   };
 
   final Map<int, BrickSettings> brickConfig = {
-    1: BrickSettings(strength: 1, numBricks: 14),
-    2: BrickSettings(strength: 1, numBricks: 21),
-    3: BrickSettings(strength: 1, numBricks: 28),
-    4: BrickSettings(strength: 1, numBricks: 28),
-    5: BrickSettings(strength: 1, numBricks: 35),
-    6: BrickSettings(strength: 1, numBricks: 35),
-    7: BrickSettings(strength: 1, numBricks: 42),
-    8: BrickSettings(strength: 1, numBricks: 42),
-    9: BrickSettings(strength: 1, numBricks: 49),
+    1: BrickSettings(strength: 2, patternCount: 49),
+    2: BrickSettings(strength: 2, patternCount: 50),
+    3: BrickSettings(strength: 2, patternCount: 60),
+    4: BrickSettings(strength: 2, patternCount: 70),
+    5: BrickSettings(strength: 2, patternCount: 80),
+    6: BrickSettings(strength: 2, patternCount: 90),
+    7: BrickSettings(strength: 2, patternCount: 100),
+    8: BrickSettings(strength: 2, patternCount: 110),
+    9: BrickSettings(strength: 2, patternCount: 120),
   };
 
+  final Map<int, BallSettings> ballConfig =  {
+    1: BallSettings(initialVelocity: Vector2(0, 50), maxVelocity: Vector2(25.0, 60), gravity: Vector2(0, 0.2)),
+    2: BallSettings(initialVelocity: Vector2(0, 55), maxVelocity: Vector2(27.5, 65), gravity: Vector2(0, 0.3)),
+    3: BallSettings(initialVelocity: Vector2(0, 60), maxVelocity: Vector2(30.0, 70), gravity: Vector2(0, 0.4)),
+    4: BallSettings(initialVelocity: Vector2(0, 65), maxVelocity: Vector2(32.5, 75), gravity: Vector2(0, 0.5)),
+    5: BallSettings(initialVelocity: Vector2(0, 70), maxVelocity: Vector2(35.0, 80), gravity: Vector2(0, 0.6)),
+    6: BallSettings(initialVelocity: Vector2(0, 75), maxVelocity: Vector2(37.5, 85), gravity: Vector2(0, 0.7)),
+    7: BallSettings(initialVelocity: Vector2(0, 80), maxVelocity: Vector2(40.0, 90), gravity: Vector2(0, 0.8)),
+    8: BallSettings(initialVelocity: Vector2(0, 90), maxVelocity: Vector2(45.0, 95), gravity: Vector2(0, 0.9)),
+    9: BallSettings(initialVelocity: Vector2(0, 100), maxVelocity: Vector2(50.0, 120), gravity: Vector2(0, 1.0)),
+  };
   final Map<int, PowerUpSettings> powerUpConfig = {
-    1: PowerUpSettings(velocity: Vector2(0, 50), duration: const Duration(seconds: 3)),
-    2: PowerUpSettings(velocity: Vector2(0, 55), duration: const Duration(seconds: 3)),
-    3: PowerUpSettings(velocity: Vector2(0, 60), duration: const Duration(seconds: 3)),
-    4: PowerUpSettings(velocity: Vector2(0, 65), duration: const Duration(seconds: 3)),
-    5: PowerUpSettings(velocity: Vector2(0, 70), duration: const Duration(seconds: 3)),
-    6: PowerUpSettings(velocity: Vector2(0, 75), duration: const Duration(seconds: 3)),
-    7: PowerUpSettings(velocity: Vector2(0, 80), duration: const Duration(seconds: 3)),
-    8: PowerUpSettings(velocity: Vector2(0, 85), duration: const Duration(seconds: 3)),
-    9: PowerUpSettings(velocity: Vector2(0, 90), duration: const Duration(seconds: 3)),
+    1: PowerUpSettings(velocity: Vector2(0, 50), duration: const Duration(seconds: 15)),
+    2: PowerUpSettings(velocity: Vector2(0, 55), duration: const Duration(seconds: 15)),
+    3: PowerUpSettings(velocity: Vector2(0, 60), duration: const Duration(seconds: 8)),
+    4: PowerUpSettings(velocity: Vector2(0, 65), duration: const Duration(seconds: 8)),
+    5: PowerUpSettings(velocity: Vector2(0, 70), duration: const Duration(seconds: 8)),
+    6: PowerUpSettings(velocity: Vector2(0, 75), duration: const Duration(seconds: 8)),
+    7: PowerUpSettings(velocity: Vector2(0, 80), duration: const Duration(seconds: 8)),
+    8: PowerUpSettings(velocity: Vector2(0, 85), duration: const Duration(seconds: 8)),
+    9: PowerUpSettings(velocity: Vector2(0, 90), duration: const Duration(seconds: 8)),
   };
-
 
   Vector2 get initialVelocity{
     if (ballConfig[level] != null){
@@ -123,9 +121,9 @@ class LevelManager extends Component with HasGameRef<Breakout>{
     return 0;
   }
 
-  int get numBricks{
+  int get numPatterns{
     if (brickConfig[level] != null){
-      return brickConfig[level]!.numBricks;
+      return brickConfig[level]!.patternCount;
     }
     return 0;
   }
