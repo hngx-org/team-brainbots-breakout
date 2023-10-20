@@ -412,12 +412,12 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin{
               duration: const Duration(milliseconds: 1000),
               curve: Curves.easeIn,
               child: BouncyButton(
-                text: 'Exit',
+                text: 'Stats',
                 onTap: () {
                   setState(() {
                     isHowTapped = !isHowTapped;
                   });
-                    exit(0);
+                  routerConfig.push(RoutesPath.statsScreen);
                 },
                 isTapped: isHowTapped,
               ),
