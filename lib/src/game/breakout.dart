@@ -258,7 +258,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     addAll(bricks);
   }
 
-  //ball powerup area
+  //ball power up area
   void addExtraBall(){
     if (extraBallsOnScreen <= 2) {
       extraBallsOnScreen += 1;
@@ -347,7 +347,7 @@ class Breakout extends FlameGame with HasCollisionDetection{
     }
   }
 
-  //end of ball power up area
+  //end of ball powerup area
 
   void initializeGameStart(){
     setPaddle();
