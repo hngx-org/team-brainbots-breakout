@@ -32,7 +32,7 @@ class Laser extends SpriteComponent with HasGameRef<Breakout>, CollisionCallback
   void update(dt){
     super.update(dt);
     position += velocity * _dt;
-    if(position.y < 0){
+    if(position.y < 0 || !(game.gameManager.isPlaying || game.gameManager.isPaused)){
       removeFromParent();
     }
   }
@@ -40,6 +40,7 @@ class Laser extends SpriteComponent with HasGameRef<Breakout>, CollisionCallback
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other){
     super.onCollision(intersectionPoints, other);
     if(other is Brick){
+      other.strength -= 0.5;
       removeFromParent();
     }
   }

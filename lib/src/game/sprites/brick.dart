@@ -53,31 +53,30 @@ class Brick extends SpriteGroupComponent with HasGameRef<Breakout>, CollisionCal
     if(other is Ball && !_hasCollided){ // the _hasCollided flag ensures that the onCollision is not called again till collision ends
       _hasCollided = true;
         removeFromParent();
+        return;
     }
     if(other is Laser && !_hasCollided){ // the _hasCollided flag ensures that the onCollision is not called again till collision ends
       _hasCollided = true;
-      bool isLaserTraveling = other.isLaserTraveling;
-      if (isLaserTraveling) {
-        strength -= 0.5;
-        if (strength <= 0){
-          removeFromParent();
-        }
-        if(strength >= 0.1 && strength <= 1){
-          if (hasPowerUp && !isPowerUpBrickCracked) {
-            final powerUpType = game.gameManager.getRandomPowerUpType(game.levelManager.level);
-            var powerUp = PowerUp(
-              powerUpType: powerUpType,
-              velocity: game.levelManager.powerUpVelocity,
-              powerUpSize: size,
-              powerUpPosition: position,
-            );
-            game.add(powerUp);
+      // strength -= 0.5;
+      if (strength <= 0){
+        removeFromParent();
+        return;
+      }
+      if(strength >= 0.1 && strength <= 1){
+        if (hasPowerUp && !isPowerUpBrickCracked) {
+          final powerUpType = game.gameManager.getRandomPowerUpType(game.levelManager.level);
+          var powerUp = PowerUp(
+            powerUpType: powerUpType,
+            velocity: game.levelManager.powerUpVelocity,
+            powerUpSize: size,
+            powerUpPosition: position,
+          );
+          game.add(powerUp);
 
-            isPowerUpBrickCracked = true;
-          }
-          current = BrickState.cracked;
-          return;
+          isPowerUpBrickCracked = true;
         }
+        current = BrickState.cracked;
+        return;
       }
     }
     super.onCollision(intersectionPoints, other);

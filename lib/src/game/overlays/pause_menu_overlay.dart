@@ -42,8 +42,8 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
       const Duration(milliseconds: 200),
     );
 
-    time = (widget.game as Breakout).gameManager.time.value;
-    formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
+    time = (widget.game as Breakout).gameManager.gameStopwatch.elapsed.inSeconds;
+    // formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
   }
 
   @override
@@ -69,7 +69,7 @@ class _PauseMenuOverlayState extends State<PauseMenuOverlay>
                 Align(
                     alignment: const Alignment(0, -0.215),
                     child: Text(
-                      'TIME:$formattedTime',
+                      'TIME:${time}s',
                       style: GoogleFonts.pressStart2p(
                           color: MyColor.appColor, fontSize: 22),
                     )),

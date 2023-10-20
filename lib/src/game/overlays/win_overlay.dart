@@ -44,8 +44,8 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
       const Duration(milliseconds: 200),
     );
 
-    time = (widget.game as Breakout).gameManager.time.value;
-    formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
+    time = (widget.game as Breakout).gameManager.gameStopwatch.elapsed.inSeconds;
+    // formattedTime = (widget.game as Breakout).gameManager.formatTime(time);
   }
 
   @override
@@ -100,7 +100,7 @@ class _WinOverlayState extends State<WinOverlay> with TickerProviderStateMixin{
                 Align(
                 alignment: const Alignment(0, 0),
                 child: Text(
-                  'TIME:$time',
+                  'TIME:${time}s',
                   style: GoogleFonts.pressStart2p(
                     color: MyColor.secondaryColor.withOpacity(0.8),
                     fontWeight: FontWeight.bold,

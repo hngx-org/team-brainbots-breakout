@@ -136,15 +136,6 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
       if(other.powerUpType == PowerUpType.shrink){
         _applyShrinkPowerUp();
       }
-      if(other.powerUpType == PowerUpType.slow){
-        gameRef.applySlowBallPowerUp();
-      }
-      if(other.powerUpType == PowerUpType.fast){
-        gameRef.applyFastBallPowerUp();
-      }
-      if(other.powerUpType == PowerUpType.extraBall){
-        game.addExtraBall();
-      }
     }
     super.onCollision(intersectionPoints, other);
   }
@@ -178,7 +169,7 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
                   y - laserSize.y
               ),
               laserSize: laserSize,
-              velocity: Vector2(0, -40),
+              velocity: Vector2(0, -50),
               damage: 0.1,
           ),Laser(
                 initialPosition: Vector2(
@@ -186,10 +177,9 @@ class Paddle extends SpriteAnimationGroupComponent with HasGameRef<Breakout>, Co
                     y - laserSize.y
                 ),
                 laserSize: laserSize,
-                velocity: Vector2(0, -40),
+                velocity: Vector2(0, -50),
                 damage: 0.1
             ),];
-          game.lasers.addAll(lasers);
           game.addAll(lasers);
         }
         else {

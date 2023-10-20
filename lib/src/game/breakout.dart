@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:brainbots_breakout/src/config/user_config.dart';
 import 'package:brainbots_breakout/src/game/managers/managers.dart';
-import 'package:brainbots_breakout/src/game/sprites/laser.dart';
 import 'package:brainbots_breakout/src/game/sprites/sprites.dart';
 import 'package:brainbots_breakout/src/game/world.dart';
 import 'package:flame/game.dart';
@@ -17,18 +16,10 @@ class Breakout extends FlameGame with HasCollisionDetection{
 
   List<Ball> balls = [];
   late Paddle paddle;
-  late Ball? magnetizedBall;
-  List <Laser> lasers =  [];
   late List<Brick> bricks;
   bool needBricks = false;
   bool isSlowBall = false;
   bool isFastBall = false;
-  bool isPaddleMagnetic = false;
-  Vector2 savedBallPosition = Vector2.zero();
-  int extraBallsOnScreen = 0;
-
-  late Timer? gameTimer;
-
 
   @override
   Future<void> onLoad() async{
@@ -42,14 +33,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
   Future<void> update(dt) async{
     super.update(dt);
 
-    userConfig.totalGameTime.value += gameManager.score.value;
-
-    for(Laser laser in lasers){
-      if(!gameManager.isPlaying){
-        laser.removeFromParent();
-      }
-    }
-
     if(needBricks){ // if no bricks are left, arrange new bricks
       arrangeBricks(levelManager.numPatterns);
       needBricks = false;
@@ -61,8 +44,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
         ball.canMove = false;
       }
       paddle.canMove = false;
-
-
     }
     else{
       for (var ball in balls) {
@@ -85,45 +66,29 @@ class Breakout extends FlameGame with HasCollisionDetection{
       gameOver();
     }
 
-    if(balls.length == 3){
-
-      extraBallsOnScreen = 0;
-    }
-
     bricks = bricks.where((element) => !element.isRemoved).toList(); // updates the bricks list to contain only bricks that havent been broken
+    gameManager.score.value = gameManager.noBricks - bricks.length;
     if(bricks.isEmpty){
       win();
-    }
-
-    if (isPaddleMagnetic) {
-      if (magnetizedBall != null) {
-        magnetizedBall!.position =
-            Vector2(paddle.position.x, paddle.position.y - magnetizedBall!.size.y - 1);
-      }
     }
   }
 
   void start(){
     overlays.remove('introOverlay');
     gameManager.state = GameState.playing;
-    gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      gameManager.time.value++; // Increment time by 1 second
-    });
+    gameManager.gameStopwatch.start();
   }
   void pause(){
     pauseEngine();
-    if (gameManager.isPaused) {
-      print('here');
-      gameTimer!.cancel();
-    }
+    gameManager.state = GameState.paused;
+    gameManager.gameStopwatch.stop();
     overlays.add('pauseMenuOverlay');
   }
 
   void resume(){
     resumeEngine();
-    gameTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      gameManager.time.value++; // Increment time by 1 second
-    });
+    gameManager.state = GameState.playing;
+    gameManager.gameStopwatch.start();
     overlays.remove('pauseMenuOverlay');
   }
 
@@ -133,7 +98,6 @@ class Breakout extends FlameGame with HasCollisionDetection{
     overlays.remove('pauseMenuOverlay');
     resumeEngine();
     gameManager.reset(); // resets the score
-
     removeAll(balls);
     setBall();
     remove(paddle);
@@ -152,13 +116,18 @@ class Breakout extends FlameGame with HasCollisionDetection{
         userConfig.levelsUnlocked.value = levelManager.level + 1;
       }
     }
-    gameTimer!.cancel();
+    gameManager.gameStopwatch.stop();
+    userConfig.totalGameTime.value += gameManager.gameStopwatch.elapsed;
+    if(gameManager.gameStopwatch.elapsed < userConfig.bestTime.value){
+      userConfig.bestTime.value = gameManager.gameStopwatch.elapsed;
+    }
     overlays.add('winOverlay');
   }
 
   void gameOver(){
     gameManager.state = GameState.gameOver;
-    gameTimer!.cancel();
+    gameManager.gameStopwatch.stop();
+    userConfig.totalGameTime.value += gameManager.gameStopwatch.elapsed;
     overlays.add('gameOverOverlay');
   }
 
@@ -254,14 +223,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
         rowIndex++;
       }
     }
-
+    gameManager.noBricks = bricks.length;
     addAll(bricks);
   }
 
   //ball power up area
   void addExtraBall(){
-    if (extraBallsOnScreen <= 2) {
-      extraBallsOnScreen += 1;
+    if (balls.length < 3) {
       overlays.add('extraBallOverlay', );
       Future.delayed(const Duration(milliseconds: 800)).then((value) => overlays.remove('extraBallOverlay', ));
       Vector2 ballSize = Vector2.all(20);
@@ -287,16 +255,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void applySlowBallPowerUp() {
-    Vector2 velocity;
     if (!isSlowBall) {
       overlays.add('slowBallOverlay', );
       Future.delayed(const Duration(milliseconds: 800)).then((value) => overlays.remove('slowBallOverlay', ));
       isSlowBall = true;
       for (var ball in balls) {
-        velocity = ball.velocity / 1.8;
-
-        ball.velocity = velocity;
-
+        ball.velocity /= 1.5;
+        ball.maxVelocity /= 1.5;
         add(ball);
       }
       Future.delayed(
@@ -304,10 +269,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
               (){
             if(isMounted){
               for (var ball in balls) {
-                velocity = ball.velocity * 1.8;
-
-                ball.velocity = velocity;
-
+                ball.velocity *= 1.5;
+                ball.maxVelocity *= 1.5;
                 add(ball);
               }
               isSlowBall = false;
@@ -318,15 +281,13 @@ class Breakout extends FlameGame with HasCollisionDetection{
   }
 
   void applyFastBallPowerUp() {
-    Vector2 velocity;
     if (!isFastBall) {
       overlays.add('fastBallOverlay', );
       Future.delayed(const Duration(milliseconds: 800)).then((value) => overlays.remove('fastBallOverlay', ));
       isFastBall = true;
       for (var ball in balls) {
-        velocity = ball.velocity * 1.8;
-        ball.velocity = velocity;
-
+        ball.velocity *= 1.5;
+        ball.maxVelocity *= 1.5;
         add(ball);
       }
       Future.delayed(
@@ -334,10 +295,8 @@ class Breakout extends FlameGame with HasCollisionDetection{
               (){
             if(isMounted){
               for (var ball in balls) {
-                velocity = ball.velocity / 1.8;
-
-                ball.velocity = velocity;
-
+                ball.velocity /= 1.5;
+                ball.maxVelocity /= 1.5;
                 add(ball);
               }
               isFastBall = false;
@@ -353,6 +312,4 @@ class Breakout extends FlameGame with HasCollisionDetection{
     setPaddle();
     reset();
   }
-
-
 }

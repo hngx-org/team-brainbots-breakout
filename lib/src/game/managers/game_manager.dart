@@ -9,18 +9,18 @@ enum GameState {intro, playing, paused, gameOver, win}
 
 class GameManager extends Component with HasGameRef<Breakout>{
   ValueNotifier<int> score = ValueNotifier(0);
-  ValueNotifier<int> time = ValueNotifier(0);
+  int noBricks = 0;
   GameState state = GameState.intro;
   bool get isIntro => state == GameState.intro;
   bool get isPlaying => state == GameState.playing;
   bool get isPaused => state == GameState.paused;
   bool get isGameOver => state == GameState.gameOver;
   bool get isWin => state == GameState.win;
-
+  Stopwatch gameStopwatch = Stopwatch();
   void reset(){
     state = GameState.intro;
     score.value = 0;
-    time.value = 0;
+    gameStopwatch.reset();
   }
   PowerUpType getRandomPowerUpType(int level) {
     final random = Random();
@@ -122,14 +122,14 @@ class GameManager extends Component with HasGameRef<Breakout>{
   }
 
 
-  String formatTime(int seconds){
-    int totalSeconds = time.value;
-    int minutes = totalSeconds ~/ 60; // Integer division to get minutes
-    int seconds = totalSeconds % 60; // Modulo operation to get remaining seconds
+  // String formatTime(int seconds){
+  //   int totalSeconds = time.value;
+  //   int minutes = totalSeconds ~/ 60; // Integer division to get minutes
+  //   int seconds = totalSeconds % 60; // Modulo operation to get remaining seconds
 
-    String minutesText = minutes == 1 ? 'min' : 'mins';
+  //   String minutesText = minutes == 1 ? 'min' : 'mins';
 
-    String timeInMinutesAndSeconds = '$minutes:${seconds.toString().padLeft(2, '0')} $minutesText';
-    return timeInMinutesAndSeconds;
-  }
+  //   String timeInMinutesAndSeconds = '$minutes:${seconds.toString().padLeft(2, '0')} $minutesText';
+  //   return timeInMinutesAndSeconds;
+  // }
 }
