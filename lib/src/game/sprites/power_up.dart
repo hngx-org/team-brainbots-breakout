@@ -60,6 +60,15 @@ class PowerUp extends SpriteComponent with HasGameRef<Breakout>, CollisionCallba
     if(!_hasCollided){
       _hasCollided = true;
       if (other is Paddle) {
+        if(powerUpType== PowerUpType.slow){
+          game.applySlowBallPowerUp();
+        }
+        if(powerUpType == PowerUpType.fast){
+          game.applyFastBallPowerUp();
+        }
+        if(powerUpType == PowerUpType.extraBall){
+          game.addExtraBall();
+        }
         if(isMounted) {
           removeFromParent();
         }

@@ -27,13 +27,13 @@ class _PowerUpFlashMessageState extends State<PowerUpFlashMessage> {
                 bottom: 22,
                 child: Text(widget.flashMessage,
                   style: GoogleFonts.pressStart2p(
-                      fontSize: 12, color: Colors.white.withOpacity(0.4), decoration: TextDecoration.none
+                      fontSize: 12, color: MyColor.appColor.withOpacity(0.4), decoration: TextDecoration.none
                   ),
                   textAlign: TextAlign.center, ),
               ),
               Text(widget.flashMessage,
                 style: GoogleFonts.pressStart2p(
-                fontSize: 12, color: MyColor.appColor.withOpacity(0.4), decoration: TextDecoration.none
+                fontSize: 12, color: Colors.white.withOpacity(0.8), decoration: TextDecoration.none
               ),
                 textAlign: TextAlign.center, ),
             ],
